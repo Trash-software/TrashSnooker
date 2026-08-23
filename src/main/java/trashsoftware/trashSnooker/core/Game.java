@@ -1871,6 +1871,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean predictTargetBall;
         private boolean stopAtCollision;
         private Phy phy;
+        private int physicalFrames = 0;
 
         WhitePredictor(Ball cueBallClone) {
             this.cueBallClone = cueBallClone;
@@ -1906,6 +1907,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                     break;
                 }
+                physicalFrames++;
             }
 
             notTerminated = false;
@@ -2046,6 +2048,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                 tryPassSecondBall();
             }
+
+//            System.out.println("First: " + prediction.getFirstCollide() + ", sec: " + prediction.getSecondCollide());
+            
 //            if (prediction.getFirstCollide() != null && predictTargetBall) {
 //                checkTwiceCollision();
 //            }
@@ -2072,7 +2077,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 ) {
                     double curDt = cueBallClone.currentDtTo(ball);
                     double predDt = cueBallClone.predictedDtToPoint(ball.x, ball.y);
-                    if (predDt < gameValues.ball.ballDiameter && predDt < curDt) {
+                    if (predDt < gameValues.ball.ballDiameter 
+                            && predDt < curDt
+                    ) {
 //                        Ball ballClone = ball.clone();
 //                        System.out.println("second: " + ballClone.getValue());
                         double x = ball.x;
@@ -2080,9 +2087,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         double[] cueBallVel = new double[]{cueBallClone.vx * phy.calculationsPerSec, cueBallClone.vy * phy.calculationsPerSec};
                         if (cueBallClone.twoMovingBallsHitCore(ball, phy)) {
                             prediction.setSecondCollide(ball,
-                                    x, y,
-                                    cueBallVel);
+                                    cueBallVel,
+                                    physicalFrames * phy.calculateMs);
                         }
+                        // reset ball
+                        ball.setXY(x, y);
+                        ball.clearMovement();
                     }
                 }
             }
@@ -2091,9 +2101,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private void tryHitBallOther(Ball firstHit) {
             for (Ball b : getAllBalls()) {
                 if (b != firstHit && !b.isPotted()) {
-                    if (firstHit.predictedDtToPoint(b.x, b.y) <
-                            gameValues.ball.ballDiameter) {
-                        prediction.setFirstBallCollidesOther(b);
+                    double curDt = firstHit.currentDtTo(b);
+                    double predDt = firstHit.predictedDtToPoint(b.x, b.y);  // 用b的当前位置，因为b.next大概是没更新的
+                    
+                    if (predDt < gameValues.ball.ballDiameter && predDt < curDt) {
+                        prediction.setFirstBallCollidesOther(b, physicalFrames * phy.calculateMs);
                     }
                 }
             }
@@ -2128,7 +2140,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 rawBallUnitVec[0], rawBallUnitVec[1],
                                 ballInitVMmPerS,
                                 whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
-                                cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY());
+                                cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY(),
+                                physicalFrames * phy.calculateMs);
                         return true;
                     }
                 }

@@ -597,6 +597,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         AiCueResult acr = new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(attackChoice.ball, true),
                 cueType,
+                attackChoice.whitePos,
                 attackChoice.targetOrigPos,
                 attackChoice instanceof AttackChoice.DirectAttackChoice dac ? dac.dirHole : null,  // fixme: check
                 attackChoice.ball,
@@ -625,6 +626,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         acr.setWhitePath(whitePath);
+        acr.setWhiteStopRange(iac.getWhiteStopRange());
         return acr;
     }
 
@@ -632,7 +634,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         AiCueResult acr = new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(choice.ball, true),
                 cueType,
-                null,
+                choice.wp == null ? null : choice.wp.whiteOrigPos(),
+                choice.wp == null ? null : choice.wp.targetOrigPos(),
                 null,
                 choice.ball,
                 choice.cueDirectionUnitVector[0],
@@ -842,6 +845,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 aiPlayer.getInGamePlayer(),
                 GamePlayStage.NORMAL,
                 CueType.DEFENSE,
+                game.getCueBall().getPositionArray(),
                 null,
                 null,
                 null,

@@ -123,19 +123,25 @@ public class PlayerPerson {
         if (personObj.has("dominant")) {
             // 这里并不一定真的是
             JSONObject primaryObj = personObj.getJSONObject("dominant");
-            JSONObject secondaryObj = null;
-            JSONObject restObj = null;
-            if (personObj.has("nonDominant")) {
-                secondaryObj = personObj.getJSONObject("nonDominant");
-            }
-            if (personObj.has("rest")) {
-                restObj = personObj.getJSONObject("rest");
-            }
+            JSONObject secondaryObj = personObj.optJSONObject("nonDominant", null);
+            JSONObject restObj = personObj.optJSONObject("rest", null);
 
             PlayerHand primary = PlayerHand.fromJson(primaryObj);
-            PlayerHand secondary = PlayerHand.fromJson(secondaryObj, primary, 0.5, 0.5);
-            PlayerHand rest = PlayerHand.fromJson(restObj, primary, 0.8, 0.8 * PlayerHand.REST_NATIVE_POWER_MUL);
-
+            PlayerHand secondary;
+            if (secondaryObj == null) {
+                double secondarySkill = personObj.optDouble("nonDominantSkill", 50) / 100;
+                secondary = primary.derive(primary.hand.getAnother(), secondarySkill, secondarySkill);
+            } else {
+                secondary = PlayerHand.fromJson(secondaryObj, primary, 0.5, 0.5);
+            }
+            PlayerHand rest;
+            if (restObj == null) {
+                double restSkill = personObj.optDouble("restSkill", 75) / 100;
+                rest = primary.derive(PlayerHand.Hand.REST, restSkill, restSkill * PlayerHand.REST_NATIVE_POWER_MUL);
+            } else {
+                rest = PlayerHand.fromJson(restObj, primary, 0.75, 0.75 * PlayerHand.REST_NATIVE_POWER_MUL);
+            }
+            
             PlayerHand left, right;
             if (primary.hand == PlayerHand.Hand.LEFT) {
                 left = primary;

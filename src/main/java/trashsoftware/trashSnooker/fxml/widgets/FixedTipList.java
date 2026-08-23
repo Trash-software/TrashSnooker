@@ -124,7 +124,7 @@ public class FixedTipList extends FixedModelList {
         gc.setFill(fill);
         gc.setStroke(Color.BLACK);
         
-        double percent = Math.max(0, Math.min(1, number / max));
+        double percent = Math.clamp(number / max, 0, 1);
 
         gc.fillRect(0, 0, canvas.getWidth() * percent, canvas.getHeight());
 

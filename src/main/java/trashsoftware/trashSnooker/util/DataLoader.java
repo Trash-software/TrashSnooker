@@ -144,8 +144,8 @@ public class DataLoader {
                         PlayerPerson playerPerson = PlayerPerson.fromJson(key, personObj);
                         playerPerson.setCustom(isCustomPlayer);
                         result.put(key, playerPerson);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } catch (RuntimeException e) {
+                        EventLogger.error(e);
                     }
                 }
             }

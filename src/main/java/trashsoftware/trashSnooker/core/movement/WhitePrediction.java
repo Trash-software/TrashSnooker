@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WhitePrediction {
+    public static final double TWICE_HIT_MINIMAL_GAP_MS = 5.0;
+    
     public final Ball cueBall;
     public final double whiteX;  // 初始的位置
     public final double whiteY;
@@ -36,6 +38,7 @@ public class WhitePrediction {
     private boolean firstBallWillPot;
     private Ball firstBallCollidesOther;
     private int firstBallCushionCount;
+    private double msWhenHitFirst;
     
     private boolean hitWallBeforeHitBall;
     private boolean cueBallWillPot;
@@ -43,8 +46,7 @@ public class WhitePrediction {
     
     // 非必选项
     private Ball whiteSecondCollide;
-    private double secondBallX;
-    private double secondBallY;
+    
     private double whiteSpeedWhenHitFirstBall;
     private double[] whiteVelocityWhenHitSecondBall;
     private double whiteSpeedWhenHitSecondBall;
@@ -69,14 +71,6 @@ public class WhitePrediction {
             firstCollide.setX(firstBallX);
             firstCollide.setY(firstBallY);
             firstCollide.pickup();
-        }
-        
-        if (whiteSecondCollide != null 
-                && !whiteSecondCollide.equals(firstCollide)
-        ) {
-            whiteSecondCollide.setX(secondBallX);
-            whiteSecondCollide.setY(secondBallY);
-            whiteSecondCollide.pickup();  // 实际上根本不用
         }
     }
     
@@ -120,6 +114,14 @@ public class WhitePrediction {
         }
         whitePath.add(point);
     }
+    
+    public double[] whiteOrigPos() {
+        return new double[]{whiteX, whiteY};
+    }
+    
+    public double[] targetOrigPos() {
+        return new double[]{firstBallX, firstBallY};
+    }
 
     public double getPathLength() {
         return pathLength;
@@ -144,7 +146,8 @@ public class WhitePrediction {
                                 double whiteDirectionXBeforeCollision,
                                 double whiteDirectionYBeforeCollision,
                                 double whiteCollisionX, 
-                                double whiteCollisionY) {
+                                double whiteCollisionY,
+                                double happenMs) {
         this.firstCollide = firstCollide;
         this.whiteSpeedWhenHitFirstBall = whiteSpeedWhenHit;
         this.hitWallBeforeHitBall = hitWallBeforeHitBall;
@@ -159,6 +162,7 @@ public class WhitePrediction {
         this.whiteCollisionY = whiteCollisionY;
         this.firstBallX = firstCollide.getX();
         this.firstBallY = firstCollide.getY();
+        this.msWhenHitFirst = happenMs;
     }
 
     public void potCueBall() {
@@ -169,13 +173,13 @@ public class WhitePrediction {
         this.firstBallWillPot = true;
     }
     
-    public void setFirstBallCollidesOther(Ball firstBallCollision) {
+    public void setFirstBallCollidesOther(Ball firstBallCollision, double happenMs) {
         this.firstBallCollidesOther = firstBallCollision;
-        if (firstBallCollision.isWhite() && whiteSecondCollide == null) {
+        if (firstBallCollision.isWhite() 
+                && whiteSecondCollide == null 
+                && happenMs - msWhenHitFirst >= TWICE_HIT_MINIMAL_GAP_MS) {
             // 又撞一下白球
             whiteSecondCollide = firstCollide;
-            secondBallX = firstBallX;
-            secondBallY = firstBallY;
         }
     }
 
@@ -185,6 +189,14 @@ public class WhitePrediction {
 
     public Ball getFirstBallCollidesOther() {
         return firstBallCollidesOther;
+    }
+
+    public double getMsWhenHitFirst() {
+        return msWhenHitFirst;
+    }
+    
+    public double gapMsFromFirstCollide(double nowMs) {
+        return nowMs - msWhenHitFirst;
     }
 
     public boolean willCueBallPot() {
@@ -240,13 +252,11 @@ public class WhitePrediction {
     /**
      * 白球撞上第二颗球时的速度，如果有的话。单位mm/s
      */
-    public void setSecondCollide(Ball secondCollide, 
-                                 double secondBallX, 
-                                 double secondBallY,
-                                 double[] whiteVelocityWhenCollision) {
+    public void setSecondCollide(Ball secondCollide,
+                                 double[] whiteVelocityWhenCollision,
+                                 double happenMs) {
+        if (happenMs - msWhenHitFirst < TWICE_HIT_MINIMAL_GAP_MS) return;
         this.whiteSecondCollide = secondCollide;
-        this.secondBallX = secondBallX;
-        this.secondBallY = secondBallY;
         this.whiteVelocityWhenHitSecondBall = whiteVelocityWhenCollision;
         this.whiteSpeedWhenHitSecondBall = Math.hypot(whiteVelocityWhenCollision[0], whiteVelocityWhenCollision[1]);
     }

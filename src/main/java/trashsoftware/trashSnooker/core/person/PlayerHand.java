@@ -67,8 +67,9 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
                                       double powerMul) {
         if (json == null) {
             if (reference == null) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Hand object and reference cannot both be null.");
             } else {
+                
                 return reference.derive(reference.hand.getAnother(), skillMul, powerMul);
             }
         }

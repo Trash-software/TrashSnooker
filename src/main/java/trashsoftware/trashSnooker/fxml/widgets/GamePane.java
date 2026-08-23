@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -23,10 +24,12 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.GraphicsUtil;
 import trashsoftware.trashSnooker.fxml.drawing.CurvedPolygonDrawer;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -915,15 +918,40 @@ public class GamePane extends StackPane {
         return new double[]{arcStart, arcExtent, arcRemHeight};
     }
 
-    public void drawPredictedWhitePath(List<double[]> path) {
+    public void drawPredictedWhitePath(List<double[]> path, List<double[]> stopRange) {
         GraphicsContext lineGraphics = getLineGraphics();
         if (path != null && !path.isEmpty()) {
             lineGraphics.setStroke(WHITE_PREDICTION_COLOR);
-            double[] pos = path.get(0);
+            double[] pos = path.getFirst();
             for (int i = 1; i < path.size(); i++) {
                 double[] dd = path.get(i);
                 lineGraphics.strokeLine(canvasX(pos[0]), canvasY(pos[1]), canvasX(dd[0]), canvasY(dd[1]));
                 pos = dd;
+            }
+            
+            if (stopRange != null && !stopRange.isEmpty()) {
+                List<double[]> outPoints = null;
+                if (stopRange.size() == 2) {
+                    outPoints = GraphicsUtil.populatePoints(gameValues.table, path, stopRange.getFirst(), stopRange.getLast());
+                } else if (stopRange.size() == 4) {
+                    outPoints = GraphicsUtil.populatePoints(gameValues.table, path, stopRange.toArray(new double[0][]));
+                } else if (stopRange.size() == 8) {
+                    double[][] points = new double[stopRange.size() + 1][];
+                    points[0] = path.getLast();
+                    for (int i = 0; i < stopRange.size(); i++) {
+                        points[i + 1] = stopRange.get(i);
+                    }
+                    outPoints = GraphicsUtil.processPoints(gameValues.table, points);
+                }
+                
+                if (outPoints != null) {
+                    drawWhiteStopArea(outPoints, GameView.WHITE.darker());
+                } else {
+                    List<double[]> points2 = new ArrayList<>(stopRange);
+                    points2.add(path.getLast());
+                    GraphicsUtil.sortPointsCounterclockwise(points2);
+                    drawWhiteStopArea(points2, GameView.WHITE.darker());
+                }
             }
         }
     }
@@ -1084,7 +1112,12 @@ public class GamePane extends StackPane {
     }
 
     public void drawWhiteStopArea(List<double[]> actualPoints) {
-        getLineGraphics().setStroke(GameView.WHITE.darker());
+        drawWhiteStopArea(actualPoints, GameView.WHITE.darker());
+    }
+
+    private void drawWhiteStopArea(List<double[]> actualPoints, Paint paint) {
+        if (actualPoints == null || actualPoints.isEmpty()) return;
+        getLineGraphics().setStroke(paint);
 
         List<double[]> canvasPoints = actualPoints.stream()
                 .map(point -> new double[]{canvasX(point[0]), canvasY(point[1])})

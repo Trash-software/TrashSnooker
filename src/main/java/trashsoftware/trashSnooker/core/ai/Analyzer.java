@@ -548,7 +548,6 @@ public class Analyzer {
             boolean checkCollisionAfterFirst,
             boolean predictTargetBall,
             boolean wipe,
-            boolean useClone,
             double makingSnookerPrice) {
         return toleranceAnalysis(
                 game,
@@ -560,7 +559,7 @@ public class Analyzer {
                 checkCollisionAfterFirst,
                 predictTargetBall,
                 wipe,
-                useClone,
+                false,
                 null, null, null,
                 makingSnookerPrice
         );

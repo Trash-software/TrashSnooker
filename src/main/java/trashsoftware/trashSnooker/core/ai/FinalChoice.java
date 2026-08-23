@@ -22,6 +22,7 @@ public abstract class FinalChoice {
         final AttackParam attackParams;
         final List<AttackChoice> nextStepAttackChoices;  // Sorted from good to bad
         final WhitePrediction whitePrediction;
+        private WhitePrediction[] tolerances;
         final GamePlayStage stage;
         final Phy phy;
         protected double price;
@@ -107,7 +108,11 @@ public abstract class FinalChoice {
             double playerPositionMul =
                     attackParams.attackChoice.attackingPlayer.getPlayerPerson().getAiPlayStyle().position / 100;
             double mul = 0.5 * playerPositionMul;
-            AttackChoice firstChoice = nextStepAttackChoices.isEmpty() ? null : nextStepAttackChoices.get(0);
+            if (stage == GamePlayStage.THIS_BALL_WIN || stage == GamePlayStage.ENHANCE_WIN) {
+                mul *= 0.75;
+            }
+            
+            AttackChoice firstChoice = nextStepAttackChoices.isEmpty() ? null : nextStepAttackChoices.getFirst();
 
             for (int i = 0; i < nextStepAttackChoices.size(); i++) {
                 AttackChoice next = nextStepAttackChoices.get(i);
@@ -179,7 +184,7 @@ public abstract class FinalChoice {
                 boolean isDirect = attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice;
 
                 // todo: 新的算法
-                WhitePrediction[] tolerances = Analyzer.toleranceAnalysis(
+                tolerances = Analyzer.toleranceAnalysis(
                         game,
                         attackParams.attackChoice.attackingPlayer,
                         params,
@@ -189,11 +194,10 @@ public abstract class FinalChoice {
                         true,
                         !isDirect,
                         true,
-                        false,
                         1.0
                 );
 
-                double acceptablePotProb = firstChoice.defaultRef.potProb - 0.15;
+                double acceptablePotProb = firstChoice.defaultRef.potProb - 0.2;
                 double tolerancePenalty = 1.0;
                 for (WhitePrediction tor : tolerances) {
                     if (whitePrediction.getSecondCollide() != tor.getSecondCollide()) {
@@ -225,6 +229,21 @@ public abstract class FinalChoice {
 
                 penalty = tolerancePenalty;
                 price /= penalty;
+            }
+        }
+
+        public WhitePrediction[] getTolerances() {
+            return tolerances;
+        }
+        
+        public List<double[]> getWhiteStopRange() {
+            if (tolerances == null) return List.of();
+            else {
+                List<double[]> result = new ArrayList<>();
+                for (WhitePrediction tor : tolerances) {
+                    result.add(tor.stopPoint());
+                }
+                return result;
             }
         }
     }

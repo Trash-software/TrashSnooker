@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class GraphicsUtil {
@@ -36,7 +37,7 @@ public class GraphicsUtil {
                                                 List<double[]> centerPath,
                                                 double[][] fourCorners) {  // 必须按照顺序(左下，左上，右上，右下)
         if (centerPath.size() < 3) return new ArrayList<>();
-        double[] centerStop = centerPath.get(centerPath.size() - 1);
+        double[] centerStop = centerPath.getLast();
         double[] centerSecondLast = centerPath.get(centerPath.size() - 3);  // 倒数第二个不太确定，但倒数第三个肯定没问题
 
         double[] direction = Algebra.unitVector(centerStop[0] - centerSecondLast[0], centerStop[1] - centerSecondLast[1]);
@@ -213,9 +214,18 @@ public class GraphicsUtil {
                 stack.add(point);
                 i++;
             } else {
-                stack.remove(stack.size() - 1);
+                stack.removeLast();
             }
         }
         return stack;
+    }
+    
+    public static List<double[]> sortPointsCounterclockwise(List<double[]> list) {
+        double[][] points = list.toArray(new double[0][]);
+        double[] centroid = centroidOf(points);
+        list.sort(Comparator.comparingDouble(
+                p -> Math.atan2(p[1] - centroid[1], p[0] - centroid[0])
+        ));
+        return list;
     }
 }

@@ -310,7 +310,8 @@ public class GameView implements Initializable {
     private double p1PlaySpeed = 1.0;
     private double p2PlaySpeed = 1.0;
     private boolean aiHelpPlay = false;
-    private List<double[]> aiWhitePath;  // todo: debug用的
+    private List<double[]> aiWhitePath;
+    private List<double[]> aiWhiteStopRange;
     private List<double[]> suggestedPlayerWhitePath;
 
     private double[][] cueAbleArea;  // 不会呲杆的打点，暂时与障碍无关
@@ -1446,6 +1447,7 @@ public class GameView implements Initializable {
 
         Ball.enableGearOffset();
         aiWhitePath = null;
+        aiWhiteStopRange = null;
         miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER && !aiHelpPlay) {
             boolean autoAim = true;
@@ -1527,6 +1529,7 @@ public class GameView implements Initializable {
 
         predictedTargetBall = null;
         aiWhitePath = null;
+        aiWhiteStopRange = null;
         suggestedPlayerWhitePath = null;
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
@@ -3273,7 +3276,8 @@ public class GameView implements Initializable {
     }
 
     private void aiReallyPlay(Player player, AiCueResult cueResult, boolean aiHelpPlayerPlaying) {
-        aiWhitePath = cueResult.getWhitePath();  // todo
+        aiWhitePath = cueResult.getWhitePath();
+        aiWhiteStopRange = cueResult.getWhiteStopRange();
         tableGraphicsChanged = true;
         if (game.gameValues.rule.snookerLike()) {
             AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
@@ -4628,9 +4632,9 @@ public class GameView implements Initializable {
             if (shadowInspection != null) {
                 drawShadowInspection();
             }
-            if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
+            if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath, aiWhiteStopRange);
             if (predictPlayerPathItem.isSelected())
-                gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
+                gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath, null);
         }
         drawBallInHand();
         if (potInspection == null) {
@@ -5632,14 +5636,7 @@ public class GameView implements Initializable {
             running = false;
         }
 
-        class PredictionResult {
-            final int index;
-            final WhitePrediction wp;
-
-            PredictionResult(int index, WhitePrediction wp) {
-                this.index = index;
-                this.wp = wp;
-            }
+        record PredictionResult(int index, WhitePrediction wp) {
         }
     }
 }

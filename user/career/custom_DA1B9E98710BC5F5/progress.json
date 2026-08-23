@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 0,
   "seedRanks": {
     "random_player_47": 56,
     "random_player_49": 51,
@@ -69,7 +69,9 @@
   "championshipId": "china_open",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 0,
       "p1": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 2,
           "p1": {
@@ -184,10 +186,13 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-ROUND_2-49",
           "p2wins": 0
         },
+        "winner": "Stuart Bingham",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-56"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-56",
+        "p2wins": 0
       },
       "p2": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 0,
           "p1": {
@@ -302,14 +307,20 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-ROUND_2-51",
           "p2wins": 0
         },
+        "winner": "Yan Bingtao",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-57"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-57",
+        "p2wins": 1
       },
+      "winner": "Yan Bingtao",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-SEMI_FINAL-60"
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-SEMI_FINAL-60",
+      "p2wins": 2
     },
     "p2": {
+      "p1wins": 2,
       "p1": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 0,
           "p1": {
@@ -424,10 +435,13 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-ROUND_2-53",
           "p2wins": 1
         },
+        "winner": "custom_DA1B9E98710BC5F5",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-58"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-58",
+        "p2wins": 2
       },
       "p2": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 2,
           "p1": {
@@ -542,17 +556,30 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-ROUND_2-55",
           "p2wins": 0
         },
+        "winner": "Glass Heart",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-59"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-59",
+        "p2wins": 2
       },
+      "winner": "custom_DA1B9E98710BC5F5",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-SEMI_FINAL-61"
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-SEMI_FINAL-61",
+      "p2wins": 0
     },
     "stage": "FINAL",
     "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-FINAL-62"
   }},
   "finished": false,
   "snookerBreaks": [
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-59",
+      "playerId": "Glass Heart"
+    },
     {
       "score": 127,
       "maximumType": "NONE",
@@ -608,6 +635,15 @@
       "playerId": "custom_DA1B9E98710BC5F5"
     },
     {
+      "score": 94,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-SEMI_FINAL-60",
+      "playerId": "Yan Bingtao"
+    },
+    {
       "score": 91,
       "maximumType": "NONE",
       "stage": "ROUND_2",
@@ -646,11 +682,29 @@
     {
       "score": 75,
       "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-57",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 75,
+      "maximumType": "NONE",
       "stage": "ROUND_1",
       "sim": true,
       "numFrame": 1,
       "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-ROUND_1-32",
       "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 74,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-58",
+      "playerId": "custom_DA1B9E98710BC5F5"
     },
     {
       "score": 74,
@@ -677,6 +731,15 @@
       "sim": true,
       "numFrame": 2,
       "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-ROUND_2-50",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-SEMI_FINAL-60",
       "playerId": "Yan Bingtao"
     },
     {
@@ -736,6 +799,15 @@
     {
       "score": 61,
       "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-57",
+      "playerId": "Selby"
+    },
+    {
+      "score": 61,
+      "maximumType": "NONE",
       "stage": "ROUND_1",
       "sim": true,
       "numFrame": 2,
@@ -781,6 +853,15 @@
     {
       "score": 56,
       "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-59",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 56,
+      "maximumType": "NONE",
       "stage": "PRE_ROUND_2",
       "sim": true,
       "numFrame": 1,
@@ -795,6 +876,15 @@
       "numFrame": 1,
       "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-PRE_ROUND_1-15",
       "playerId": "random_player_103"
+    },
+    {
+      "score": 54,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-QUARTER_FINAL-56",
+      "playerId": "Stuart Bingham"
     },
     {
       "score": 54,

@@ -12,10 +12,11 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 12500.0;
+    public static final double DEFAULT_AI_PRECISION = 15000.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private final CueParams cueParams;
     private final CueType cueType;
+    private final double[] whiteOrigPos;
     private final double[] targetOrigPos;
     private final double[][] targetDirHole;
     private final Ball targetBall;
@@ -24,12 +25,14 @@ public class AiCueResult {
     //    private final boolean rua;
     private double unitX, unitY;
     private List<double[]> whitePath = new ArrayList<>();
+    private List<double[]> whiteStopRange = new ArrayList<>();
     private double totalPsyFactor;
     private final FinalChoice choice;  // 供记录
 
     public AiCueResult(InGamePlayer inGamePlayer,
                        GamePlayStage gamePlayStage,
                        CueType cueType,
+                       double[] whiteOrigPos,
                        double[] targetOrigPos,
                        double[][] targetDirHole,
                        Ball targetBall,
@@ -48,6 +51,7 @@ public class AiCueResult {
 
         this.cueParams = cueParams;
         this.cueType = cueType;
+        this.whiteOrigPos = whiteOrigPos;
         this.targetOrigPos = targetOrigPos;
         this.targetDirHole = targetDirHole;
         this.targetBall = targetBall;
@@ -109,6 +113,14 @@ public class AiCueResult {
         this.whitePath = whitePath;
     }
 
+    public List<double[]> getWhiteStopRange() {
+        return whiteStopRange;
+    }
+
+    public void setWhiteStopRange(List<double[]> whiteStopRange) {
+        this.whiteStopRange = whiteStopRange;
+    }
+
     private void applyRandomError(InGamePlayer igp, GamePlayStage gamePlayStage) {
         Random random = new Random();
         double rad = Algebra.thetaOf(unitX, unitY);
@@ -116,29 +128,6 @@ public class AiCueResult {
         PlayerPerson person = igp.getPlayerPerson();
 
         double precisionFactor = aiPrecisionFactor;
-//        double psyMul = getPsyMul(gamePlayStage, person);
-//        precisionFactor *= psyMul;
-//        System.out.println(gamePlayStage + ", psyMul: " + psyMul + ", precision: " + precisionFactor);
-
-//        if (gamePlayStage == GamePlayStage.THIS_BALL_WIN ||
-//                gamePlayStage == GamePlayStage.ENHANCE_WIN) {
-//            precisionFactor *= (person.psyNerve / 100) * (1.0 - frameImportance * -0.5);
-//            System.out.println(gamePlayStage + ", precision: " + precisionFactor);
-//        } else if (gamePlayStage == GamePlayStage.BREAK) {
-//            precisionFactor *= 5.0;
-//        }
-
-        // rua不rua
-//        precisionFactor /= calculateFramePsyDivisor(frameImportance, );
-//        precisionFactor *= igp.getPsyStatus();
-
-//        if (rua) {
-//            // 打rua了，精度进一步降低
-//            System.out.println("Ai player ruaed!");
-//            precisionFactor *= (person.psyRua / 100);
-//        }
-
-//        precisionFactor /= calculateFramePsyDivisor(frameImportance, person.avgPsy());
 
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;
@@ -210,8 +199,17 @@ public class AiCueResult {
         totalPsyFactor = igp.getPsyMul(gamePlayStage, frameImportance);
         sd /= totalPsyFactor;
         System.out.println("Final psy mul: " + totalPsyFactor + ", init sd -> sd: " + initSd + " -> " + sd);
+        
+        double radDeviation = random.nextGaussian() * sd * mistakeFactor;
+        if (whiteOrigPos == null || targetOrigPos == null) {
+            System.err.println("No white orig pos or target orig pos, random angry cue?");
+        } else {
+            double maxRadDeviation = Math.atan2(targetBall.getRadius() * 2,
+                    Math.hypot(targetOrigPos[0] - whiteOrigPos[0], targetOrigPos[1] - whiteOrigPos[1]));
+            radDeviation = Math.clamp(radDeviation, -maxRadDeviation, maxRadDeviation);
+        }
 
-        double afterRandom = random.nextGaussian() * sd * mistakeFactor + rad;
+        double afterRandom = rad + radDeviation;
 //        afterRandom = Math.min(afterRandom, maxPrecision);
 
         double[] vecAfterRandom = Algebra.unitVectorOfAngle(afterRandom);

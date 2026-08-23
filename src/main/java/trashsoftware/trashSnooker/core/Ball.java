@@ -923,22 +923,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         clearBounceDesiredLeavePos();
         ball.clearBounceDesiredLeavePos();
 
-//        double[] exactColPoint = getExactCollisionPoint(this, x1, y1,
-//                ball, x2, y2);
-//        if (exactColPoint == null) {
-//            System.err.println("Cannot find exact collision point!");
-//            double[] approxColPoint = findApproxCollisionPoint(x1, y1, ball, x2, y2);
-//            x1 = approxColPoint[0];
-//            y1 = approxColPoint[1];
-//            x2 = approxColPoint[2];
-//            y2 = approxColPoint[3];
-//        } else {
-//            x1 = exactColPoint[0];
-//            y1 = exactColPoint[1];
-//            x2 = exactColPoint[2];
-//            y2 = exactColPoint[3];
-//        }
-
         if (!phy.isPrediction) {
             // AI考虑进攻时并不会clone目标球
             // 因此我们不希望AI在模拟时触发任何移动目标球的行为
