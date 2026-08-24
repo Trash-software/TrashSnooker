@@ -13,7 +13,16 @@ public class ConfigLoader {
 
     public static final String PATH = "user/config.cfg";
     public static final String KEY_MAP_PATH = "user/keyMap.cfg";
-    private static final Locale DEFAULT_LOCALE = new Locale("zh", "CN");
+    private static final Locale DEFAULT_LOCALE = Locale.of("zh", "CN");
+    
+    public static final String KEY_N_THREADS = "nThreads";
+    public static final String KEY_LOCALE = "locale";
+    public static final String KEY_RECORD_COMPRESSION = "recordCompression";
+    public static final String KEY_FRAME_RATE = "frameRate";
+    public static final String KEY_PERFORMANCE = "performance";
+    public static final String KEY_ANTI_ALIASING = "antiAliasing";
+    public static final String KEY_DISPLAY = "display";
+    public static final String KEY_AI_AUTO_NEXT_FRAME = "aiAutoNextFrame";
 
     private static ConfigLoader instance;
     private final Map<String, String> keyValues = new HashMap<>();
@@ -126,7 +135,7 @@ public class ConfigLoader {
     }
 
     public int getFrameRate() {
-        return getInt("frameRate", 120);
+        return getInt(KEY_FRAME_RATE, 120);
     }
 
     public int getProductionFrameRate() {
@@ -172,7 +181,7 @@ public class ConfigLoader {
     }
 
     public AntiAliasing getAntiAliasing() {
-        return switch (ConfigLoader.getInstance().getString("antiAliasing")) {
+        return switch (ConfigLoader.getInstance().getString(KEY_ANTI_ALIASING)) {
             case "balanced" -> AntiAliasing.BALANCED;
             case "disabled" -> AntiAliasing.DISABLED;
             default -> AntiAliasing.DISABLED;
@@ -229,13 +238,14 @@ public class ConfigLoader {
     }
 
     private void initConfig() {
-        put("nThreads", 4);
-        put("locale", "zh_CN");
-        put("recordCompression", "xz");
-        put("frameRate", 120);
-        put("performance", "high");
-        put("antiAliasing", "disabled");
-        put("display", "windowed");
+        put(KEY_N_THREADS, 4);
+        put(KEY_LOCALE, "zh_CN");
+        put(KEY_RECORD_COMPRESSION, "xz");
+        put(KEY_FRAME_RATE, 120);
+        put(KEY_PERFORMANCE, "high");
+        put(KEY_ANTI_ALIASING, "disabled");
+        put(KEY_DISPLAY, "windowed");
+        put(KEY_AI_AUTO_NEXT_FRAME, false);
 
         double[] screenParams = autoDetectScreenParams();
         putScreenParams(screenParams);

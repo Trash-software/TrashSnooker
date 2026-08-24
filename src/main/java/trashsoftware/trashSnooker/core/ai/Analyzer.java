@@ -303,6 +303,13 @@ public class Analyzer {
             return null;
         }
 
+        if (isDefensiveAttack && (!wp.willFirstBallPot() || wp.isCueBallFirstBallTwiceColl())) {
+            // 如果是连打带防，则在预测中它得进并且不能二次碰撞才行
+            // 翻袋连打带防也是这个分支
+            wp.resetToInit();
+            return null;
+        }
+
         Ball firstCollide = wp.getFirstCollide();
         if (firstCollide != null && legalSet.contains(firstCollide)) {
             if (wp.willCueBallPot()) {
@@ -399,8 +406,9 @@ public class Analyzer {
 
             double stabilityScore = 0.0;
             // analyze tolerance
+            WhitePrediction[] tolerances = null;
             if (considerTolerance) {
-                WhitePrediction[] tolerances = toleranceAnalysis(
+                tolerances = toleranceAnalysis(
                         copy,
                         aiPlayer,
                         cpp,
@@ -429,7 +437,7 @@ public class Analyzer {
             }
 //            System.out.printf("%f %f %f\n", snookerScore, opponentAttackPrice, penalty);
 
-            return new FinalChoice.DefenseChoice(
+            FinalChoice.DefenseChoice dc = new FinalChoice.DefenseChoice(
                     firstCollide,
                     nativePrice,
                     defenseResult,
@@ -445,6 +453,8 @@ public class Analyzer {
                     wp.isFirstBallCollidesOther(),
                     isDefensiveAttack
             );
+            dc.tolerances = tolerances;
+            return dc;
         }
         wp.resetToInit();
         return null;

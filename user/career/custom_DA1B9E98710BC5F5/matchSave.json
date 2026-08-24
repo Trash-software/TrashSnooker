@@ -1,22 +1,22 @@
 {
-  "p1": "Yan Bingtao",
+  "p1": "custom_DA1B9E98710BC5F5",
   "game": {
     "p1": {
       "playerNumber": 1,
-      "gameRule": "SNOOKER",
-      "handFeelEffort": 1.0945132770229136,
-      "psyStatus": 0.8687799999999974,
-      "person": "Yan Bingtao",
-      "playerType": "COMPUTER"
-    },
-    "p1Wins": 0,
-    "p2": {
-      "playerNumber": 2,
       "gameRule": "SNOOKER",
       "handFeelEffort": 1,
       "psyStatus": 1,
       "person": "custom_DA1B9E98710BC5F5",
       "playerType": "PLAYER"
+    },
+    "p1Wins": 2,
+    "p2": {
+      "playerNumber": 2,
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 1.134706269263339,
+      "psyStatus": 0.9413499999999999,
+      "person": "Trump",
+      "playerType": "COMPUTER"
     },
     "codeGameCounter": 2,
     "p2BreakLoseChance": 0,
@@ -28,20 +28,20 @@
       "tablePreset": "starSnookerTableGood"
     },
     "winRecords": {
-      "1": 2,
-      "2": 2
+      "1": 1,
+      "2": 1
     },
-    "p2Wins": 2,
-    "startTime": 1787521508538,
+    "p2Wins": 0,
+    "startTime": 1787607273717,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_DA1B9E98710BC5F5+2029+china_open-FINAL-62",
-    "totalFrames": 5,
+    "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-QUARTER_FINAL-107",
+    "totalFrames": 7,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
     "p1Breaks": false
   },
-  "p2": "custom_DA1B9E98710BC5F5",
-  "stage": "FINAL"
+  "p2": "Trump",
+  "stage": "QUARTER_FINAL"
 }

@@ -87,6 +87,10 @@ public abstract class ObjectOnTable implements Cloneable {
     protected double getSpeed() {
         return Math.hypot(vx, vy);
     }
+    
+    public double[] getVelocityArray() {
+        return new double[]{vx, vy};
+    }
 
     public double getSpeedPerSecond(Phy phy) {
         return getSpeed() * phy.calculationsPerSec;

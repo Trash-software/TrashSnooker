@@ -905,7 +905,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             DoublePotAiming dpa = getDoublePotAiming(
                     whiteX, whiteY,
-                    axisPointX, 
+                    axisPointX,
                     axisPointY,
                     ball,
                     cushion,
@@ -1832,7 +1832,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     /**
      * @param cushionPos  库点
-     * @param whiteAiming  理论上的瞄球方向 */
+     * @param whiteAiming  理论上的瞄球方向 
+     */
     public record DoublePotAiming(Ball target, double[] targetPos, Pocket pocket,
                                   double[] collisionPos, List<double[]> cushionPos,
                                   double[] whiteAiming, int cushionCount) {
@@ -1871,7 +1872,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean predictTargetBall;
         private boolean stopAtCollision;
         private Phy phy;
-        private int physicalFrames = 0;
 
         WhitePredictor(Ball cueBallClone) {
             this.cueBallClone = cueBallClone;
@@ -1907,7 +1907,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                     break;
                 }
-                physicalFrames++;
             }
 
             notTerminated = false;
@@ -1935,10 +1934,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
 
         private boolean oneRunFirstBall(Ball firstBall) {
+            prediction.addPointInFirstBallPath(new double[]{firstBall.x, firstBall.y});
             firstBall.prepareMove(phy);
 
-            if (firstBall.isLikelyStopped(phy)) return true;
-            if (firstBall.isOutOfTable()) return true;
+            if (firstBall.isLikelyStopped(phy)) {
+//                if (prediction.getFirstBallStopPoint() == null) {
+//                    prediction.setFirstBallStopPos(firstBall.getPositionArray());
+//                }
+                return true;
+            }
+            if (firstBall.isOutOfTable()) {
+                return true;
+            }
             if (firstBall.willPot(phy)) {
                 prediction.potFirstBall();
                 return true;
@@ -2050,7 +2057,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
 
 //            System.out.println("First: " + prediction.getFirstCollide() + ", sec: " + prediction.getSecondCollide());
-            
+
 //            if (prediction.getFirstCollide() != null && predictTargetBall) {
 //                checkTwiceCollision();
 //            }
@@ -2064,20 +2071,20 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 ////                System.out.println("Twice Dt: " + cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y));
 //                if (cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y) <
 //                        gameValues.ball.ballDiameter) {
-////                    System.out.println("Twice collision!");
+
+        ////                    System.out.println("Twice collision!");
 //                    prediction.setTwiceColl(true);
 //                }
 //            }
 //        }
-
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite() && !ball.isPotted() 
-//                        && ball != prediction.getFirstCollide()
+                if (!ball.isWhite() && !ball.isPotted()
+                        && (predictTargetBall || ball != prediction.getFirstCollide())  // 不predict target时，firstBall会在那里像坨石头一样
                 ) {
                     double curDt = cueBallClone.currentDtTo(ball);
                     double predDt = cueBallClone.predictedDtToPoint(ball.x, ball.y);
-                    if (predDt < gameValues.ball.ballDiameter 
+                    if (predDt < gameValues.ball.ballDiameter
                             && predDt < curDt
                     ) {
 //                        Ball ballClone = ball.clone();
@@ -2087,8 +2094,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         double[] cueBallVel = new double[]{cueBallClone.vx * phy.calculationsPerSec, cueBallClone.vy * phy.calculationsPerSec};
                         if (cueBallClone.twoMovingBallsHitCore(ball, phy)) {
                             prediction.setSecondCollide(ball,
-                                    cueBallVel,
-                                    physicalFrames * phy.calculateMs);
+                                    cueBallClone.getPositionArray(),
+                                    cueBallVel);
                         }
                         // reset ball
                         ball.setXY(x, y);
@@ -2103,9 +2110,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (b != firstHit && !b.isPotted()) {
                     double curDt = firstHit.currentDtTo(b);
                     double predDt = firstHit.predictedDtToPoint(b.x, b.y);  // 用b的当前位置，因为b.next大概是没更新的
-                    
+
                     if (predDt < gameValues.ball.ballDiameter && predDt < curDt) {
-                        prediction.setFirstBallCollidesOther(b, physicalFrames * phy.calculateMs);
+                        prediction.setFirstBallCollidesOther(b);
                     }
                 }
             }
@@ -2118,7 +2125,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             gameValues.ball.ballDiameter) {
                         double whiteVx = cueBallClone.vx;
                         double whiteVy = cueBallClone.vy;
-                        cueBallClone.twoMovingBallsHitCore(ball, phy);
+                        if (!cueBallClone.twoMovingBallsHitCore(ball, phy)) {
+                            System.err.println("Will hit but not hit");
+                            continue;
+                        }
                         double[] rawBallUnitVec = Algebra.unitVector(
                                 ball.getLastCollisionX() - cueBallClone.getLastCollisionX(),
                                 ball.getLastCollisionY() - cueBallClone.getLastCollisionY());
@@ -2133,6 +2143,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         }
                         // 额外一帧应该还好
                         prediction.addPointInPath(new double[]{cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY()});
+                        prediction.addPointInFirstBallPath(new double[]{ball.getLastCollisionX(), ball.getLastCollisionY()});
                         prediction.setFirstCollide(ball,
                                 Math.hypot(whiteVx, whiteVy) * phy.calculationsPerSec,
                                 hitWall,
@@ -2140,8 +2151,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 rawBallUnitVec[0], rawBallUnitVec[1],
                                 ballInitVMmPerS,
                                 whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
-                                cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY(),
-                                physicalFrames * phy.calculateMs);
+                                cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY());
                         return true;
                     }
                 }

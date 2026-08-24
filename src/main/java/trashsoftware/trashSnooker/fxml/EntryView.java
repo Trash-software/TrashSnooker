@@ -385,7 +385,8 @@ public class EntryView implements Initializable {
                     refreshGui();
                 },
                 null,
-                newNameField
+                newNameField,
+                true
         );
     }
     
@@ -416,7 +417,8 @@ public class EntryView implements Initializable {
                     refreshGui();
                 },
                 null,
-                deletePerson
+                deletePerson,
+                true
         );
     }
 

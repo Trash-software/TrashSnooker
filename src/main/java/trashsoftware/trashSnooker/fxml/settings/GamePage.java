@@ -31,6 +31,8 @@ public class GamePage extends AbsSettingsPage {
     @FXML
     ComboBox<SettingsView.AIHelperDefense> aiHelperDefenseBox;
     @FXML
+    ComboBox<SettingsView.YesNo> aiVsAiAutoNextFrameBox;
+    @FXML
     ComboBox<SettingsView.MouseDragMethod> mouseDragMethodBox;
     @FXML
     TableView<KeyMap> keyMapTable;
@@ -55,6 +57,7 @@ public class GamePage extends AbsSettingsPage {
                 aiStrengthBox,
                 autoChangeBreakCueBox,
                 aiHelperDefenseBox,
+                aiVsAiAutoNextFrameBox,
                 mouseDragMethodBox));
     }
 
@@ -80,6 +83,11 @@ public class GamePage extends AbsSettingsPage {
         aiHelperDefenseBox.getSelectionModel().select(SettingsView.AIHelperDefense.fromKey(
                 configLoader.getString("aiHelperDefense", "ask")
         ));
+        
+        aiVsAiAutoNextFrameBox.getItems().addAll(SettingsView.YesNo.values());
+        aiVsAiAutoNextFrameBox.getSelectionModel().select(SettingsView.YesNo.fromBoolean(
+                configLoader.getBoolean(ConfigLoader.KEY_AI_AUTO_NEXT_FRAME, false)
+        ));
 
         mouseDragMethodBox.getItems().addAll(SettingsView.MouseDragMethod.values());
         mouseDragMethodBox.getSelectionModel().select(SettingsView.MouseDragMethod.fromKey(
@@ -102,6 +110,9 @@ public class GamePage extends AbsSettingsPage {
         }
         if (hasChanged.apply(aiHelperDefenseBox)) {
             configLoader.put("aiHelperDefense", aiHelperDefenseBox.getSelectionModel().getSelectedItem().toKey());
+        }
+        if (hasChanged.apply(aiVsAiAutoNextFrameBox)) {
+            configLoader.put(ConfigLoader.KEY_AI_AUTO_NEXT_FRAME, aiVsAiAutoNextFrameBox.getSelectionModel().getSelectedItem().toBoolean());
         }
         if (hasChanged.apply(mouseDragMethodBox)) {
             configLoader.put("mouseDragMethod", mouseDragMethodBox.getSelectionModel().getSelectedItem().toKey());

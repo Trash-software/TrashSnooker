@@ -30,8 +30,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
 //    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
 
-    public static final double PURE_ATTACK_PROB = 0.36;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
-    public static final double DEFENSIVE_ATTACK_PROB = 0.18;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
+    public static final double PURE_ATTACK_PROB = 0.38;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
+    public static final double DEFENSIVE_ATTACK_PROB = 0.16;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
 
     //    public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
 //    public static final double EACH_BALL_SEE_PRICE = 0.5;
@@ -64,6 +64,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     };
     public static boolean aiOnlyDefense = false;
     public static boolean aiOnlyDouble = false;
+    public static boolean aiOnlyAttack = false;
     protected boolean interrupted = false;
     protected boolean forcedAttack = false;
     protected Ball presetTarget;
@@ -120,7 +121,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected abstract boolean mustAttackInternal();
 
     protected final boolean mustAttack() {
-        if (forcedAttack) {
+        if (forcedAttack || aiOnlyAttack) {
             return true;
         }
         return mustAttackInternal();
@@ -170,14 +171,22 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //        double powerTick = 1000.0 / aps.getSolving();
 
         int continuousFoulAndMiss = game.getContinuousFoulAndMiss();
-        double chanceOfSmallPower = Math.pow(continuousFoulAndMiss, 1.35) / 18 + 0.5;  // 到第6杆时必定小力了
+        double chanceOfSmallPower = Math.pow(continuousFoulAndMiss, 1.35) / 18 + 0.5;  // 默认情况下，到第6杆时必定小力了;
+        boolean preferSoftTouch = true;
+        if (game instanceof AbstractSnookerGame asg) {
+            if (asg.isOverscoring(aiPlayer)) {
+                preferSoftTouch = false;
+            }
+        } else if (game.getGameValues().rule.ruleSet.contains(Rule.HIT_CUSHION)) {
+            preferSoftTouch = false;
+        }
         if (Math.random() < chanceOfSmallPower) {
             System.out.println("AI solving snooker small power!");
-            FinalChoice.DefenseChoice smallPowerSolve = solveSnookerDefense(legalBalls, degreesTick, phy, considerPostEffect, true, allowPocketCorner);
+            FinalChoice.DefenseChoice smallPowerSolve = solveSnookerDefense(legalBalls, degreesTick, phy, considerPostEffect, true, allowPocketCorner, preferSoftTouch);
             if (smallPowerSolve != null) return smallPowerSolve;
         }
         System.out.println("AI solving snooker!");
-        return solveSnookerDefense(legalBalls, degreesTick, phy, considerPostEffect, false, allowPocketCorner);
+        return solveSnookerDefense(legalBalls, degreesTick, phy, considerPostEffect, false, allowPocketCorner, false);
 
     }
 
@@ -570,15 +579,18 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            }
 
             System.out.println("Best defensive: " + bestDefense.result);
-            return new FinalChoice.IntegratedAttackChoice(
+            FinalChoice.IntegratedAttackChoice iac = new FinalChoice.IntegratedAttackChoice(
                     game,
                     bestDefense.attackParam,
                     nextTarget,
                     bestDefense.result.cuePlayParams,
                     phy,
                     stage,
-                    bestDefense.result.price
+                    bestDefense.result.price,
+                    bestDefense.attackParam.attackChoice instanceof AttackChoice.DoubleAttackChoice
             );
+            iac.tolerances = bestDefense.result.tolerances;
+            return iac;
         } else {
             System.out.println("No defensive attacks");
         }
@@ -607,9 +619,9 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 iac,
                 game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()));
         List<double[]> whitePath;
-        if (iac.whitePrediction != null) {
-            whitePath = iac.whitePrediction.getWhitePath();
-            if (iac.whitePrediction.isCueBallFirstBallTwiceColl()) {
+        if (iac.wp != null) {
+            whitePath = iac.wp.getWhitePath();
+            if (iac.wp.isCueBallFirstBallTwiceColl()) {
                 EventLogger.warning("Final attack cue is a twice collision-1");
             }
         } else {
@@ -619,6 +631,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     true,
                     true, true, false,
                     true, true);
+            System.err.println("Iac has null wp");
             if (wp.isCueBallFirstBallTwiceColl()) {
                 EventLogger.warning("Final attack cue is a twice collision-2");
             }
@@ -627,6 +640,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         acr.setWhitePath(whitePath);
         acr.setWhiteStopRange(iac.getWhiteStopRange());
+        // 这里没有targetStopRange
         return acr;
     }
 
@@ -644,6 +658,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 choice,
                 game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()));
         acr.setWhitePath(choice.wp != null ? choice.wp.getWhitePath() : null);
+        acr.setWhiteStopRange(choice.getWhiteStopRange());
+        acr.setTargetStopRange(choice.getTargetStopRange());  // 哈哈哈，实际上并没有做，因为GameView也不会画目标球的线路
         return acr;
     }
 
@@ -1050,7 +1066,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                                           Phy phy,
                                                           boolean considerPostEffect,
                                                           boolean smallPower,
-                                                          boolean allowPocketCorner) {
+                                                          boolean allowPocketCorner,
+                                                          boolean preferSoftTouch) {
         Set<Ball> legalSet = new HashSet<>(legalBalls);
 //        DefenseChoice best = null;
 
@@ -1103,7 +1120,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         for (AngleSnookerSolver ass : angleSolvers) {
             for (FinalChoice.DefenseChoice result : ass.results) {
                 if (notViolateCushionRule(result)) {
-                    if (smallPower && result.wp.getWhiteSpeedWhenHitFirstBall() > 100) {
+                    if (smallPower && preferSoftTouch && result.wp.getWhiteSpeedWhenHitFirstBall() > 100) {
                         continue;
                     }
                     legalChoices.add(result);
@@ -1258,14 +1275,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     correctedChoice.cueDirectionUnitVector[1],
                     attackParams.cueParams
             );
-            boolean checkPot = attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice;
-//            game2 = checkPot ? game.clone() : game;
+            boolean isDouble = attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice;
 
             // 直接能打到的球，必不会在打到目标球之前碰库
-            WhitePrediction wp = copy.predictWhite(params, phy, 0.0,
+            WhitePrediction wp = copy.predictWhite(params, 
+                    phy, 
+                    0.0,
                     true,
                     true,
-                    checkPot,
+                    isDouble,
                     false,
                     true,
                     false);
@@ -1284,7 +1302,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //                wp.resetToInit();
 //                return;
 //            }
-            if (checkPot && (!wp.willFirstBallPot() || wp.isCueBallFirstBallTwiceColl())) {
+            if (isDouble && (!wp.willFirstBallPot() || wp.isCueBallFirstBallTwiceColl())) {
                 // 进不了的翻袋，或是母球与目标球二次碰撞
 //                System.out.println("Twice collision!!!!!!");
                 wp.resetToInit();
@@ -1338,7 +1356,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     wp,
                     phy,
                     stage,
-                    kickPriceCalculator
+                    kickPriceCalculator,
+                    isDouble
             );
         }
     }

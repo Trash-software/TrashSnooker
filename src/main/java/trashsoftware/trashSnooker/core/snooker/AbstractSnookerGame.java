@@ -1323,6 +1323,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 if (printPlayStage) System.out.println("Way on 147");
                 return GamePlayStage.NORMAL;
             }
+            int breakScore = cuingPlayer.getSinglePoleScore();
+            if (breakScore < 100 && breakScore + remaining >= 100) {
+                // 还有破百可以打
+                if (printPlayStage) System.out.println("Overed score but want 100+ break");
+                return GamePlayStage.WON_BUT_HAS_TARGET;
+            }
 
             if (printPlayStage) System.out.println("Overed score, blind chicken eight play");
             return GamePlayStage.NO_PRESSURE;

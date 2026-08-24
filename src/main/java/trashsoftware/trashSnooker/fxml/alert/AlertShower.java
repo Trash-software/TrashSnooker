@@ -47,7 +47,7 @@ public class AlertShower {
             EventLogger.error(e);
         }
     }
-    
+
     public static void setAutoClose(long autoCloseMs, Alert view) {
         if (autoCloseMs > 0) {
             Thread autoClose = getThread(autoCloseMs, view);
@@ -73,7 +73,7 @@ public class AlertShower {
         return autoClose;
     }
 
-    public static void showSingleButtonWindow(Window owner, String content, String header, 
+    public static void showSingleButtonWindow(Window owner, String content, String header,
                                               String buttonText,
                                               Runnable callback,
                                               Node additionalContent) {
@@ -99,49 +99,53 @@ public class AlertShower {
             if (additionalContent != null) {
                 view.setupAdditional(additionalContent);
             }
-            
+
             newStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void askConfirmation(Window owner, String content, String header,
-                                       Runnable positiveCallback, Runnable negativeCallback) {
-        askConfirmation(owner, content, header, 
-                App.getStrings().getString("yes"), 
+    public static Alert askConfirmation(Window owner, String content, String header,
+                                        Runnable positiveCallback, Runnable negativeCallback) {
+        return askConfirmation(owner, content, header,
+                App.getStrings().getString("yes"),
                 App.getStrings().getString("no"),
-                positiveCallback, 
-                negativeCallback);
+                positiveCallback,
+                negativeCallback,
+                true);
     }
 
-    public static void askConfirmation(Window owner, String content, String header,
-                                       String positiveText, String negativeText,
-                                       Runnable positiveCallback, Runnable negativeCallback) {
-        askConfirmation(owner, content, header, positiveText, negativeText, false, positiveCallback, negativeCallback, null);
+    public static Alert askConfirmation(Window owner, String content, String header,
+                                        String positiveText, String negativeText,
+                                        Runnable positiveCallback, Runnable negativeCallback,
+                                        boolean wait) {
+        return askConfirmation(owner, content, header, positiveText, negativeText, false, positiveCallback, negativeCallback, null, wait);
     }
 
-    public static void askConfirmation(Window owner, String content, String header,
-                                       String positiveText, String negativeText,
-                                       boolean neutralCancel,
-                                       Runnable positiveCallback, Runnable negativeCallback) {
-        askConfirmation(owner, content, header, positiveText, negativeText, neutralCancel, positiveCallback, negativeCallback, null);
-    }
-    
-    public static void askConfirmation(Window owner, String content, String header,
-                                       String positiveText, String negativeText,
-                                       boolean neutralCancel,
-                                       Runnable positiveCallback, Runnable negativeCallback,
-                                       Node additionalContent) {
-        askConfirmation3(owner, content, header, positiveText, negativeText, null, 
-                neutralCancel, positiveCallback, negativeCallback, null, additionalContent);
+    public static Alert askConfirmation(Window owner, String content, String header,
+                                        String positiveText, String negativeText,
+                                        boolean neutralCancel,
+                                        Runnable positiveCallback, Runnable negativeCallback,
+                                        boolean wait) {
+        return askConfirmation(owner, content, header, positiveText, negativeText, neutralCancel, positiveCallback, negativeCallback, null, wait);
     }
 
-    public static void askConfirmation3(Window owner, String content, String header,
-                                       String positiveText, String negativeText, String cancelText,
-                                       boolean neutralCancel,
-                                       Runnable positiveCallback, Runnable negativeCallback, Runnable cancelCallback,
-                                       Node additionalContent) {
+    public static Alert askConfirmation(Window owner, String content, String header,
+                                        String positiveText, String negativeText,
+                                        boolean neutralCancel,
+                                        Runnable positiveCallback, Runnable negativeCallback,
+                                        Node additionalContent,
+                                        boolean wait) {
+        return askConfirmation3(owner, content, header, positiveText, negativeText, null,
+                neutralCancel, positiveCallback, negativeCallback, null, additionalContent, wait);
+    }
+
+    public static Alert askConfirmation3(Window owner, String content, String header,
+                                         String positiveText, String negativeText, String cancelText,
+                                         boolean neutralCancel,
+                                         Runnable positiveCallback, Runnable negativeCallback, Runnable cancelCallback,
+                                         Node additionalContent, boolean wait) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     Alert.class.getResource("alert.fxml"),
@@ -163,18 +167,23 @@ public class AlertShower {
                     positiveText, negativeText,
                     neutralCancel,
                     positiveCallback, negativeCallback);
-            
+
             if (neutralCancel && (cancelText != null || cancelCallback != null)) {
                 view.setupCustomCancel(cancelText, cancelCallback);
             }
-            
+
             if (additionalContent != null) {
                 view.setupAdditional(additionalContent);
             }
 
-            newStage.showAndWait();
+            if (wait) {
+                newStage.showAndWait();
+            } else {
+                newStage.show();
+            }
+            return view;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

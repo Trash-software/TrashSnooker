@@ -1,7 +1,7 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 3656067,
+    "money": 3709467,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -13048,13 +13048,80 @@
         "moneyAfter": 3656067,
         "type": "purchase",
         "timestamp": "2026-08-24 07:46:18"
+      },
+      {
+        "inGameDate": "2029/3/25",
+        "year": 2029,
+        "moneyBefore": 3656067,
+        "match": "china_open",
+        "moneyAfter": 3718067,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 62000,
+          "raw": 80000
+        }},
+        "timestamp": "2026-08-24 09:54:33"
+      },
+      {
+        "inGameDate": "2029/4/17",
+        "moneyBefore": 3718067,
+        "moneyAfter": 3717067,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1000
+        }],
+        "timestamp": "2026-08-24 09:55:17"
+      },
+      {
+        "inGameDate": "2029/4/17",
+        "moneyBefore": 3717067,
+        "moneyAfter": 3713467,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3600
+        }],
+        "timestamp": "2026-08-24 09:55:19"
+      },
+      {
+        "item": 2,
+        "inGameDate": "2029/4/17",
+        "moneyBefore": 3713467,
+        "match": "custom_DA1B9E98710BC5F5+2029+world_champ",
+        "moneyAfter": 3713667,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2026-08-24 09:55:19"
+      },
+      {
+        "inGameDate": "2029/4/17",
+        "moneyBefore": 3713667,
+        "match": "custom_DA1B9E98710BC5F5+2029+world_champ",
+        "moneyAfter": 3709467,
+        "type": "participation",
+        "items": [
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2026-08-24 09:55:19"
       }
     ],
     "level": 49,
-    "expInThisLevel": 617,
+    "expInThisLevel": 1472,
     "availPerks": 0,
     "totalPerks": 245,
-    "totalExp": 49635
+    "totalExp": 50490
   },
-  "checksum": "3AAA0258BEBB6652A9FF1B25F9490096"
+  "checksum": "35C72099869097A282EB89B939958425"
 }

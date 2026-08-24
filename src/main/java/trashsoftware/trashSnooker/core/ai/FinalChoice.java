@@ -14,15 +14,50 @@ import java.util.List;
 
 public abstract class FinalChoice {
 
+    final WhitePrediction wp;
+    WhitePrediction[] tolerances;
+    
+    FinalChoice(WhitePrediction wp) {
+        this.wp = wp;
+    }
+
+    public WhitePrediction[] getTolerances() {
+        return tolerances;
+    }
+
+    public List<double[]> getWhiteStopRange() {
+        if (tolerances == null) return List.of();
+        else {
+            List<double[]> result = new ArrayList<>();
+            for (WhitePrediction tor : tolerances) {
+                result.add(tor.stopPoint());
+            }
+            return result;
+        }
+    }
+    
+    public List<double[]> getTargetStopRange() {
+        if (tolerances == null) return List.of();
+        else {
+            List<double[]> result = new ArrayList<>();
+            for (WhitePrediction tor : tolerances) {
+                double[] tarStop = tor.getFirstBallStopPoint();
+                if (tarStop != null) {
+                    result.add(tarStop);
+                }
+            }
+            return result;
+        }
+    }
+
     public static class IntegratedAttackChoice extends FinalChoice implements Comparable<IntegratedAttackChoice> {
 
         public final boolean isPureAttack;
+        public final boolean isDoubleAttack;
         final Game<?, ?> game;
         final AiCue.KickPriceCalculator kickPriceCalculator;
         final AttackParam attackParams;
         final List<AttackChoice> nextStepAttackChoices;  // Sorted from good to bad
-        final WhitePrediction whitePrediction;
-        private WhitePrediction[] tolerances;
         final GamePlayStage stage;
         final Phy phy;
         protected double price;
@@ -40,21 +75,24 @@ public abstract class FinalChoice {
                 List<AttackChoice> nextStepAttackChoices,
                 int nextStepTarget,
                 CuePlayParams params,
-                WhitePrediction whitePrediction,
+                WhitePrediction wp,
                 Phy phy,
                 GamePlayStage stage,
-                AiCue.KickPriceCalculator kickPriceCalculator
+                AiCue.KickPriceCalculator kickPriceCalculator,
+                boolean isDoubleAttack
         ) {
+            super(wp);
+            
             this.game = game;
             this.attackParams = attackParams;
             this.nextStepAttackChoices = nextStepAttackChoices;
             this.nextStepTarget = nextStepTarget;
-            this.whitePrediction = whitePrediction;
             this.phy = phy;
             this.stage = stage;
             this.params = params;
             this.kickPriceCalculator = kickPriceCalculator;
             isPureAttack = true;
+            this.isDoubleAttack = isDoubleAttack;
 
             generatePrice();
         }
@@ -68,16 +106,19 @@ public abstract class FinalChoice {
                                          CuePlayParams params,
                                          Phy phy,
                                          GamePlayStage stage,
-                                         double price) {
+                                         double price,
+                                         boolean isDoubleAttack) {
+            super(null);  // fixme: 可以有
+            
             this.game = game;
             this.attackParams = attackParams;
             this.nextStepAttackChoices = new ArrayList<>();
-            this.whitePrediction = null;  // fixme: 可以有
             this.params = params;
             this.nextStepTarget = nextStepTarget;
             this.phy = phy;
             this.stage = stage;
             this.kickPriceCalculator = null;
+            this.isDoubleAttack = isDoubleAttack;
 
             this.price = price;
 
@@ -162,18 +203,18 @@ public abstract class FinalChoice {
                 mul /= 4;
             }
 //            if (whitePrediction.getSecondCollide() != null) price *= kickBallMul;
-            if (kickPriceCalculator != null && whitePrediction.getSecondCollide() != null) {
-                double dtFromCol = whitePrediction.whitePathLenBtw1st2ndCollision();
+            if (kickPriceCalculator != null && wp.getSecondCollide() != null) {
+                double dtFromCol = wp.whitePathLenBtw1st2ndCollision();
 //                System.out.println(dtFromCol);
-                priceOfKick = kickPriceCalculator.priceOfKick(whitePrediction.getSecondCollide(),
-                        whitePrediction.getWhiteSpeedWhenHitSecondBall(),
+                priceOfKick = kickPriceCalculator.priceOfKick(wp.getSecondCollide(),
+                        wp.getWhiteSpeedWhenHitSecondBall(),
                         dtFromCol,
-                        Algebra.unitVector(whitePrediction.getWhiteVelocityWhenHitSecondBall()));
+                        Algebra.unitVector(wp.getWhiteVelocityWhenHitSecondBall()));
 //                System.out.println("Kick price: " + priceOfKick);
                 price *= priceOfKick;
             }
 
-            if (whitePrediction.isWhiteHitsHoleArcs()) price *= AiCue.WHITE_HIT_CORNER_PENALTY;
+            if (wp.isWhiteHitsHoleArcs()) price *= AiCue.WHITE_HIT_CORNER_PENALTY;
 
             if (stage != GamePlayStage.NO_PRESSURE && firstChoice != null) {
                 // 正常情况下少走点库
@@ -200,7 +241,7 @@ public abstract class FinalChoice {
                 double acceptablePotProb = firstChoice.defaultRef.potProb - 0.2;
                 double tolerancePenalty = 1.0;
                 for (WhitePrediction tor : tolerances) {
-                    if (whitePrediction.getSecondCollide() != tor.getSecondCollide()) {
+                    if (wp.getSecondCollide() != tor.getSecondCollide()) {
                         tolerancePenalty *= 2.0;
                     }
 
@@ -231,21 +272,6 @@ public abstract class FinalChoice {
                 price /= penalty;
             }
         }
-
-        public WhitePrediction[] getTolerances() {
-            return tolerances;
-        }
-        
-        public List<double[]> getWhiteStopRange() {
-            if (tolerances == null) return List.of();
-            else {
-                List<double[]> result = new ArrayList<>();
-                for (WhitePrediction tor : tolerances) {
-                    result.add(tor.stopPoint());
-                }
-                return result;
-            }
-        }
     }
 
     public static class DefenseChoice extends FinalChoice implements Comparable<DefenseChoice> {
@@ -265,7 +291,6 @@ public abstract class FinalChoice {
         CueParams cueParams;
 
         CuePlayParams cuePlayParams;
-        WhitePrediction wp;
 //        AttackChoice opponentEasiestChoice;
 
         boolean whiteCollidesOther;
@@ -284,6 +309,8 @@ public abstract class FinalChoice {
                                 boolean whiteCollidesOther,
                                 boolean targetCollidesOther,
                                 boolean defensiveAttack) {
+            super(wp);
+            
             this.ball = ball;
 //            this.opponentAttackChance = opponentAttackChance;
             this.defenseResult = defenseResult;
@@ -294,7 +321,6 @@ public abstract class FinalChoice {
             this.cueDirectionUnitVector = cueDirectionUnitVector;
             this.cueParams = cueParams;
             this.cuePlayParams = cuePlayParams;
-            this.wp = wp;
 //            this.handSkill = handSkill;
 //            this.opponentEasiestChoice = opponentEasiestChoice;
 

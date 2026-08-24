@@ -43,7 +43,7 @@ public class App extends Application {
             new Font("sansserif", 12) :
             new Font(Font.getDefault().getName(), 12);
     public static final boolean PRINT_DEBUG = false;
-    private static final String CONFIG = "user" + File.separator + "config.cfg";
+    public static final String CONFIG = "user" + File.separator + "config.cfg";
     private static ResourceBundle strings;
     private static ResourceBundle achievementStrings;
 

@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 15000.0;
+    public static final double DEFAULT_AI_PRECISION = 11500.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private final CueParams cueParams;
     private final CueType cueType;
@@ -26,6 +26,7 @@ public class AiCueResult {
     private double unitX, unitY;
     private List<double[]> whitePath = new ArrayList<>();
     private List<double[]> whiteStopRange = new ArrayList<>();
+    private List<double[]> targetStopRange = new ArrayList<>();
     private double totalPsyFactor;
     private final FinalChoice choice;  // 供记录
 
@@ -121,6 +122,14 @@ public class AiCueResult {
         this.whiteStopRange = whiteStopRange;
     }
 
+    public List<double[]> getTargetStopRange() {
+        return targetStopRange;
+    }
+
+    public void setTargetStopRange(List<double[]> targetStopRange) {
+        this.targetStopRange = targetStopRange;
+    }
+
     private void applyRandomError(InGamePlayer igp, GamePlayStage gamePlayStage) {
         Random random = new Random();
         double rad = Algebra.thetaOf(unitX, unitY);
@@ -144,7 +153,7 @@ public class AiCueResult {
         // AI还不会传球
         double sd;
         if (cueType == CueType.ATTACK) {
-            sd = (105 - attackPrecision) / precisionFactor;  // 再歪也歪不了太多吧？
+            sd = (101 - attackPrecision) / precisionFactor;  // 再歪也歪不了太多吧？
             // 处理AI球员长台/大角度球的能力修正
             if (choice instanceof FinalChoice.IntegratedAttackChoice iac) {
                 double personLong = person.getLongPrecision();
@@ -174,15 +183,15 @@ public class AiCueResult {
             System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
         } else if (cueType == CueType.DOUBLE_POT) {
 //            sd = 0.000000000001;  // 测试用
-            sd = (105 - person.getAiPlayStyle().doubleAbility) / precisionFactor * 1.25;
+            sd = (101 - person.getAiPlayStyle().doubleAbility) / precisionFactor * 1.1;
         } else if (cueType == CueType.BREAK || gamePlayStage == GamePlayStage.BREAK) {
-            sd = (105 - Math.max(attackPrecision,
+            sd = (101 - Math.max(attackPrecision,
                     defensePrecision)) / precisionFactor;
         } else if (cueType == CueType.SOLVE) {
-            sd = (105 - person.getSolving()) / precisionFactor * 5.0;
+            sd = (101 - person.getSolving()) / precisionFactor * 5.0;
 //            System.out.println("Solving sd: " + sd);
         } else {
-            sd = (105 - defensePrecision) / precisionFactor;
+            sd = (101 - defensePrecision) / precisionFactor;
         }
         
         final double initSd = sd;

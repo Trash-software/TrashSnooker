@@ -451,7 +451,7 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
     
     public enum CueExtension {
         NO(1.0, false),
-        SHORT(0.92, false),
+        SHORT(0.93, false),
         SOCKET(0.875, true),
         SOCKET_DOUBLE(0.75, true) {
             @Override

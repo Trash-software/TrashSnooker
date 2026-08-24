@@ -56,10 +56,7 @@ public class AiPlayStyle {
         } else {
             likePwrRng = new double[]{15, 60};
         }
-        double doubleAbi = 75;
-        if (aiObject.has("doubleAbility")) {
-            doubleAbi = aiObject.getDouble("doubleAbility");
-        }
+        double doubleAbi = aiObject.optDouble("doubleAbility", 75);
         
         return new AiPlayStyle(
                 aiObject.getDouble("stable"),

@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.movement;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
@@ -10,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WhitePrediction {
-    public static final double TWICE_HIT_MINIMAL_GAP_MS = 5.0;
+    public static final double TWICE_HIT_MINIMAL_GAP_MS = 3.001;
     
     public final Ball cueBall;
     public final double whiteX;  // 初始的位置
     public final double whiteY;
     private final List<double[]> whitePath = new ArrayList<>();
+//    private final List<double[]> firstBallPath = new ArrayList<>();
+//    private double[] firstBallStopPos;
     private Ball firstCollide;
     // 目标球碰撞后的单位行进方向
     private double ballDirectionX;
@@ -38,7 +41,8 @@ public class WhitePrediction {
     private boolean firstBallWillPot;
     private Ball firstBallCollidesOther;
     private int firstBallCushionCount;
-    private double msWhenHitFirst;
+//    private double msWhenHitFirst;
+    private boolean hitWallAfterFirstCollide;  // 白球或目标球在撞击之后又碰了库。用于二次碰撞检测
     
     private boolean hitWallBeforeHitBall;
     private boolean cueBallWillPot;
@@ -48,6 +52,7 @@ public class WhitePrediction {
     private Ball whiteSecondCollide;
     
     private double whiteSpeedWhenHitFirstBall;
+    private double[] whitePosWhenHitSecondBall;
     private double[] whiteVelocityWhenHitSecondBall;
     private double whiteSpeedWhenHitSecondBall;
     private boolean whiteHitsHoleArcs = false;  // 是否碰撞了袋角
@@ -85,22 +90,43 @@ public class WhitePrediction {
         return whitePath;
     }
     
-    public double[] lastVector() {
-        if (whitePath.size() < 2) return new double[]{1, 1};
-        double[] last = whitePath.get(whitePath.size() - 1);
-        double[] secondLast = whitePath.get(whitePath.size() - 2);
-        
-        return new double[]{last[0] - secondLast[0], last[1] - secondLast[1]};
+//    public double[] lastVector() {
+//        if (whitePath.size() < 2) return new double[]{1, 1};
+//        double[] last = whitePath.get(whitePath.size() - 1);
+//        double[] secondLast = whitePath.get(whitePath.size() - 2);
+//        
+//        return new double[]{last[0] - secondLast[0], last[1] - secondLast[1]};
+//    }
+
+    public List<double[]> getFirstBallPath() {
+//        return firstBallPath;
+        return null;
     }
-    
+
     public double[] stopPoint() {
         if (whitePath.isEmpty()) return null;
-        return whitePath.get(whitePath.size() - 1); 
+        return whitePath.getLast(); 
     }
     
+    public double @Nullable [] getFirstBallStopPoint() {
+        return null;
+//        if (firstBallPath.isEmpty()) return null;
+//        return firstBallPath.getLast();
+    }
+
+//    public void setFirstBallStopPos(double[] firstBallStopPos) {
+//        if (this.firstBallStopPos == null) {
+//            this.firstBallStopPos = firstBallStopPos;
+//        }
+//    }
+    
+    public void addPointInFirstBallPath(double[] point) {
+//        firstBallPath.add(point);
+    }
+
     public void addPointInPath(double[] point) {
         if (!whitePath.isEmpty()) {
-            double[] lastPoint = whitePath.get(whitePath.size() - 1);
+            double[] lastPoint = whitePath.getLast();
             double dt = Algebra.distanceToPoint(point[0], point[1], lastPoint[0], lastPoint[1]);
             pathLength += dt;
             if (firstCollide == null) {
@@ -146,8 +172,7 @@ public class WhitePrediction {
                                 double whiteDirectionXBeforeCollision,
                                 double whiteDirectionYBeforeCollision,
                                 double whiteCollisionX, 
-                                double whiteCollisionY,
-                                double happenMs) {
+                                double whiteCollisionY) {
         this.firstCollide = firstCollide;
         this.whiteSpeedWhenHitFirstBall = whiteSpeedWhenHit;
         this.hitWallBeforeHitBall = hitWallBeforeHitBall;
@@ -162,7 +187,8 @@ public class WhitePrediction {
         this.whiteCollisionY = whiteCollisionY;
         this.firstBallX = firstCollide.getX();
         this.firstBallY = firstCollide.getY();
-        this.msWhenHitFirst = happenMs;
+//        this.msWhenHitFirst = happenMs;
+        this.hitWallAfterFirstCollide = false;
     }
 
     public void potCueBall() {
@@ -173,13 +199,18 @@ public class WhitePrediction {
         this.firstBallWillPot = true;
     }
     
-    public void setFirstBallCollidesOther(Ball firstBallCollision, double happenMs) {
+    public void setFirstBallCollidesOther(Ball firstBallCollision) {
         this.firstBallCollidesOther = firstBallCollision;
         if (firstBallCollision.isWhite() 
                 && whiteSecondCollide == null 
-                && happenMs - msWhenHitFirst >= TWICE_HIT_MINIMAL_GAP_MS) {
+//                && happenMs - msWhenHitFirst >= TWICE_HIT_MINIMAL_GAP_MS
+                && hitWallAfterFirstCollide
+        ) {
             // 又撞一下白球
             whiteSecondCollide = firstCollide;
+            whitePosWhenHitSecondBall = firstBallCollision.getPositionArray();
+            whiteVelocityWhenHitSecondBall = firstBallCollision.getVelocityArray();
+            whiteSpeedWhenHitSecondBall = Math.hypot(whiteVelocityWhenHitSecondBall[0], whiteVelocityWhenHitSecondBall[1]);
         }
     }
 
@@ -191,13 +222,13 @@ public class WhitePrediction {
         return firstBallCollidesOther;
     }
 
-    public double getMsWhenHitFirst() {
-        return msWhenHitFirst;
-    }
-    
-    public double gapMsFromFirstCollide(double nowMs) {
-        return nowMs - msWhenHitFirst;
-    }
+//    public double getMsWhenHitFirst() {
+//        return msWhenHitFirst;
+//    }
+//    
+//    public double gapMsFromFirstCollide(double nowMs) {
+//        return nowMs - msWhenHitFirst;
+//    }
 
     public boolean willCueBallPot() {
         return cueBallWillPot;
@@ -242,25 +273,35 @@ public class WhitePrediction {
             whiteCushionCountBefore++;
         } else {
             whiteCushionCountAfter++;
+            hitWallAfterFirstCollide = true;
         }
     }
     
     public void firstBallHitCushion() {
         firstBallCushionCount++;
+        hitWallAfterFirstCollide = true;
     }
 
     /**
      * 白球撞上第二颗球时的速度，如果有的话。单位mm/s
      */
     public void setSecondCollide(Ball secondCollide,
-                                 double[] whiteVelocityWhenCollision,
-                                 double happenMs) {
-        if (happenMs - msWhenHitFirst < TWICE_HIT_MINIMAL_GAP_MS) return;
+                                 double[] whitePosWhenHitSecondBall,
+                                 double[] whiteVelocityWhenCollision) {
+//        if (happenMs - msWhenHitFirst < TWICE_HIT_MINIMAL_GAP_MS) return;
+        // 在没再碰库的情况下，白球不可能和第一颗球二次碰撞
+        if (secondCollide.equals(firstCollide) && !hitWallAfterFirstCollide) return;
+        
         this.whiteSecondCollide = secondCollide;
+        this.whitePosWhenHitSecondBall = whitePosWhenHitSecondBall;
         this.whiteVelocityWhenHitSecondBall = whiteVelocityWhenCollision;
         this.whiteSpeedWhenHitSecondBall = Math.hypot(whiteVelocityWhenCollision[0], whiteVelocityWhenCollision[1]);
     }
-    
+
+    public double[] getWhitePosWhenHitSecondBall() {
+        return whitePosWhenHitSecondBall;
+    }
+
     public double whitePathLenBtw1st2ndCollision() {
         return whiteSecondCollide == null ? 
                 0 : 

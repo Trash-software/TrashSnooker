@@ -80,6 +80,7 @@ import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.enums.TrajectoryHide;
 import trashsoftware.trashSnooker.enums.TrajectoryMode;
+import trashsoftware.trashSnooker.fxml.alert.Alert;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.drawing.*;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
@@ -785,6 +786,7 @@ public class GameView implements Initializable {
         } else {
             handSelectionToggleGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
                 if (game == null || game.getGame() == null) return;
+                if (!game.getGame().getCuingIgp().isHuman()) return;
                 PlayerHand.Hand selected = PlayerHand.Hand.valueOf(String.valueOf(t1.getUserData()));
                 PlayerHand.CueHand cueHand = handCueHandMap.get(selected);
                 PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
@@ -800,14 +802,34 @@ public class GameView implements Initializable {
         }
     }
 
-    private void updateHandSelectionToggleByData(PlayerHand.Hand hand) {
-        Toggle toggle = switch (hand) {
+    private void updateHandSelectionToggleByData(PlayerHand.CueHand cueHand) {
+        RadioButton toggle = switch (cueHand.hand) {
             case LEFT -> handSelectionLeft;
             case RIGHT -> handSelectionRight;
             default -> handSelectionRest;
         };
 
         handSelectionToggleGroup.selectToggle(toggle);
+        updateHandButtonText(toggle, cueHand);
+    }
+    
+    private void resetHandNames() {
+        handSelectionLeft.setText(PlayerHand.Hand.LEFT.shownName(strings));
+        handSelectionRight.setText(PlayerHand.Hand.RIGHT.shownName(strings));
+        handSelectionRest.setText(PlayerHand.Hand.REST.shownName(strings));
+    }
+    
+    private void updateHandButtonText(RadioButton radioButton,
+                                      PlayerHand.CueHand cueHand) {
+        String text;
+        if (cueHand.extension == PlayerHand.CueExtension.NO) {
+            text = cueHand.hand.shownName(strings);
+        } else {
+            text = String.format("%s (%s)",
+                    cueHand.hand.shownName(strings),
+                    cueHand.extension.getReadable(strings));
+        }
+        radioButton.setText(text);
     }
 
     private void updateHandButton(RadioButton radioButton,
@@ -815,15 +837,7 @@ public class GameView implements Initializable {
                                   List<PlayerHand.CueHand> playAbles) {
         for (PlayerHand.CueHand cueHand : playAbles) {
             if (cueHand.hand == thisHand) {
-                String text;
-                if (cueHand.extension == PlayerHand.CueExtension.NO) {
-                    text = cueHand.hand.shownName(strings);
-                } else {
-                    text = String.format("%s (%s)",
-                            cueHand.hand.shownName(strings),
-                            cueHand.extension.getReadable(strings));
-                }
-                radioButton.setText(text);
+                updateHandButtonText(radioButton, cueHand);
                 radioButton.setDisable(false);
                 handCueHandMap.put(thisHand, cueHand);
                 return;
@@ -835,7 +849,9 @@ public class GameView implements Initializable {
     private void updateHandSelection(boolean forceChangeHand) {
         Ball cueBall = game.getGame().getCueBall();
         InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
-        if (igp.getPlayerType() == PlayerType.COMPUTER) return;
+        if (igp.getPlayerType() == PlayerType.COMPUTER) {
+            return;
+        }
         PlayerPerson playingPerson = igp.getPlayerPerson();
 
         List<PlayerHand.CueHand> playAbles = HandBody.getPlayableHands(
@@ -1496,6 +1512,7 @@ public class GameView implements Initializable {
 
         updatePlayStage();
         enableDisabledUi();
+        resetHandNames();
         recalculateUiRestrictions();
 
         tableGraphicsChanged = true;
@@ -1562,6 +1579,13 @@ public class GameView implements Initializable {
         tableGraphicsChanged = true;
 
         AchManager.getInstance().showAchievementPopup();
+
+        if (autoStartNextFrame()) {
+            Platform.runLater(() -> {
+                oneFrame();
+                cueButton.fire();
+            });
+        }
     }
 
     private void endFrame() {
@@ -1661,7 +1685,7 @@ public class GameView implements Initializable {
                             null);
                 } else {
                     AchManager.getInstance().showAchievementPopup();
-                    AlertShower.askConfirmation(
+                    Alert confirmAlert = AlertShower.askConfirmation(
                             stage,
                             strings.getString("ifStartNextFrameContent"),
                             strings.getString("ifStartNextFrame"),
@@ -1676,11 +1700,23 @@ public class GameView implements Initializable {
                                     game.generalSave();
                                 }
                                 stage.hide();
-                            }
+                            },
+                            false
                     );
+                    if (autoStartNextFrame()) {
+                        AlertShower.setAutoClose(3000, confirmAlert);
+                    }
                 }
             });
         }
+    }
+
+    private boolean autoStartNextFrame() {
+        if (game != null && !game.getPlayer1().isHuman() && !game.getPlayer2().isHuman() && aiAutoPlay) {
+            // AI vs AI
+            return ConfigLoader.getInstance().getBoolean(ConfigLoader.KEY_AI_AUTO_NEXT_FRAME, false);
+        }
+        return false;
     }
 
     private GameHolder getActiveHolder() {
@@ -2255,7 +2291,8 @@ public class GameView implements Initializable {
                 strings.getString("opponentReBreak"),
                 true,
                 () -> performReBreak(subject),
-                () -> performReBreak(game.getGame().getAnotherIgp(subject)));
+                () -> performReBreak(game.getGame().getAnotherIgp(subject)),
+                true);
     }
 
     @FXML
@@ -2433,7 +2470,8 @@ public class GameView implements Initializable {
                 strings.getString("confirm"),
                 strings.getString("cancel"),
                 this::repair,
-                null
+                null,
+                true
         );
     }
 
@@ -2778,7 +2816,8 @@ public class GameView implements Initializable {
                                 tableGraphicsChanged = true;
                             },
                             null,
-                            container
+                            container,
+                            true
                     );
                     return;
                 } else {
@@ -3033,9 +3072,9 @@ public class GameView implements Initializable {
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
             if (success) {
-                System.out.println("AI Pot success!");
+                System.out.println("AI Pot success! pure: " + iac.isPureAttack + ", double: " + iac.isDoubleAttack);
             } else {
-                System.out.println("AI Pot failed!");
+                System.out.println("AI Pot failed! pure: " + iac.isPureAttack + ", double: " + iac.isDoubleAttack);
             }
             lastPotAttempt = currentAttempt;
             curDefAttempt = null;
@@ -3261,7 +3300,8 @@ public class GameView implements Initializable {
                                 () -> aiReallyPlay(player, cueResult, aiHelpPlayerPlaying),
                                 () -> aiCue(player, aiHasRightToReposition, true),
                                 this::quitAiHelpPlay,
-                                null
+                                null,
+                                true
                         ));
                         return;
                     }
@@ -3296,7 +3336,7 @@ public class GameView implements Initializable {
             cursorDirectionUnitY = cueResult.getUnitY();
             System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
             currentHand = cueResult.getCuePlayerHand();
-            updateHandSelectionToggleByData(currentHand.playerHand.hand);
+            updateHandSelectionToggleByData(currentHand.toCueHand());
             updatePowerSlider(player.getInGamePlayer(), cueResult.getCuePlayerHand());
             powerSlider.setValue(cueResult.getCueParams().selectedPower());
             cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
@@ -3793,7 +3833,8 @@ public class GameView implements Initializable {
                 Platform.runLater(() -> AlertShower.showInfo(
                         stage,
                         strings.getString("physicalCongestion"),
-                        strings.getString("bugged")
+                        strings.getString("bugged"),
+                        3000
                 ));
             }
 
@@ -4598,6 +4639,15 @@ public class GameView implements Initializable {
                         4
                 );
             }
+
+            if (center.getSecondCollide() != null) {
+                double[] whitePosSecondCol = center.getWhitePosWhenHitSecondBall();
+                gamePane.getLineGraphics().strokeOval(
+                        gamePane.canvasX(whitePosSecondCol[0]) - ballRadius,
+                        gamePane.canvasY(whitePosSecondCol[1]) - ballRadius,
+                        ballDiameter,
+                        ballDiameter);  // 绘制预测撞击点的白球
+            }
         }
     }
 
@@ -4632,7 +4682,8 @@ public class GameView implements Initializable {
             if (shadowInspection != null) {
                 drawShadowInspection();
             }
-            if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath, aiWhiteStopRange);
+            if (drawAiPathItem.isSelected())
+                gamePane.drawPredictedWhitePath(aiWhitePath, aiWhiteStopRange);
             if (predictPlayerPathItem.isSelected())
                 gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath, null);
         }
@@ -4817,7 +4868,7 @@ public class GameView implements Initializable {
                     getCuingCue(),
                     false);
         } else {
-//            System.out.println("Drawing!");
+//            System.out.println("Drawing! " + currentHand);
             if (currentHand != null && currentHand.playerHand.hand == PlayerHand.Hand.REST) {
 //                if (cueAnimationPlayer.restCuePointing == null) {
 //                    System.err.println("RPNull");

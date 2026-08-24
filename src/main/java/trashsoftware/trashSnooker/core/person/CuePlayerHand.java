@@ -60,4 +60,13 @@ public class CuePlayerHand {
     public double getErrorMultiplierOfPower(double origSelPower) {
         return playerHand.getErrorMultiplierOfPower(origSelPower / extension.factor);
     }
+
+    @Override
+    public String toString() {
+        return "CuePlayerHand{" +
+                "playerHand=" + playerHand +
+                ", cueBrand=" + cueBrand +
+                ", extension=" + extension +
+                '}';
+    }
 }

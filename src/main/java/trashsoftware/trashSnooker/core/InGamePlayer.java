@@ -187,12 +187,13 @@ public class InGamePlayer {
     
     private static double stagePsyEffect(GamePlayStage playStage) {
         return switch (playStage) {
-            case BREAK -> 0.2;
+            case BREAK -> 0.5;
             case NORMAL -> 1.0;
             case ENHANCE_WIN -> 1.8;
             case OTHER_KEY_BALL -> 2.0;
             case NEXT_BALL_WIN -> 2.5;
             case THIS_BALL_WIN -> 3.5;
+            case WON_BUT_HAS_TARGET -> 0.25;
             case NO_PRESSURE -> 0.1;
         };
     }

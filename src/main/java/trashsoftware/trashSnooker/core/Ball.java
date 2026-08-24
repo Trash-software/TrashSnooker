@@ -923,14 +923,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         clearBounceDesiredLeavePos();
         ball.clearBounceDesiredLeavePos();
 
-        if (!phy.isPrediction) {
+//        if (!phy.isPrediction) {
             // AI考虑进攻时并不会clone目标球
             // 因此我们不希望AI在模拟时触发任何移动目标球的行为
             this.x = x1;
             this.y = y1;
             ball.x = x2;
             ball.y = y2;
-        }
+//        }
 
         // fixme: 固定开球，目前有bug不能用
 //        if (game != null && !phy.isPrediction && game.ballHeapIntact &&
@@ -1149,11 +1149,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //                && justHit != ball && ball.justHit != this
         ) {
 
-            twoMovingBallsHitCore(ball, phy);
+            return twoMovingBallsHitCore(ball, phy);
 
 //            justHit = ball;
 //            ball.justHit = this;
-            return true;
         }
         return false;
     }
