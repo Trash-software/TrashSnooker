@@ -63,7 +63,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
                 unitXY[1],
                 cueParams
         );
-        return new FinalChoice.DefenseChoice(unitXY, cueParams, cpp);
+        return new FinalChoice.DefenseChoice(cueBall.getPositionArray(), unitXY, cueParams, cpp);
     }
 
     @Override

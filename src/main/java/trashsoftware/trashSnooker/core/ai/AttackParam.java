@@ -1,7 +1,10 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
-import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.Algebra;
+import trashsoftware.trashSnooker.core.CueParams;
+import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -58,7 +61,7 @@ public class AttackParam {
             moveT = 10.0;
         }
 //            double whiteT = gameValues.estimateMoveTime(phy, )
-        double pathChange = moveT * (phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR + 
+        double pathChange = moveT * (phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR +
                 phy.cloth.goodness.fixedErrorFactor * TableCloth.FIXED_ERROR_FACTOR);  // 变线
 //            System.out.println("Path change " + pathChange);  
 
@@ -82,14 +85,15 @@ public class AttackParam {
         double tarDevHoleSdMm = Math.tan(tarDevSdRad) * attackChoice.targetHoleDistance;
 
         // 角度球的瞄准难度：从白球处看目标球和袋，在视线背景上的投影距离
-        double targetAimingOffset =
-                Math.cos(Math.PI / 2 - attackChoice.angleRad) * attackChoice.targetHoleDistance;
+        double targetAimingOffset = targetAimingOffset(attackChoice.angleRad, attackChoice.targetHoleDistance);
 
         double allowedDev;
         NormalDistribution nd;
         if (attackChoice instanceof AttackChoice.DirectAttackChoice dac) {
             // 举个例子，瞄准为90的AI，白球在右顶袋打蓝球右底袋时，offset差不多1770，下面这个值在53毫米左右
-            double targetDifficultyMm = targetAimingOffset * (105 - playerPerson.getPrecisionPercentage()) / 500;
+            double targetDifficultyMm = targetDifficultyMmByAiming(targetAimingOffset, 
+                    playerPerson.getPrecisionPercentage(), 
+                    playerPerson.getAnglePrecision());
 
             tarDevHoleSdMm += targetDifficultyMm;
 
@@ -104,7 +108,7 @@ public class AttackParam {
         } else if (attackChoice instanceof AttackChoice.DoubleAttackChoice doubleAc) {
             // 稍微给高点
             // 除数越大，AI越倾向打翻袋
-            double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 180;
+            double targetDifficultyMm = targetDifficultyMmOfDoubleByAiming(targetAimingOffset, aps.doubleAbility);
 
             tarDevHoleSdMm += targetDifficultyMm;
 
@@ -127,12 +131,12 @@ public class AttackParam {
         potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
 //        if (potProb < 0) potProb = 0.0;  // 虽然我不知道为什么prob会是负的
         if (Double.isNaN(potProb)) {
-            System.err.println("Pot prob is NaN. Allowed Dev is " + allowedDev + 
+            System.err.println("Pot prob is NaN. Allowed Dev is " + allowedDev +
                     ", std: " + nd.getStandardDeviation() +
-                    ", tarDevHoleSdMm: " + tarDevHoleSdMm + 
+                    ", tarDevHoleSdMm: " + tarDevHoleSdMm +
                     ", tarDevSdRad: " + tarDevSdRad +
                     ", sdCollisionMm: " + sdCollisionMm +
-                    ", devs: " + Arrays.toString(devs) + 
+                    ", devs: " + Arrays.toString(devs) +
                     ", moveT: " + moveT
             );
             potProb = 0.0;
@@ -151,6 +155,23 @@ public class AttackParam {
 
     protected AttackParam copyWithCorrectedChoice(AttackChoice corrected) {
         return new AttackParam(this, corrected);
+    }
+
+    public static double targetAimingOffset(double angleRad, double targetDestinationDt) {
+        return Math.cos(Math.PI / 2 - angleRad) * targetDestinationDt;
+    }
+
+    public static double targetDifficultyMmByAiming(double targetAimingOffset,
+                                                    double playerPrecision,
+                                                    double playerAngleGoodness) {
+        // 举个例子，瞄准为90的AI，白球在右顶袋打蓝球右底袋时，offset差不多1770，下面这个值在49毫米左右
+        return targetAimingOffset * (105 - playerPrecision) / 500 / playerAngleGoodness;
+    }
+    
+    public static double targetDifficultyMmOfDoubleByAiming(double targetAimingOffset, double doubleAbility) {
+        // 稍微给高点
+        // 除数越大，AI越倾向打翻袋
+        return targetAimingOffset * (105 - doubleAbility) / 180;
     }
 
     public double getPotProb() {

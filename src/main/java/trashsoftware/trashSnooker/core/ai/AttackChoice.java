@@ -187,6 +187,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                                                       boolean isPositioning) {
             double collisionPointX = aiming.collisionPos()[0];
             double collisionPointY = aiming.collisionPos()[1];
+            double[] collisionPos = new double[]{collisionPointX, collisionPointY};
             double cueDirX = collisionPointX - whitePos[0];
             double cueDirY = collisionPointY - whitePos[1];
             double[] cueDirUnit = Algebra.unitVector(cueDirX, cueDirY);
@@ -210,8 +211,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                     attackingPlayer.getPlayerPerson(),
                     attackingPlayer.getInGamePlayer().getCueSelection().getSelected().brand
             );
-
-            double[] collisionPos = new double[]{collisionPointX, collisionPointY};
+            
             double[] whiteToColl =
                     new double[]{collisionPointX - whitePos[0], collisionPointY - whitePos[1]};
             double[] ballToFirstCushion = new double[]{

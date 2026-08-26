@@ -3,18 +3,18 @@
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.95,
-    "person": "Kid",
+    "psyStatus": 1,
+    "person": "Neil Robertson",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 1,
-    "person": "custom_player_3",
+    "psyStatus": 0.95,
+    "person": "Mou Moumou",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
@@ -31,9 +31,9 @@
       "holeSizeOrdinal": 2
     }
   },
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
-  "startTime": 1787608413084,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
+  "startTime": 1787708545664,
   "p1BreakLoseChance": 0,
   "totalFrames": 1,
   "cloth": {

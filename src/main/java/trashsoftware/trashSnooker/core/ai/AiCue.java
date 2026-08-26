@@ -583,7 +583,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     game,
                     bestDefense.attackParam,
                     nextTarget,
-                    bestDefense.result.cuePlayParams,
+                    bestDefense.result.params,
+                    bestDefense.result.wp,
                     phy,
                     stage,
                     bestDefense.result.price,
@@ -617,6 +618,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 attackChoice.cueDirectionUnitVector[1],
                 attackParam.cueParams,
                 iac,
+                game.getGameValues(),
                 game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()));
         List<double[]> whitePath;
         if (iac.wp != null) {
@@ -656,6 +658,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 choice.cueDirectionUnitVector[1],
                 choice.cueParams,
                 choice,
+                game.getGameValues(),
                 game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()));
         acr.setWhitePath(choice.wp != null ? choice.wp.getWhitePath() : null);
         acr.setWhiteStopRange(choice.getWhiteStopRange());
@@ -676,57 +679,61 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     }
 
     protected AiCueResult regularCueDecision(Phy phy) {
-        if (game.isBreaking()) {
-            FinalChoice.DefenseChoice breakChoice = breakCue(phy);
-            System.out.println("AI break: " + breakChoice);
-            if (breakChoice != null) return makeDefenseCue(breakChoice, CueType.BREAK);
-        }
+        try {
+            if (game.isBreaking()) {
+                FinalChoice.DefenseChoice breakChoice = breakCue(phy);
+                System.out.println("AI break: " + breakChoice);
+                if (breakChoice != null) return makeDefenseCue(breakChoice, CueType.BREAK);
+            }
 
-        if (!aiOnlyDefense) {
-            FinalChoice.IntegratedAttackChoice attackChoice = standardAttack(phy, mustAttack());
-            if (attackChoice != null) {
-                System.out.println("AI attack");
-                return makeAttackCue(attackChoice);
+            if (!aiOnlyDefense) {
+                FinalChoice.IntegratedAttackChoice attackChoice = standardAttack(phy, mustAttack());
+                if (attackChoice != null) {
+                    System.out.println("AI attack");
+                    return makeAttackCue(attackChoice);
+                }
             }
-        }
-        FinalChoice.DefenseChoice stdDefense = standardDefense();
-        if (stdDefense != null) {
-            System.out.println("AI standard defense");
-            return makeDefenseCue(stdDefense, CueType.DEFENSE);
-        }
-        FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
-        if (defenseChoice != null) {
-            if (defenseChoice.defensiveAttack) {
-                System.out.println("AI defensive attack");
-            } else {
-                System.out.println("AI defense");
+            FinalChoice.DefenseChoice stdDefense = standardDefense();
+            if (stdDefense != null) {
+                System.out.println("AI standard defense");
+                return makeDefenseCue(stdDefense, CueType.DEFENSE);
             }
-            System.out.println(defenseChoice);
+            FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
+            if (defenseChoice != null) {
+                if (defenseChoice.defensiveAttack) {
+                    System.out.println("AI defensive attack");
+                } else {
+                    System.out.println("AI defense");
+                }
+                System.out.println(defenseChoice);
 //            System.out.printf("Best defense choice: %f %f %f %f %f\n", 
 //                    defenseChoice.price, defenseChoice.snookerPrice, defenseChoice.opponentAttackPrice,
 //                    defenseChoice.penalty, defenseChoice.tolerancePenalty);
-            if (!aiOnlyDefense &&
-                    defenseChoice.opponentCanPureAttack(game.getAnotherPlayer(aiPlayer).getPlayerPerson())) {
-                System.out.println("Defense not good, try last resort");
-                FinalChoice.IntegratedAttackChoice iac = tryLastResortAttack(phy);
-                if (iac != null) {
-                    return makeAttackCue(iac);
+                if (!aiOnlyDefense &&
+                        defenseChoice.opponentCanPureAttack(game.getAnotherPlayer(aiPlayer).getPlayerPerson())) {
+                    System.out.println("Defense not good, try last resort");
+                    FinalChoice.IntegratedAttackChoice iac = tryLastResortAttack(phy);
+                    if (iac != null) {
+                        return makeAttackCue(iac);
+                    }
                 }
+                return makeDefenseCue(defenseChoice, CueType.DEFENSE);
             }
-            return makeDefenseCue(defenseChoice, CueType.DEFENSE);
-        }
 
-        FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, needConsiderResultOfSolving(), false);
-        if (solveSnooker != null) {
-            System.out.println("AI solve snooker");
-            System.out.println(solveSnooker);
-            return makeDefenseCue(solveSnooker, CueType.SOLVE);
-        }
-        FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, false, true);  // 只能说是逼急了，来个袋角解斯诺克
-        System.out.println("Cannot solve snooker! Try pocket arc!");
-        if (solveSnooker2 != null) {
-            System.out.println("AI solve snooker by pocket arc");
-            return makeDefenseCue(solveSnooker2, CueType.SOLVE);
+            FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, needConsiderResultOfSolving(), false);
+            if (solveSnooker != null) {
+                System.out.println("AI solve snooker");
+                System.out.println(solveSnooker);
+                return makeDefenseCue(solveSnooker, CueType.SOLVE);
+            }
+            FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, false, true);  // 只能说是逼急了，来个袋角解斯诺克
+            System.out.println("Cannot solve snooker! Try pocket arc!");
+            if (solveSnooker2 != null) {
+                System.out.println("AI solve snooker by pocket arc");
+                return makeDefenseCue(solveSnooker2, CueType.SOLVE);
+            }
+        } catch (RuntimeException e) {
+            EventLogger.error(e);
         }
         System.out.println("Ai random angry cue");
         return randomAngryCue();
@@ -869,6 +876,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 directionVec[1],
                 cueParams,
                 null,
+                game.getGameValues(),
                 game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber())
         );
     }

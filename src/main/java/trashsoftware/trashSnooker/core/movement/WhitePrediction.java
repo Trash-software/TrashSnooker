@@ -35,6 +35,11 @@ public class WhitePrediction {
     private double whiteCollisionY;
     private int whiteCushionCountBefore;  // 碰第一颗球之前的库数
     private int whiteCushionCountAfter;  // 碰第一颗球之后的库数
+    
+    // 第一次碰库时的位置，都是大致位置，不完全精确
+    private double[] whiteFirstCushionPos;
+//    private double[] firstBallFirstCushionPos;
+    
     // 第一颗碰到的球的初始位置
     private double firstBallX;
     private double firstBallY;
@@ -243,7 +248,7 @@ public class WhitePrediction {
 //    }
 
     public boolean isCueBallFirstBallTwiceColl() {
-         return firstCollide.equals(whiteSecondCollide);
+         return firstCollide != null && firstCollide.equals(whiteSecondCollide);
 //        return false;
 //        return cueBallFirstBallTwiceColl;
     }
@@ -274,6 +279,14 @@ public class WhitePrediction {
         } else {
             whiteCushionCountAfter++;
             hitWallAfterFirstCollide = true;
+        }
+        
+        if (whiteFirstCushionPos == null) {
+            if (whitePath.isEmpty()) {
+                whiteFirstCushionPos = new double[]{whiteX, whiteY};
+            } else {
+                whiteFirstCushionPos = whitePath.getLast();
+            }
         }
     }
     
@@ -375,4 +388,12 @@ public class WhitePrediction {
     public double getWhiteCollisionY() {
         return whiteCollisionY;
     }
+
+    public double[] getWhiteFirstCushionPos() {
+        return whiteFirstCushionPos;
+    }
+
+//    public double[] getFirstBallFirstCushionPos() {
+//        return firstBallFirstCushionPos;
+//    }
 }

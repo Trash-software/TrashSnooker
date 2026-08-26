@@ -286,7 +286,7 @@ public class Analyzer {
             boolean considerPostEffect,
             boolean isDefensiveAttack
     ) {
-
+        double[] whiteOrigPos = copy.getCueBall().getPositionArray();
         WhitePrediction wp = copy.predictWhite(cpp,
                 phy,
                 STD_LENGTH_AFTER_WALL,
@@ -443,6 +443,7 @@ public class Analyzer {
                     defenseResult,
                     penalty,
                     stabilityScore,
+                    whiteOrigPos,
                     unitXY,
                     cueParams,
                     wp,
@@ -529,10 +530,10 @@ public class Analyzer {
         double aimingSd;
         if (isAttack) {
             aimingSd = (105 - playerPerson.getPrecisionPercentage()) * handSdMul /
-                    AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
+                    AiCueResult.AI_PRECISION_MULTIPLIER;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
         } else {
             aimingSd = (105 - aps.defense) * handSdMul /
-                    AiCueResult.DEFAULT_AI_PRECISION;
+                    AiCueResult.AI_PRECISION_MULTIPLIER;
         }
 
         if (cueParams.getCueAngleDeg() > 5.0) {

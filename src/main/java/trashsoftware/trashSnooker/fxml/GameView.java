@@ -3266,6 +3266,7 @@ public class GameView implements Initializable {
                 return;
             }
             final AiCueResult cueResult = cueResult0;
+            // todo这里
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
 //            System.out.println(cueResult);
             if (cueResult == null) {

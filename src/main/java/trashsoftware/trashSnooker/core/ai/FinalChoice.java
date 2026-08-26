@@ -15,10 +15,12 @@ import java.util.List;
 public abstract class FinalChoice {
 
     final WhitePrediction wp;
+    final CuePlayParams params;
     WhitePrediction[] tolerances;
     
-    FinalChoice(WhitePrediction wp) {
+    FinalChoice(WhitePrediction wp, CuePlayParams params) {
         this.wp = wp;
+        this.params = params;
     }
 
     public WhitePrediction[] getTolerances() {
@@ -50,6 +52,16 @@ public abstract class FinalChoice {
         }
     }
 
+    /**
+     * 返回白球击打的假想球的位置
+     * <p>
+     * 对于直接和翻袋进攻，就是下球点
+     * 对于防守，也是白球的碰撞点
+     * 对于解球，就是第一库点
+     * 对于暴力开球，就是白球线上的任意一点
+     */
+    public abstract double[] getAimedPos();
+
     public static class IntegratedAttackChoice extends FinalChoice implements Comparable<IntegratedAttackChoice> {
 
         public final boolean isPureAttack;
@@ -62,7 +74,6 @@ public abstract class FinalChoice {
         final Phy phy;
         protected double price;
         int nextStepTarget;
-        CuePlayParams params;
         double priceOfKick = 0.0;
 
         // debug用的
@@ -81,7 +92,7 @@ public abstract class FinalChoice {
                 AiCue.KickPriceCalculator kickPriceCalculator,
                 boolean isDoubleAttack
         ) {
-            super(wp);
+            super(wp, params);
             
             this.game = game;
             this.attackParams = attackParams;
@@ -89,7 +100,6 @@ public abstract class FinalChoice {
             this.nextStepTarget = nextStepTarget;
             this.phy = phy;
             this.stage = stage;
-            this.params = params;
             this.kickPriceCalculator = kickPriceCalculator;
             isPureAttack = true;
             this.isDoubleAttack = isDoubleAttack;
@@ -104,16 +114,16 @@ public abstract class FinalChoice {
                                          AttackParam attackParams,
                                          int nextStepTarget,
                                          CuePlayParams params,
+                                         WhitePrediction wp,
                                          Phy phy,
                                          GamePlayStage stage,
                                          double price,
                                          boolean isDoubleAttack) {
-            super(null);  // fixme: 可以有
+            super(wp, params);
             
             this.game = game;
             this.attackParams = attackParams;
             this.nextStepAttackChoices = new ArrayList<>();
-            this.params = params;
             this.nextStepTarget = nextStepTarget;
             this.phy = phy;
             this.stage = stage;
@@ -128,6 +138,17 @@ public abstract class FinalChoice {
         @Override
         public int compareTo(@NotNull FinalChoice.IntegratedAttackChoice o) {
             return normalCompareTo(o);
+        }
+
+        @Override
+        public double[] getAimedPos() {
+            if (attackParams.attackChoice instanceof AttackChoice.DirectAttackChoice dac) {
+                return dac.collisionPos;
+            } else if (attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice dou) {
+                return dou.collisionPos;  // 这是对的，就是这么设计的
+            } else {
+                throw new RuntimeException("IAC has weird attack choice: " + attackParams.attackChoice);
+            }
         }
 
         public AttackParam getAttackParams() {
@@ -278,7 +299,7 @@ public abstract class FinalChoice {
 
         final double penalty;
         final double stabilityScore;
-        protected PlayerHand handSkill;
+//        protected PlayerHand handSkill;
         protected Ball ball;
         //        protected double snookerScore;
 //        protected double opponentAttackChance;
@@ -286,11 +307,12 @@ public abstract class FinalChoice {
         protected DefenseResult defenseResult;
         //        protected double opponentAvailPrice;
         protected double price;  // price还是越大越好
+        protected double[] whiteOrigPos;
         protected double[] cueDirectionUnitVector;  // selected
 
         CueParams cueParams;
 
-        CuePlayParams cuePlayParams;
+//        CuePlayParams cuePlayParams;
 //        AttackChoice opponentEasiestChoice;
 
         boolean whiteCollidesOther;
@@ -302,6 +324,7 @@ public abstract class FinalChoice {
                                 @Nullable DefenseResult defenseResult,
                                 double penalty,
                                 double stabilityScore,
+                                double[] whiteOrigPos,
                                 double[] cueDirectionUnitVector,
                                 CueParams cueParams,
                                 WhitePrediction wp,
@@ -309,7 +332,7 @@ public abstract class FinalChoice {
                                 boolean whiteCollidesOther,
                                 boolean targetCollidesOther,
                                 boolean defensiveAttack) {
-            super(wp);
+            super(wp, cuePlayParams);
             
             this.ball = ball;
 //            this.opponentAttackChance = opponentAttackChance;
@@ -318,9 +341,9 @@ public abstract class FinalChoice {
             this.stabilityScore = stabilityScore;
 
 //            this.collideOtherBall = collideOtherBall;
+            this.whiteOrigPos = whiteOrigPos;
             this.cueDirectionUnitVector = cueDirectionUnitVector;
             this.cueParams = cueParams;
-            this.cuePlayParams = cuePlayParams;
 //            this.handSkill = handSkill;
 //            this.opponentEasiestChoice = opponentEasiestChoice;
 
@@ -334,7 +357,8 @@ public abstract class FinalChoice {
         /**
          * 暴力开球用的
          */
-        protected DefenseChoice(double[] cueDirectionUnitVector,
+        protected DefenseChoice(double[] whiteOrigPos,
+                                double[] cueDirectionUnitVector,
                                 CueParams cueParams,
                                 CuePlayParams cuePlayParams) {
             this(null,
@@ -342,6 +366,7 @@ public abstract class FinalChoice {
                     new DefenseResult(0, new ArrayList<>(), false),
                     1.0,
                     1.0,
+                    whiteOrigPos,
                     cueDirectionUnitVector,
                     cueParams,
                     null,
@@ -349,6 +374,25 @@ public abstract class FinalChoice {
                     true,
                     true,
                     false);
+        }
+
+        @Override
+        public double[] getAimedPos() {
+            if (defenseResult == null || wp == null) {
+                // 瞎抡一杆或是暴力开球
+                return new double[]{whiteOrigPos[0] + cueDirectionUnitVector[0] * 500, 
+                        whiteOrigPos[1] + cueDirectionUnitVector[1] * 500};
+            } else if (defenseResult.isSolving) {
+                double[] cushionPos = wp.getWhiteFirstCushionPos();
+                if (cushionPos == null) {
+                    System.err.println("Solving should have a non-null cushion pos");
+                    return new double[]{whiteOrigPos[0] + cueDirectionUnitVector[0] * 75,
+                            whiteOrigPos[1] + cueDirectionUnitVector[1] * 75};
+                }
+                return cushionPos;
+            } else {
+                return new double[]{wp.getWhiteCollisionX(), wp.getWhiteCollisionY()};
+            }
         }
 
         private void generatePrice(double nativePrice) {

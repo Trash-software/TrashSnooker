@@ -770,6 +770,7 @@ public class MatchRecord extends RecordTree {
 
         Scene scene = new Scene(gpv);
         window.setScene(scene);
+//        window.setY(50);
 
         window.showAndWait();
     }

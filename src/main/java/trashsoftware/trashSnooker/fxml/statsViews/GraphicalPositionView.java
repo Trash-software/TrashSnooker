@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.fxml.statsViews;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -32,6 +33,7 @@ public class GraphicalPositionView extends VBox {
     GamePane gamePane;
     CheckBox p1Check = new CheckBox(), p2Check = new CheckBox();
     CheckBox showDetailCheck = new CheckBox();
+    ScrollPane infoScrollPane = new ScrollPane();
     GridPane infoPane = new GridPane();
     GameValues gameValues;
     Game<?, ?> fakeGame;
@@ -77,8 +79,14 @@ public class GraphicalPositionView extends VBox {
         infoPane.add(p1Check, 1, 0);
         infoPane.add(p2Check, 6, 0);
         infoPane.add(showDetailCheck, 4, 0);
+        infoPane.setAlignment(Pos.TOP_CENTER);
+        infoPane.setPadding(new Insets(5));
+        
+        infoScrollPane.setContent(infoPane);
+        infoScrollPane.setMaxHeight(320);
+        
         getChildren().add(gamePane);
-        getChildren().add(infoPane);
+        getChildren().add(infoScrollPane);
     }
 
     void addFrameCheckAt(Pane container) {

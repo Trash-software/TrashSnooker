@@ -86,7 +86,8 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 unitXY[1],
                 cueParams
         );
-        return new FinalChoice.DefenseChoice(unitXY, cueParams, cpp);
+        return new FinalChoice.DefenseChoice(game.getCueBall().getPositionArray(),
+                unitXY, cueParams, cpp);
     }
 
     @Override

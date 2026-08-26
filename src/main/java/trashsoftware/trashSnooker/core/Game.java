@@ -2481,6 +2481,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             propagateImpulse(new ArrayList<>(affectedBalls), firstBallInTouch, vx, vy,
                     gameValues.ball.ballBounceRatio);
 
+            // 这里可以用线性代数取代，但是这样直观且简单
+            double curDt = Math.hypot(movingBall.x - firstBallInTouch.x, movingBall.y - firstBallInTouch.y);
+            double nextDt = Math.hypot(movingBall.x + movingBall.vx - (firstBallInTouch.x + firstBallInTouch.vx), 
+                    movingBall.y + movingBall.vy - (firstBallInTouch.y + firstBallInTouch.vy));
+
+            if (nextDt < curDt) {
+                firstBallInTouch.twoMovingBallsHitCore(movingBall, phy);
+            }
             affectedBalls.add(movingBall);
         }
 
@@ -2502,13 +2510,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             Map<Ball, List<Ball>> neighbors = new HashMap<>();
             for (int i = 0; i < n; i++) {
                 Ball bi = balls.get(i);
+                if (bi == movingBall) continue;
                 neighbors.putIfAbsent(bi, new ArrayList<>());
                 for (int j = 0; j < n; j++) {
                     if (i == j) continue;
                     Ball bj = balls.get(j);
+                    if (bj == movingBall) continue;
                     double dx = bj.x - bi.x;
                     double dy = bj.y - bi.y;
-                    if (Math.hypot(dx, dy) <= bi.radius + bj.radius + 1e-6) {
+                    if (Math.hypot(dx, dy) <= bi.radius + bj.radius + 1e-8) {
                         neighbors.get(bi).add(bj);
                     }
                 }

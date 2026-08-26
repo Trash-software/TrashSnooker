@@ -31,7 +31,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private final Color color;
     private final Color colorWithOpa;
     private final Color colorTransparent;
-//    private final Color traceColor;
+    //    private final Color traceColor;
     public static final int TOTAL_TRACE_LEVELS = 16;
     private transient final SortedMap<Integer, Color> traceColors = new TreeMap<>();
     private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
@@ -184,7 +184,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         double linSpeed = mag * numPhysicalCalculations;
         double degChange = Math.toDegrees(linSpeed / ballRadius);
-        
+
         return new double[]{axisX, axisY, axisZ, degChange};
     }
 
@@ -518,18 +518,19 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //                double direction = Algebra.thetaOf(vx, vy);
 //                double theta = Algebra.angleBetweenTwoAngles(biSector, direction);
 //                if (theta < Algebra.HALF_PI) {
-////                    pot();
-////                    System.out.println("Hit pocket back");
-////                    double[] normal = new double[]{
-////                            nextX - center[0],
-////                            nextY - center[1]
-////                    };
-////                    normal = Algebra.normalVector(normal);
-////                    double[] bounce = Algebra.symmetricVector(vx, vy, normal[0], normal[1]);
-////                    vx = bounce[0] * 0.1;
-////                    vy = bounce[1] * 0.1;
-////                    nextX = x + vx;
-////                    nextY = y + vy;
+
+    ////                    pot();
+    ////                    System.out.println("Hit pocket back");
+    ////                    double[] normal = new double[]{
+    ////                            nextX - center[0],
+    ////                            nextY - center[1]
+    ////                    };
+    ////                    normal = Algebra.normalVector(normal);
+    ////                    double[] bounce = Algebra.symmetricVector(vx, vy, normal[0], normal[1]);
+    ////                    vx = bounce[0] * 0.1;
+    ////                    vy = bounce[1] * 0.1;
+    ////                    nextX = x + vx;
+    ////                    nextY = y + vy;
 //
 //                    return true;
 //                }
@@ -538,7 +539,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //
 //        return false;
 //    }
-
     protected boolean isNotMoving() {
         return vx == 0.0 && vy == 0.0;
     }
@@ -736,7 +736,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             } else {
                 bouncedSideSpin = sideSpin + sideSpinChange;
             }
-            
+
             currentBounce = new CushionBounce(
                     0,
                     effectiveAcc,
@@ -924,12 +924,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         ball.clearBounceDesiredLeavePos();
 
 //        if (!phy.isPrediction) {
-            // AI考虑进攻时并不会clone目标球
-            // 因此我们不希望AI在模拟时触发任何移动目标球的行为
-            this.x = x1;
-            this.y = y1;
-            ball.x = x2;
-            ball.y = y2;
+        // AI考虑进攻时并不会clone目标球
+        // 因此我们不希望AI在模拟时触发任何移动目标球的行为
+        this.x = x1;
+        this.y = y1;
+        ball.x = x2;
+        ball.y = y2;
 //        }
 
         // fixme: 固定开球，目前有bug不能用
@@ -948,6 +948,16 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         double[] thisV = new double[]{vx, vy};
         double[] ballV = new double[]{ball.vx, ball.vy};
+
+        // 先把旋转传递的一些东西算出来
+        double frictionStrength = values.ball.frictionRatio;
+        double spinProj = 0.0;
+        boolean wasBallStopped = false;
+        if (ball.vx == 0 && ball.vy == 0) {
+            wasBallStopped = true;
+            spinProj = Algebra.projectionLengthOn(thisV,
+                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
+        }
 
         double[] normVec = new double[]{x1 - x2, y1 - y2};  // 两球连线=法线
         double[] tangentVec = Algebra.normalVector(normVec);  // 切线
@@ -981,31 +991,26 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         // todo: 看看有没有问题。应该没问题，以前是因为atan引起的，现在atan2应该就好了
         // todo: 我错了，去掉之后三天两头卡bug
-        if (thisHorV == 0) thisHorV = 0.0000000001;
-        if (thisVerV == 0) thisVerV = 0.0000000001;
-        if (ballHorV == 0) ballHorV = 0.0000000001;
-        if (ballVerV == 0) ballVerV = 0.0000000001;
+        if (thisHorV == 0) thisHorV = 1e-9;
+        if (thisVerV == 0) thisVerV = 1e-9;
+        if (ballHorV == 0) ballHorV = 1e-9;
+        if (ballVerV == 0) ballVerV = 1e-9;
 
-        double thisOutHor = thisHorV;
-        double thisOutVer = ballVerV;
-        double ballOutHor = ballHorV;
-        double ballOutVer = thisVerV;
+//        double thisOutHor = thisHorV;
+//        double thisOutVer = ballVerV;
+//        double ballOutHor = ballHorV;
+//        double ballOutVer = thisVerV;
 
-        double frictionStrength = values.ball.frictionRatio;
-        double spinProj = 0.0;
-        boolean wasBallStopped = false;
-        if (ball.vx == 0 && ball.vy == 0) {
-            wasBallStopped = true;
-            spinProj = Algebra.projectionLengthOn(thisV,
-                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
-        }
+        // 加起来会损失一点，那是热量
+        double passRatio = values.ball.ballBounceRatio;
+        double keepRatio = (1 - values.ball.sqrtBounceRatio);
 
         // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
         double[] thisOutAtRelAxis = new double[]{
-                thisOutHor, thisOutVer
+                thisHorV, ballVerV * passRatio + thisVerV * keepRatio
         };
         double[] ballOutAtRelAxis = new double[]{
-                ballOutHor, ballOutVer
+                ballHorV, thisVerV * passRatio + ballVerV * keepRatio
         };
         double[] thisOut = Algebra.matrixMultiplyVector(inverseCob, thisOutAtRelAxis);
         double[] ballOut = Algebra.matrixMultiplyVector(inverseCob, ballOutAtRelAxis);
@@ -1114,16 +1119,16 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         ball.nextY = y2 + ball.vy;
 
 //        // 弹走了来再减速
-        vx *= values.ball.ballBounceRatio;
-        vy *= values.ball.ballBounceRatio;
-        ball.vx *= values.ball.ballBounceRatio;
-        ball.vy *= values.ball.ballBounceRatio;
+//        vx *= values.ball.ballBounceRatio;
+//        vy *= values.ball.ballBounceRatio;
+//        ball.vx *= values.ball.ballBounceRatio;
+//        ball.vy *= values.ball.ballBounceRatio;
 
         // 一些没传掉的动能
-        vx += thisV[0] * (1 - values.ball.ballBounceRatio) * 0.5;
-        vy += thisV[1] * (1 - values.ball.ballBounceRatio) * 0.5;
-        ball.vx += ballV[0] * (1 - values.ball.ballBounceRatio) * 0.5;
-        ball.vy += ballV[1] * (1 - values.ball.ballBounceRatio) * 0.5;
+//        vx += thisV[0] * (1 - values.ball.ballBounceRatio) * 0.5;
+//        vy += thisV[1] * (1 - values.ball.ballBounceRatio) * 0.5;
+//        ball.vx += ballV[0] * (1 - values.ball.ballBounceRatio) * 0.5;
+//        ball.vy += ballV[1] * (1 - values.ball.ballBounceRatio) * 0.5;
 
         if (Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY) < Algebra.distanceToPoint(x, y, ball.x, ball.y)) {
             if (!phy.isPrediction)
@@ -1260,7 +1265,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public double getLastCollisionY() {
         return lastCollisionY;
     }
-    
+
     public double[] getLastCollisionPos() {
         return new double[]{lastCollisionX, lastCollisionY};
     }
