@@ -10,6 +10,9 @@ import trashsoftware.trashSnooker.util.Util;
  * 记录一杆的出杆参数
  */
 public class CueParams {
+    
+    public static final double DEFAULT_CUE_ANGLE_DEG = 5.0;
+    public static final double TAN_OF_CUE_ANGLE_DEG = Math.tan(Math.toRadians(DEFAULT_CUE_ANGLE_DEG));
 
     private final double selectedPower;
     private final double selectedFrontBackSpin;

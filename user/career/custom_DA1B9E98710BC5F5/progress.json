@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 1,
   "seedRanks": {
     "random_player_86": 72,
     "random_player_88": 44,
@@ -117,6 +117,7 @@
   "championshipId": "world_champ",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 5,
       "p1": {
         "p1wins": 1,
         "p1": {
@@ -551,8 +552,10 @@
         "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-QUARTER_FINAL-105",
         "p2wins": 4
       },
+      "winner": "Selby",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108"
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108",
+      "p2wins": 1
     },
     "p2": {
       "p1": {
@@ -773,6 +776,7 @@
         "p2wins": 0
       },
       "p2": {
+        "p1wins": 4,
         "p1": {
           "p1wins": 3,
           "p1": {
@@ -983,8 +987,10 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-ROUND_2-103",
           "p2wins": 2
         },
+        "winner": "custom_DA1B9E98710BC5F5",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-QUARTER_FINAL-107"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-QUARTER_FINAL-107",
+        "p2wins": 0
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-109"
@@ -1060,6 +1066,15 @@
     {
       "score": 128,
       "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108",
+      "playerId": "Selby"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
       "stage": "QUARTER_FINAL",
       "sim": true,
       "numFrame": 4,
@@ -1127,6 +1142,15 @@
       "sim": true,
       "numFrame": 2,
       "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-ROUND_1-82",
+      "playerId": "Selby"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108",
       "playerId": "Selby"
     },
     {
@@ -1274,6 +1298,15 @@
       "playerId": "random_player_49"
     },
     {
+      "score": 96,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108",
+      "playerId": "Selby"
+    },
+    {
       "score": 95,
       "maximumType": "NONE",
       "stage": "ROUND_1",
@@ -1407,6 +1440,15 @@
       "numFrame": 3,
       "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-PRE_ROUND_3-78",
       "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 6,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108",
+      "playerId": "Selby"
     },
     {
       "score": 78,
@@ -1636,6 +1678,15 @@
     {
       "score": 59,
       "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 59,
+      "maximumType": "NONE",
       "stage": "QUARTER_FINAL",
       "sim": true,
       "numFrame": 1,
@@ -1677,6 +1728,15 @@
       "numFrame": 2,
       "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-PRE_ROUND_1-24",
       "playerId": "random_player_101"
+    },
+    {
+      "score": 58,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-SEMI_FINAL-108",
+      "playerId": "Selby"
     },
     {
       "score": 58,
@@ -1866,6 +1926,15 @@
       "numFrame": 1,
       "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-PRE_ROUND_1-16",
       "playerId": "Small Egg High"
+    },
+    {
+      "score": 52,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+world_champ-QUARTER_FINAL-107",
+      "playerId": "custom_DA1B9E98710BC5F5"
     },
     {
       "score": 52,

@@ -1245,19 +1245,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<PocketDirection> list = new ArrayList<>();
         double x = targetBall.x;
         double y = targetBall.y;
-//        double[] xy = new double[]{x, y};
-//        BIG_LOOP:
         for (int i = 0; i < 6; i++) {
             Pocket pocket = gameValues.table.pockets[i];
-//            double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
             double[] holeOpenCenter = pocket.getOpenCenter(gameValues);
-//            double[] holeBottom = gameValues.table.allHoles[i];
-
-//            boolean onPocketMouth = !pocket.isMid &&
-//                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballDiameter;
-//            double dtMouthToFall = Algebra.distanceToPoint(holeOpenCenter, pocket.fallCenter);
-//            boolean inPocketMouth = Algebra.distanceToPoint(x, y, pocket.fallCenter[0], pocket.fallCenter[1]) < dtMouthToFall;
-
             double dxToOpen = holeOpenCenter[0] - x;
             double dyToOpen = holeOpenCenter[1] - y;
             double dxToFall = pocket.fallCenter[0] - x;
@@ -1286,32 +1276,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
 
                 list.add(new PocketDirection(pocket,
-                        new double[][]{unitXY, new double[]{aimPosX, aimPosY}, new double[]{collisionPointX, collisionPointY}}));
+                        new double[][]{unitXY, 
+                                new double[]{aimPosX, aimPosY}, 
+                                new double[]{collisionPointX, collisionPointY}}));
             }
-
-//            if ((onPocketMouth || inPocketMouth) &&
-//                    pointToPointCanPassBall(x, y, pocket.fallCenter[0], pocket.fallCenter[1], targetBall,
-//                            null, true, true)) {
-//                // 目标球离袋口瞄球点太近了，转而检查真正的袋口
-//                double directionX = pocket.fallCenter[0] - x;
-//                double directionY = pocket.fallCenter[1] - y;
-//                double[] unitXY = Algebra.unitVector(directionX, directionY);
-//                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
-//                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
-//
-//                list.add(new PocketDirection(pocket,
-//                        new double[][]{unitXY, pocket.fallCenter, new double[]{collisionPointX, collisionPointY}}));
-//            } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
-//                    null, true, true)) {
-//                double directionX = holeOpenCenter[0] - x;
-//                double directionY = holeOpenCenter[1] - y;
-//                double[] unitXY = Algebra.unitVector(directionX, directionY);
-//                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
-//                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
-//
-//                list.add(new PocketDirection(pocket,
-//                        new double[][]{unitXY, holeOpenCenter, new double[]{collisionPointX, collisionPointY}}));
-//            }
         }
         return list;
     }

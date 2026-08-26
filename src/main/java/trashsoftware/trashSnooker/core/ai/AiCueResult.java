@@ -146,11 +146,11 @@ public class AiCueResult {
 //        double precisionFactor = aiPrecisionFactor;
 
         double mistake = random.nextDouble() * 100;
-        double mistakeFactor = 1.0;
         double maxPrecision = 100.0;
+        double mistakeFactor = 0.0;
         if (mistake > igp.getPlayerPerson().getAiPlayStyle().stability) {
-            mistakeFactor = 2.0;
             maxPrecision = 90.0;
+            mistakeFactor = 1.0;
             System.out.println("Mistake");
         }
 
@@ -200,7 +200,8 @@ public class AiCueResult {
             case BREAK -> (105 - Math.max(attackPrecision, defensePrecision)) * 0.25;
             case PASS_POT -> 25;  // 
         };
-
+        
+        aimPointSdMm *= 0.9;  // 一个统一修正值
         // 距离和瞄准难度不是线性关系，远的没那么难瞄，但距离远了确实也看不那么清，所以这里来个pow折中一下
         // 次数越大，长台越难
         double dtMul = Math.pow(whiteAimDt / Values.MAX_DISTANCE / 2.2, 0.5);
@@ -212,18 +213,20 @@ public class AiCueResult {
         // 照理来说，手应该不太影响瞄？
 //        double handSdMul = 1.0;
 //        aimPointSdMm *= handSdMul;
-        
-        aimPointSdMm *= mistakeFactor;
 
         // 手感差时偏差大
         double handFeelMul = 1.0 / igp.getHandFeelEffort();
         aimPointSdMm *= handFeelMul;
+
+        // 抬高杆尾会难以瞄准
+        double visionFarness = Math.tan(Math.toRadians(cueParams.getCueAngleDeg()));
+        aimPointSdMm *= visionFarness / CueParams.TAN_OF_CUE_ANGLE_DEG;
         
         aimPointSdMm = Math.min(aimPointSdMm, 50);  // 再歪歪不出一颗球远
 
         double sdRad = Math.atan2(aimPointSdMm, whiteAimDt);
 
-        double radDeviation = random.nextGaussian() * sdRad;
+        double radDeviation = (random.nextGaussian() + mistakeFactor) * sdRad;
 //        double radDeviation = 2 * sdRad;
         double afterRandom = rad + radDeviation;
 

@@ -1,16 +1,20 @@
 package trashsoftware.trashSnooker.core.ai;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,6 +72,7 @@ public class Analyzer {
             boolean isPositioning
     ) {
         List<AttackChoice.DirectAttackChoice> directAttackChoices = new ArrayList<>();
+        GameValues gameValues = game.getGameValues();
         for (Ball ball : legalBalls) {
             if (ball.isPotted() || ball == lastPottingBall) continue;  // todo: 潜在bug：斯诺克清彩阶段自由球
             List<Game.PocketDirection> dirHoles = game.directionsToAccessibleHoles(ball);
@@ -78,6 +83,21 @@ public class Analyzer {
                 double[][] dirHole = pd.dirHole();
                 double collisionPointX = dirHole[2][0];
                 double collisionPointY = dirHole[2][1];
+                
+                // 修正中袋瞄点
+                if (pd.pocket().isMid) {
+                    double[] openCenter = getMidNewOpenCenter(pd, dirHole, gameValues);
+                    double dxToOpen = openCenter[0] - ball.getX();
+                    double dyToOpen = openCenter[1] - ball.getY();
+                    double[] unitDirection = Algebra.unitVector(dxToOpen, dyToOpen);
+                    double updateCpx = ball.getX() - gameValues.ball.ballDiameter * unitDirection[0];
+                    double updateCpy = ball.getY() - gameValues.ball.ballDiameter * unitDirection[1];
+                    dirHole = new double[][]{
+                            unitDirection,
+                            openCenter,
+                            new double[]{updateCpx, updateCpy}
+                    };
+                }
 
                 if (game.pointToPointCanPassBall(whitePos[0], whitePos[1],
                         collisionPointX, collisionPointY, game.getCueBall(), ball, true,
@@ -103,6 +123,26 @@ public class Analyzer {
             }
         }
         return directAttackChoices;
+    }
+
+    private static double @NotNull [] getMidNewOpenCenter(Game.PocketDirection pd, double[][] dirHole, GameValues gameValues) {
+        double thetaRad = Math.atan2(Math.abs(dirHole[0][0]), Math.abs(dirHole[0][1]));
+        // 范围在0-PI/2之间
+        // 0就是比如蓝球点打中袋，PI/2就是贴库完全打不到中袋
+        // 这里有因为中袋原本瞄点进去一点造成的误差，但是不影响
+        double outPoint = -gameValues.ball.ballRadius;  // 完全薄球应该瞄在台里面半颗球的位置
+        // 看似算了一大堆，实际上还是随便写的
+        double inPoint = gameValues.table.pocketDifficulty.midPocketArcRadius * 0.5 + gameValues.ball.ballRadius;
+        double inMm = Algebra.shiftRangeSafe(0, Algebra.HALF_PI, inPoint, outPoint, thetaRad);
+        double trueAimY;
+        if (pd.pocket().fallCenter[1] < gameValues.table.midY) {
+            // 上方中袋
+            trueAimY = gameValues.table.topY - inMm;
+        } else {
+            trueAimY = gameValues.table.botY + inMm;
+        }
+        double[] openCenter = new double[]{dirHole[1][0], trueAimY};
+        return openCenter;
     }
 
     public static <G extends Game<?, ?>> List<AttackChoice> getAttackChoices(
@@ -536,10 +576,10 @@ public class Analyzer {
                     AiCueResult.AI_PRECISION_MULTIPLIER;
         }
 
-        if (cueParams.getCueAngleDeg() > 5.0) {
+        if (cueParams.getCueAngleDeg() > CueParams.DEFAULT_CUE_ANGLE_DEG) {
             // 抬高杆尾导致瞄准困难
-            aimingSd *= Algebra.shiftRangeSafe(5.0, 45.0, 1.0, 3.0,
-                    cueParams.getCueAngleDeg());
+            double visionFarness = Math.tan(Math.toRadians(cueParams.getCueAngleDeg()));
+            aimingSd *= visionFarness / CueParams.TAN_OF_CUE_ANGLE_DEG;
         }
 
 //        if (Double.isNaN(curveDevRad)) {

@@ -273,7 +273,7 @@ public class GameView implements Initializable {
     // 杆法的击球点。注意: cuePointY用在击球点的canvas上，值越大杆法越低，而unitFrontBackSpin相反
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
-    private double cueAngleDeg = 5.0;
+    private double cueAngleDeg = CueParams.DEFAULT_CUE_ANGLE_DEG;
     private double cueRollRotateDeg1 = 180.0;  // 转杆，并不重要
     private double cueRollRotateDeg2 = 180.0;  // 球员2的转杆
     private double cueAngleBaseVer = 10.0;
