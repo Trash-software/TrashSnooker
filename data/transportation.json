@@ -276,6 +276,16 @@
         "first": 7800
       }
     },
+    "DXB-RUH": {
+      "city1": "Dubai",
+      "city2": "Riyadh",
+      "type": "international",
+      "prices": {
+        "economy": 70,
+        "business": 500,
+        "first": 700
+      }
+    },
     "PVG-SYD": {
       "city1": "Shanghai",
       "city2": "Sydney",
@@ -286,18 +296,6 @@
         "economy": 720,
         "business": 4000,
         "first": 6500
-      }
-    },
-    "LHR-DGP": {
-      "city1": "London",
-      "city2": "Doggivepower",
-      "type": "international",
-      "time": "03:45",
-      "distance": 2400,
-      "prices": {
-        "economy": 220,
-        "business": 850,
-        "first": 1450
       }
     },
     "LHR-SPC": {
@@ -382,6 +380,36 @@
         "economy": 80,
         "business": 250,
         "first": 420
+      }
+    },
+    "CAN-DXB": {
+      "city1": "Guangzhou",
+      "city2": "Dubai",
+      "type": "international",
+      "prices": {
+        "economy": 420,
+        "business": 2100,
+        "first": 3600
+      }
+    },
+    "CKG-CGP": {
+      "city1": "Chongqing",
+      "city2": "Catgivepower",
+      "type": "international",
+      "prices": {
+        "economy": 590,
+        "business": 3100,
+        "first": 5000
+      }
+    },
+    "DXB-CGP": {
+      "city1": "Dubai",
+      "city2": "Catgivepower",
+      "type": "international",
+      "prices": {
+        "economy": 250,
+        "business": 1100,
+        "first": 2000
       }
     }
   },

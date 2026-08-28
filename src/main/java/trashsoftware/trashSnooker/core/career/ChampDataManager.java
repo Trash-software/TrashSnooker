@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.career;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.transporation.City;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -56,6 +57,14 @@ public class ChampDataManager {
 
     public List<ChampionshipData> getChampionshipData() {
         return championshipData;
+    }
+    
+    public List<ChampionshipData> getByCity(City city) {
+        List<ChampionshipData> result = new ArrayList<>();
+        for (ChampionshipData cd : championshipData) {
+            if (cd.location.city.equals(city)) result.add(cd);
+        }
+        return result;
     }
 
     public List<ChampionshipData> getSnookerTripleCrown() {

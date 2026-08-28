@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.career.transporation;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
 public class RouteResult {
@@ -109,6 +110,41 @@ public class RouteResult {
 
     public boolean isEmpty() {
         return steps.isEmpty();
+    }
+    
+    public String toUiString(ResourceBundle strings) {
+        StringJoiner journey = new StringJoiner(" -> ");
+        journey.add(startCity.getName(strings.getLocale()));
+
+        for (RouteStep step : steps) {
+            journey.add(step.toCity().getName(strings.getLocale()));
+        }
+
+        return String.format(
+                """
+                        %s, %s: %d,
+                        %s: %s, %s: %s,
+                        %s: %d
+                        %s: %s: %d
+                        %s: %d
+                        %s: %d""",
+                journey,
+                "",
+                getTransitCount(),
+                strings.getString("routeTotalTime"),
+                formatTime(totalTimeMinutes),
+                strings.getString("routeOnboardTime"),
+                formatTime(onBoardTimeMinutes),
+                strings.getString("routeDistance"),
+                totalDistance,
+                strings.getString("prices"),
+                strings.getString("economyClass"),
+                totalEconomyPrice,
+                strings.getString("businessClass"),
+                totalBusinessPrice,
+                strings.getString("firstClass"),
+                totalFirstPrice
+        );
     }
 
     @Override

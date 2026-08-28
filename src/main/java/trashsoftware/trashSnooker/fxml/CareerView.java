@@ -999,7 +999,7 @@ public class CareerView extends ChildInitializable {
 //            view.setStage(selfStage);
             view.setParent(selfStage.getScene());
 
-            view.setup();
+            view.setup(careerManager);
             App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);

@@ -8,9 +8,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -22,11 +20,12 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 import org.controlsfx.control.WorldMapView;
+import trashsoftware.trashSnooker.core.career.CareerManager;
+import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.transporation.City;
 import trashsoftware.trashSnooker.core.career.transporation.Route;
 import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
 import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
-import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.net.URL;
 import java.util.*;
@@ -54,8 +53,13 @@ public class GeographicView extends ChildInitializable {
     Pane routeLayer, cityLayer;
     @FXML
     CheckBox internationalFlightsBox, domesticFlightsBox, trainsBox;
+    @FXML
+    ComboBox<City> departureBox, destinationBox;
+    @FXML
+    Label routeResultLabel;
 
     private TransportationManager manager;
+    private CareerManager careerManager;
     private ResourceBundle strings;
 
     /*
@@ -78,7 +82,7 @@ public class GeographicView extends ChildInitializable {
     private final RouteRenderer curvedRouteRenderer =
             new CurveRouteRenderer();
 
-    private boolean routeRedrawPending = false;
+    private boolean overlayUpdatePending = false;
 
     private final Map<WorldMapView.Location, City> locationCityMap =
             new IdentityHashMap<>();
@@ -87,6 +91,12 @@ public class GeographicView extends ChildInitializable {
             new ArrayList<>();
 
     private final Map<City, CityMarker> cityMarkerMap =
+            new HashMap<>();
+
+    private final Map<City, Node> cityAnchorMap =
+            new HashMap<>();
+
+    private final Map<String, Node> locationAnchors =
             new HashMap<>();
 
     @Override
@@ -99,15 +109,16 @@ public class GeographicView extends ChildInitializable {
         super.backAction();
     }
 
-    public void setup() {
+    public void setup(CareerManager careerManager) {
         manager = TransportationManager.getInstance();
+        this.careerManager = careerManager;
 
         setupViewport();
         setupCountryViews();
         setupLocationViews();
         loadCities();
 
-        setCheckboxes();
+        setBoxes();
 
         /*
          * ControlsFX 自己的 zoom 永远保持 1。
@@ -144,16 +155,63 @@ public class GeographicView extends ChildInitializable {
             resolveLabelOverlaps();
         });
     }
+    
+    @FXML
+    void searchRouteAction() {
+        City a = departureBox.getValue();
+        City b = destinationBox.getValue();
+        if (a == null || b == null || a.equals(b)) {
+            System.out.println("Cannot");
+        }
+        // todo: method
+        RouteResult routeResult = manager.findCheapestRoute(a, b);
+        if (routeResult != null) {
+            routeResultLabel.setText(routeResult.toUiString(strings));
+        }
+    }
 
-    private void setCheckboxes() {
+    private void setBoxes() {
         trainsBox.selectedProperty().addListener((_, oldValue, newValue) -> {
-            if (oldValue != newValue) scheduleRouteRedraw();
+            if (oldValue != newValue) scheduleOverlayUpdate();
         });
         internationalFlightsBox.selectedProperty().addListener((_, oldValue, newValue) -> {
-            if (oldValue != newValue) scheduleRouteRedraw();
+            if (oldValue != newValue) scheduleOverlayUpdate();
         });
         domesticFlightsBox.selectedProperty().addListener((_, oldValue, newValue) -> {
-            if (oldValue != newValue) scheduleRouteRedraw();
+            if (oldValue != newValue) scheduleOverlayUpdate();
+        });
+        
+        setCityBoxFactory(departureBox);
+        setCityBoxFactory(destinationBox);
+        
+        List<City> allCities = manager.getCityList();
+        departureBox.getItems().addAll(allCities);
+        destinationBox.getItems().addAll(allCities);
+    }
+    
+    private void setCityBoxFactory(ComboBox<City> comboBox) {
+        comboBox.setCellFactory(param -> new ListCell<>(){
+            @Override
+            protected void updateItem(City item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName(strings.getLocale()) + ", " + item.getCountry());
+                }
+            }
+        });
+
+        comboBox.setButtonCell(new ListCell<>(){
+            @Override
+            protected void updateItem(City item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName(strings.getLocale()) + ", " + item.getCountry());
+                }
+            }
         });
     }
 
@@ -179,7 +237,7 @@ public class GeographicView extends ChildInitializable {
         worldMapView.setStyle(
                 "-fx-background-color: transparent;"
         );
-        
+
         routeLayer.setMouseTransparent(false);
         routeLayer.setPickOnBounds(false);
         cityLayer.setMouseTransparent(false);
@@ -222,13 +280,53 @@ public class GeographicView extends ChildInitializable {
         worldMapView.setLocationViewFactory(location -> {
             City city = locationCityMap.get(location);
 
+            Pane anchor = new Pane();
+
+            anchor.setPrefSize(1, 1);
+            anchor.setMinSize(1, 1);
+            anchor.setMaxSize(1, 1);
+
+            anchor.setMouseTransparent(true);
+
+            locationAnchors.put(
+                    location.getName(),
+                    anchor
+            );
+
+            cityAnchorMap.put(
+                    city,
+                    anchor
+            );
+
+            return anchor;
+        });
+    }
+
+    private void loadCities() {
+        Locale locale = strings.getLocale();
+
+        for (City city : manager.getCities().values()) {
+            WorldMapView.Location location =
+                    new WorldMapView.Location(
+                            city.getId(),
+                            city.getLatitude(),
+                            city.getLongitude()
+                    );
+            
+            locationCityMap.put(
+                    location,
+                    city
+            );
+
+            worldMapView.getLocations().add(
+                    location
+            );
+
             CityMarker marker =
                     new CityMarker(
                             city,
-                            location.getName()
+                            city.getName(locale)
                     );
-
-            marker.updateZoom(zoom);
 
             cityMarkers.add(marker);
 
@@ -237,29 +335,51 @@ public class GeographicView extends ChildInitializable {
                     marker
             );
 
-            return marker;
-        });
+            cityLayer.getChildren().add(
+                    marker
+            );
+        }
+
+        worldMapView.setShowLocations(true);
+
+        Platform.runLater(
+                this::updateCityPositions
+        );
     }
 
-    private void loadCities() {
-        Locale locale =
-                ConfigLoader.getInstance().getLocale();
-
+    private void updateCityPositions() {
         for (City city : manager.getCities().values()) {
-            WorldMapView.Location location =
-                    new WorldMapView.Location(
-                            city.getName(locale),
-                            city.getLatitude(),
-                            city.getLongitude()
+            Node anchor =
+                    locationAnchors.get(
+                            city.getId()
                     );
 
-            locationCityMap.put(
-                    location,
-                    city
-            );
+            CityMarker marker =
+                    cityMarkerMap.get(
+                            city
+                    );
 
-            worldMapView.getLocations().add(
-                    location
+            if (anchor == null || marker == null) {
+                continue;
+            }
+
+            /*
+             * anchor 的 (0,0) 就是 ControlsFX 算出来的城市位置。
+             */
+            Point2D scenePoint =
+                    anchor.localToScene(
+                            0,
+                            0
+                    );
+
+            Point2D localPoint =
+                    cityLayer.sceneToLocal(
+                            scenePoint
+                    );
+
+            marker.relocate(
+                    localPoint.getX(),
+                    localPoint.getY()
             );
         }
     }
@@ -449,30 +569,22 @@ public class GeographicView extends ChildInitializable {
         worldMapView.setTranslateX(panX);
         worldMapView.setTranslateY(panY);
 
-        /*
-         * 城市图标和文字不应该跟着地图变大。
-         */
-        for (CityMarker marker : cityMarkers) {
-            marker.updateZoom(zoom);
-        }
-
-        scheduleRouteRedraw();
+        scheduleOverlayUpdate();
     }
 
-    private void scheduleRouteRedraw() {
-        /*
-         * drag / zoom 时可能一帧调用很多次，
-         * 合并成下一次 JavaFX pulse 只画一次。
-         */
-        if (routeRedrawPending) {
+    private void scheduleOverlayUpdate() {
+        if (overlayUpdatePending) {
             return;
         }
 
-        routeRedrawPending = true;
+        overlayUpdatePending = true;
 
         Platform.runLater(() -> {
-            routeRedrawPending = false;
+            overlayUpdatePending = false;
+
+            updateCityPositions();
             redrawRoutes();
+            resolveLabelOverlaps();
         });
     }
 
@@ -488,20 +600,20 @@ public class GeographicView extends ChildInitializable {
 
             City city2 = route.getCity2();
 
-            CityMarker marker1 =
-                    cityMarkerMap.get(
+            Node anchor1 =
+                    cityAnchorMap.get(
                             route.getCity1()
                     );
 
-            CityMarker marker2 =
-                    cityMarkerMap.get(
+            Node anchor2 =
+                    cityAnchorMap.get(
                             route.getCity2()
                     );
 
             if (city1 == null ||
                     city2 == null ||
-                    marker1 == null ||
-                    marker2 == null) {
+                    anchor1 == null ||
+                    anchor2 == null) {
                 continue;
             }
 
@@ -513,7 +625,7 @@ public class GeographicView extends ChildInitializable {
              */
             Point2D p1 =
                     routeLayer.sceneToLocal(
-                            marker1.localToScene(
+                            anchor1.localToScene(
                                     0,
                                     0
                             )
@@ -521,7 +633,7 @@ public class GeographicView extends ChildInitializable {
 
             Point2D p2 =
                     routeLayer.sceneToLocal(
-                            marker2.localToScene(
+                            anchor2.localToScene(
                                     0,
                                     0
                             )
@@ -682,14 +794,6 @@ public class GeographicView extends ChildInitializable {
         private final Circle inner;
         private final Circle hitCircle;
 
-        private final Scale inverseScale =
-                new Scale(
-                        1.0,
-                        1.0,
-                        0.0,
-                        0.0
-                );
-
         CityMarker(
                 City city,
                 String displayName
@@ -701,8 +805,6 @@ public class GeographicView extends ChildInitializable {
             setPrefSize(1, 1);
             setMinSize(1, 1);
             setMaxSize(1, 1);
-
-            getTransforms().add(inverseScale);
 
             /*
              * 城市外圈。
@@ -748,13 +850,13 @@ public class GeographicView extends ChildInitializable {
 
             if (city.isCapital()) {
                 label.setStyle("""
-                    -fx-font-size: 11px;
-                    -fx-font-weight: bold;
-                    """);
+                        -fx-font-size: 11px;
+                        -fx-font-weight: bold;
+                        """);
             } else {
                 label.setStyle("""
-                    -fx-font-size: 10px;
-                    """);
+                        -fx-font-size: 10px;
+                        """);
             }
 
             getChildren().addAll(
@@ -859,14 +961,6 @@ public class GeographicView extends ChildInitializable {
                             : 1.0
             );
         }
-
-        void updateZoom(double zoom) {
-            double inverse =
-                    1.0 / zoom;
-
-            inverseScale.setX(inverse);
-            inverseScale.setY(inverse);
-        }
     }
 
     private void onRouteClicked(Route route) {
@@ -882,7 +976,18 @@ public class GeographicView extends ChildInitializable {
     }
 
     private String createCityTooltipText(City city) {
-        return city.getId();
+        StringBuilder builder = new StringBuilder();
+        builder.append(city.getName(strings.getLocale())).append('\n');
+        
+        List<ChampionshipData> cityChamps = careerManager.getChampDataManager().getByCity(city);
+        if (!cityChamps.isEmpty()) {
+            StringJoiner joiner = new StringJoiner("\n");
+            for (ChampionshipData cd : cityChamps) {
+                joiner.add(cd.getName());
+            }
+            builder.append(joiner);
+        }
+        return builder.toString();
     }
 
     private String createRouteTooltipText(Route route) {
@@ -895,7 +1000,7 @@ public class GeographicView extends ChildInitializable {
         } else {
             transport = "trainTransport";
         }
-        
+
         Locale locale = strings.getLocale();
 
         return String.format(

@@ -38,12 +38,13 @@ public class HumanCareer extends Career {
     private FinancialManager finance;
     private AwardDistributionHint unShownAwd;
     private final CareerManager careerManager;
-    private ChampionshipLocation liveLocation = ChampionshipLocation.CHN;  // 居住地
+    private ChampionshipLocation liveLocation;  // 居住地
 
     HumanCareer(PlayerPerson playerPerson, CareerManager careerManager) {
         super(playerPerson, true, careerManager);
 
         this.careerManager = careerManager;
+        liveLocation = ChampionshipLocation.getDefaultSpawn();  // todo
     }
 
     @Override
@@ -247,7 +248,7 @@ public class HumanCareer extends Career {
     public void earnMoney(int earned, ChampionshipLocation location) {
         finance.cumulativeAwards += earned;
 
-        double tax = location.tax(earned);
+        double tax = location.taxCountry.tax(earned);
 
         finance.money += (int) Math.round(earned - tax);
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()

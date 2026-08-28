@@ -18,8 +18,6 @@ public class Route {
     private final int economyPrice;
     private final int businessPrice;
     private final int firstPrice;
-    
-//    private final double computedDistance;
 
     Route(
             String id,
@@ -40,8 +38,17 @@ public class Route {
         this.businessPrice = businessPrice;
         this.firstPrice = firstPrice;
         
-        this.distance = computeDistance(city1, city2);
+        this.distance = routeDistance(city1, city2, flight, type);
         this.timeMinutes = computeTimeMinutes(this.distance, flight, type);
+    }
+
+    public static double routeDistance(City city1, City city2, boolean flight, String type) {
+        double straightDt = computeDistance(city1, city2);
+        if (flight) return straightDt;
+        else {
+            if ("high_speed".equals(type)) return straightDt * 1.1;
+            else return straightDt * 1.2;
+        }
     }
     
     public static double computeDistance(City city1, City city2) {

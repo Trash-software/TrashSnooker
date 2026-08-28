@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.SubRule;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
@@ -123,14 +125,17 @@ public class ChampionshipData {
         data.day = Integer.parseInt(date[1]);
 
         JSONObject location = jsonObject.optJSONObject("location", null);
-        ChampionshipLocation cl = ChampionshipLocation.CHN;
+        ChampionshipLocation cl = null;
         if (location != null) {
             try {
-                cl = ChampionshipLocation.valueOf(location.optString("country"));
+                ChampionshipLocation.TaxCountry tc = ChampionshipLocation.TaxCountry.valueOf(location.optString("country"));
+                City city = TransportationManager.getInstance().getCityById(location.optString("city"));
+                if (city != null) cl = new ChampionshipLocation(city, tc);
             } catch (JSONException | IllegalArgumentException iae) {
-                System.err.println("Championship " + data.id + " cannot get country.");
+                System.err.println("Championship " + data.id + " cannot get location.");
             }
         }
+        if (cl == null) cl = ChampionshipLocation.getDefaultSpawn();
         data.location = cl;
         
         // Check: 有可能与种子选手/仅职业/ranked等前置条件冲突

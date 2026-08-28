@@ -14,13 +14,29 @@
       spacing="5.0">
     
     <padding>
-        <Insets topRightBottomLeft="5.0"/>
+        <Insets topRightBottomLeft="10.0"/>
     </padding>
     
-    <VBox spacing="5.0">
+    <VBox spacing="10.0">
+        <HBox>
+            <Button text="%backIcon" onAction="#backAction"/>
+        </HBox>
+        
         <CheckBox fx:id="internationalFlightsBox" text="%intlFlights"/>
         <CheckBox fx:id="domesticFlightsBox" text="%domesticFlights"/>
         <CheckBox fx:id="trainsBox" text="%trainsTransport"/>
+        
+        <Separator/>
+        
+        <GridPane vgap="10.0" hgap="5.0">
+            <Label text="%departurePlace"/>
+            <ComboBox fx:id="departureBox" GridPane.columnIndex="1"/>
+            <Label text="%destinationPlace" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="destinationBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            
+            <Button text="%search" onAction="#searchRouteAction" GridPane.rowIndex="3"/>
+            <Label fx:id="routeResultLabel" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+        </GridPane>
     </VBox>
 
     <StackPane fx:id="mapViewport"

@@ -35,6 +35,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.career.achievement;
     exports trashsoftware.trashSnooker.audio;
     exports trashsoftware.trashSnooker.core.infoRec;
+    exports trashsoftware.trashSnooker.core.career.transporation;
 
     opens trashsoftware.trashSnooker.fxml;
     opens trashsoftware.trashSnooker.fxml.alert;

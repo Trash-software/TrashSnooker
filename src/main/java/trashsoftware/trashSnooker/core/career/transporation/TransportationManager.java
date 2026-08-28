@@ -50,6 +50,12 @@ public class TransportationManager {
     public Map<String, City> getCities() {
         return cities;
     }
+
+    public List<City> getCityList() {
+        List<City> list = new ArrayList<>(cities.values());
+        list.sort(Comparator.comparing(City::getCountry).thenComparing(City::getId));
+        return list;
+    }
     
     public City getCityById(String cityId) {
         return cities.get(cityId);
