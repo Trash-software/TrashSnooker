@@ -1,0 +1,486 @@
+{
+  "flights": {
+    "LHR-BHD": {
+      "city1": "London",
+      "city2": "Belfast",
+      "type": "domestic",
+      "time": "01:20",
+      "distance": 520,
+      "prices": {
+        "economy": 90,
+        "business": 260,
+        "first": 420
+      }
+    },
+    "LHR-BER": {
+      "city1": "London",
+      "city2": "Berlin",
+      "type": "international",
+      "time": "01:55",
+      "distance": 930,
+      "prices": {
+        "economy": 120,
+        "business": 420,
+        "first": 700
+      }
+    },
+    "LHR-JFK": {
+      "city1": "London",
+      "city2": "New York",
+      "type": "international",
+      "time": "08:00",
+      "distance": 5550,
+      "prices": {
+        "economy": 500,
+        "business": 2600,
+        "first": 4800
+      }
+    },
+    "LHR-YYZ": {
+      "city1": "London",
+      "city2": "Toronto",
+      "type": "international",
+      "time": "07:45",
+      "distance": 5700,
+      "prices": {
+        "economy": 480,
+        "business": 2400,
+        "first": 4300
+      }
+    },
+    "JFK-YYZ": {
+      "city1": "New York",
+      "city2": "Toronto",
+      "type": "international",
+      "time": "01:45",
+      "distance": 590,
+      "prices": {
+        "economy": 130,
+        "business": 450,
+        "first": 750
+      }
+    },
+    "LHR-PEK": {
+      "city1": "London",
+      "city2": "Beijing",
+      "type": "international",
+      "time": "10:30",
+      "distance": 8150,
+      "prices": {
+        "economy": 720,
+        "business": 4200,
+        "first": 7000
+      }
+    },
+    "LHR-PVG": {
+      "city1": "London",
+      "city2": "Shanghai",
+      "type": "international",
+      "time": "12:30",
+      "distance": 9300,
+      "prices": {
+        "economy": 800,
+        "business": 5000,
+        "first": 8000
+      }
+    },
+    "LHR-CAN": {
+      "city1": "London",
+      "city2": "Guangzhou",
+      "type": "international",
+      "time": "12:00",
+      "distance": 9500,
+      "prices": {
+        "economy": 820,
+        "business": 4900,
+        "first": 7900
+      }
+    },
+    "LHR-RUH": {
+      "city1": "London",
+      "city2": "Riyadh",
+      "type": "international",
+      "time": "06:45",
+      "distance": 4950,
+      "prices": {
+        "economy": 450,
+        "business": 2200,
+        "first": 4000
+      }
+    },
+    "BER-JFK": {
+      "city1": "Berlin",
+      "city2": "New York",
+      "type": "international",
+      "time": "09:00",
+      "distance": 6400,
+      "prices": {
+        "economy": 550,
+        "business": 2800,
+        "first": 4800
+      }
+    },
+    "JFK-PEK": {
+      "city1": "New York",
+      "city2": "Beijing",
+      "type": "international",
+      "time": "14:00",
+      "distance": 11000,
+      "prices": {
+        "economy": 950,
+        "business": 5600,
+        "first": 9000
+      }
+    },
+    "YYZ-PVG": {
+      "city1": "Toronto",
+      "city2": "Shanghai",
+      "type": "international",
+      "time": "14:30",
+      "distance": 11400,
+      "prices": {
+        "economy": 950,
+        "business": 5500,
+        "first": 8800
+      }
+    },
+    "RUH-PEK": {
+      "city1": "Riyadh",
+      "city2": "Beijing",
+      "type": "international",
+      "time": "08:30",
+      "distance": 6600,
+      "prices": {
+        "economy": 560,
+        "business": 2900,
+        "first": 5000
+      }
+    },
+    "PEK-PVG": {
+      "city1": "Beijing",
+      "city2": "Shanghai",
+      "type": "domestic",
+      "time": "02:20",
+      "distance": 1080,
+      "prices": {
+        "economy": 120,
+        "business": 380,
+        "first": 650
+      }
+    },
+    "PEK-WUH": {
+      "city1": "Beijing",
+      "city2": "Wuhan",
+      "type": "domestic",
+      "time": "02:15",
+      "distance": 1050,
+      "prices": {
+        "economy": 115,
+        "business": 360,
+        "first": 600
+      }
+    },
+    "PVG-CAN": {
+      "city1": "Shanghai",
+      "city2": "Guangzhou",
+      "type": "domestic",
+      "time": "02:35",
+      "distance": 1210,
+      "prices": {
+        "economy": 130,
+        "business": 400,
+        "first": 680
+      }
+    },
+    "PVG-WUH": {
+      "city1": "Shanghai",
+      "city2": "Wuhan",
+      "type": "domestic",
+      "time": "01:55",
+      "distance": 690,
+      "prices": {
+        "economy": 90,
+        "business": 290,
+        "first": 480
+      }
+    },
+    "CAN-WUH": {
+      "city1": "Guangzhou",
+      "city2": "Wuhan",
+      "type": "domestic",
+      "time": "01:50",
+      "distance": 830,
+      "prices": {
+        "economy": 95,
+        "business": 310,
+        "first": 520
+      }
+    },
+    "CAN-CKG": {
+      "city1": "Guangzhou",
+      "city2": "Chongqing",
+      "type": "domestic",
+      "time": "02:10",
+      "distance": 970,
+      "prices": {
+        "economy": 110,
+        "business": 340,
+        "first": 570
+      }
+    },
+    "WUH-CKG": {
+      "city1": "Wuhan",
+      "city2": "Chongqing",
+      "type": "domestic",
+      "time": "01:40",
+      "distance": 750,
+      "prices": {
+        "economy": 90,
+        "business": 280,
+        "first": 470
+      }
+    },
+    "PEK-CKG": {
+      "city1": "Beijing",
+      "city2": "Chongqing",
+      "type": "domestic",
+      "time": "02:50",
+      "distance": 1450,
+      "prices": {
+        "economy": 145,
+        "business": 450,
+        "first": 750
+      }
+    },
+    "LHR-DXB": {
+      "city1": "London",
+      "city2": "Dubai",
+      "type": "international",
+      "time": "07:30",
+      "distance": 5500,
+      "prices": {
+        "economy": 480,
+        "business": 2400,
+        "first": 4200
+      }
+    },
+    "DXB-SYD": {
+      "city1": "Dubai",
+      "city2": "Sydney",
+      "type": "international",
+      "time": "14:00",
+      "distance": 12000,
+      "prices": {
+        "economy": 850,
+        "business": 4800,
+        "first": 7800
+      }
+    },
+    "PVG-SYD": {
+      "city1": "Shanghai",
+      "city2": "Sydney",
+      "type": "international",
+      "time": "10:30",
+      "distance": 7900,
+      "prices": {
+        "economy": 720,
+        "business": 4000,
+        "first": 6500
+      }
+    },
+    "LHR-DGP": {
+      "city1": "London",
+      "city2": "Doggivepower",
+      "type": "international",
+      "time": "03:45",
+      "distance": 2400,
+      "prices": {
+        "economy": 220,
+        "business": 850,
+        "first": 1450
+      }
+    },
+    "LHR-SPC": {
+      "city1": "London",
+      "city2": "Spacecity",
+      "type": "international",
+      "time": "02:35",
+      "distance": 1450,
+      "prices": {
+        "economy": 160,
+        "business": 600,
+        "first": 1000
+      }
+    },
+    "SPC-CGP": {
+      "city1": "Spacecity",
+      "city2": "Catgivepower",
+      "type": "international",
+      "time": "01:25",
+      "distance": 620,
+      "prices": {
+        "economy": 90,
+        "business": 300,
+        "first": 500
+      }
+    },
+    "DGP-CGP": {
+      "city1": "Doggivepower",
+      "city2": "Catgivepower",
+      "type": "domestic",
+      "time": "01:20",
+      "distance": 500,
+      "prices": {
+        "economy": 85,
+        "business": 280,
+        "first": 460
+      }
+    },
+    "PEK-HRB": {
+      "city1": "Beijing",
+      "city2": "Harbin",
+      "type": "domestic",
+      "time": "02:00",
+      "distance": 1050,
+      "prices": {
+        "economy": 110,
+        "business": 350,
+        "first": 580
+      }
+    },
+    "PEK-XIY": {
+      "city1": "Beijing",
+      "city2": "Xi'an",
+      "type": "domestic",
+      "time": "02:15",
+      "distance": 920,
+      "prices": {
+        "economy": 105,
+        "business": 330,
+        "first": 550
+      }
+    },
+    "PEK-SJW": {
+      "city1": "Beijing",
+      "city2": "Shijiazhuang",
+      "type": "domestic",
+      "time": "01:15",
+      "distance": 280,
+      "prices": {
+        "economy": 65,
+        "business": 190,
+        "first": 320
+      }
+    },
+    "XIY-CKG": {
+      "city1": "Xi'an",
+      "city2": "Chongqing",
+      "type": "domestic",
+      "time": "01:35",
+      "distance": 580,
+      "prices": {
+        "economy": 80,
+        "business": 250,
+        "first": 420
+      }
+    }
+  },
+  "trains": {
+    "LON-SHF": {
+      "city1": "London",
+      "city2": "Sheffield",
+      "type": "intercity",
+      "time": "02:05",
+      "distance": 260,
+      "prices": {
+        "economy": 55,
+        "business": 120,
+        "first": 180
+      }
+    },
+    "LON-BFS": {
+      "city1": "London",
+      "city2": "Belfast",
+      "type": "international",
+      "time": "10:30",
+      "distance": 650,
+      "prices": {
+        "economy": 80,
+        "business": 160,
+        "first": 240
+      }
+    },
+    "LON-LEI": {
+      "city1": "London",
+      "city2": "Leicester",
+      "type": "intercity",
+      "time": "01:10",
+      "distance": 160,
+      "prices": {
+        "economy": 40,
+        "business": 85,
+        "first": 130
+      }
+    },
+    "LEI-BHM": {
+      "city1": "Leicester",
+      "city2": "Birmingham",
+      "type": "intercity",
+      "time": "01:00",
+      "distance": 70,
+      "prices": {
+        "economy": 25,
+        "business": 55,
+        "first": 85
+      }
+    },
+    "BHM-SHF": {
+      "city1": "Birmingham",
+      "city2": "Sheffield",
+      "type": "intercity",
+      "time": "01:25",
+      "distance": 105,
+      "prices": {
+        "economy": 35,
+        "business": 75,
+        "first": 110
+      }
+    },
+    "SHF-YRK": {
+      "city1": "Sheffield",
+      "city2": "York",
+      "type": "intercity",
+      "time": "00:50",
+      "distance": 85,
+      "prices": {
+        "economy": 25,
+        "business": 55,
+        "first": 80
+      }
+    },
+    "PEK-SJW": {
+      "city1": "Beijing",
+      "city2": "Shijiazhuang",
+      "type": "high_speed",
+      "time": "01:20",
+      "distance": 280,
+      "prices": {
+        "economy": 20,
+        "business": 45,
+        "first": 70
+      }
+    },
+    "PEK-XIY": {
+      "city1": "Beijing",
+      "city2": "Xi'an",
+      "type": "high_speed",
+      "time": "04:30",
+      "distance": 1100,
+      "prices": {
+        "economy": 65,
+        "business": 130,
+        "first": 210
+      }
+    }
+  }
+}

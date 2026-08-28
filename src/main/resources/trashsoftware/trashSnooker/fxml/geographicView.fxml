@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.controlsfx.control.WorldMapView?>
+<?import javafx.geometry.Insets?>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.GeographicView"
+      spacing="5.0">
+    
+    <padding>
+        <Insets topRightBottomLeft="5.0"/>
+    </padding>
+    
+    <VBox spacing="5.0">
+        <CheckBox fx:id="internationalFlightsBox" text="%intlFlights"/>
+        <CheckBox fx:id="domesticFlightsBox" text="%domesticFlights"/>
+        <CheckBox fx:id="trainsBox" text="%trainsTransport"/>
+    </VBox>
+
+    <StackPane fx:id="mapViewport"
+               prefHeight="640.0"
+               prefWidth="1080.0">
+        <WorldMapView fx:id="worldMapView"
+                      prefHeight="640.0"
+                      prefWidth="1080.0"/>
+        <Pane fx:id="routeLayer"/>
+        <Pane fx:id="cityLayer"/>
+    </StackPane>
+
+</HBox>

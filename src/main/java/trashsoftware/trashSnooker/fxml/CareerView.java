@@ -97,7 +97,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Button careerRankHistoryBtn;
     @FXML
-    ImageView expImage, moneyImage, inventoryImage, storeImage, achIconImage, lineChartImg;
+    ImageView expImage, moneyImage, inventoryImage, storeImage, worldMapImage, achIconImage, lineChartImg;
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
@@ -979,6 +979,27 @@ public class CareerView extends ChildInitializable {
             view.setParent(selfStage.getScene());
 
             view.setup(isInventory);
+            App.setRoot(root);
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
+    }
+    
+    @FXML
+    void showWorldMapAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("geographicView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            GeographicView view = loader.getController();
+//            view.setStage(selfStage);
+            view.setParent(selfStage.getScene());
+
+            view.setup();
             App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);

@@ -64,6 +64,11 @@
             <ImageView fx:id="storeImage"/>
             <Label text="%store"/>
         </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#showWorldMapAction">
+            <ImageView fx:id="worldMapImage"/>
+            <Label text="%estate"/>
+        </HBox>
     </HBox>
     
     <PerkAdder fx:id="abilityShower" GridPane.rowIndex="2"/>

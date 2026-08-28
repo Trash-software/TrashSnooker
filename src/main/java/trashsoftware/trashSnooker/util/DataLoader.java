@@ -32,6 +32,8 @@ public class DataLoader {
     private static final String CUE_TIP_LIST_FILE = "data/cue_tips.json";
     private static final String TABLE_PRESETS_FILE = "data/tables.json";
     private static final String BALLS_PRESETS_FILE = "data/balls.json";
+    public static final String ROUTES_JSON_PATH = "data/transportation.json";
+    public static final String CITIES_JSON_PATH = "data/cities.json";
 
     private static DataLoader instance;
 

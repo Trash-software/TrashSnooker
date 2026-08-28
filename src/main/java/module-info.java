@@ -4,6 +4,7 @@ module TrashSnooker {
     requires javafx.fxml;
     requires javafx.graphics;
     requires javafx.swing;
+    requires org.controlsfx.controls;
     requires org.json;
     requires org.jetbrains.annotations;
     requires java.sql;
