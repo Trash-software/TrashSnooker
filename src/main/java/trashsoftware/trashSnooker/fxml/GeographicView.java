@@ -13,19 +13,17 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 import org.controlsfx.control.WorldMapView;
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
-import trashsoftware.trashSnooker.core.career.transporation.City;
-import trashsoftware.trashSnooker.core.career.transporation.Route;
-import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
-import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
+import trashsoftware.trashSnooker.core.career.transporation.*;
 
 import java.net.URL;
 import java.util.*;
@@ -40,7 +38,7 @@ public class GeographicView extends ChildInitializable {
             Color.DARKORANGE;
 
     private static final Color DOMESTIC_FLIGHT_COLOR =
-            Color.DODGERBLUE;
+            Color.DARKGOLDENROD;
 
     private static final Color TRAIN_COLOR =
             Color.FORESTGREEN;
@@ -56,7 +54,11 @@ public class GeographicView extends ChildInitializable {
     @FXML
     ComboBox<City> departureBox, destinationBox;
     @FXML
-    Label routeResultLabel;
+    ComboBox<RouteResultSort> resultSortBox;
+    @FXML
+    ListView<RouteResult> searchResultsView;
+    @FXML
+    CheckBox directOnlyBox, flightsOnlyBox;
 
     private TransportationManager manager;
     private CareerManager careerManager;
@@ -98,6 +100,8 @@ public class GeographicView extends ChildInitializable {
 
     private final Map<String, Node> locationAnchors =
             new HashMap<>();
+    
+    private RouteSearchResult routeSearchResult;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -118,7 +122,7 @@ public class GeographicView extends ChildInitializable {
         setupLocationViews();
         loadCities();
 
-        setBoxes();
+        setupControls();
 
         /*
          * ControlsFX 自己的 zoom 永远保持 1。
@@ -163,14 +167,37 @@ public class GeographicView extends ChildInitializable {
         if (a == null || b == null || a.equals(b)) {
             System.out.println("Cannot");
         }
-        // todo: method
-        RouteResult routeResult = manager.findCheapestRoute(a, b);
-        if (routeResult != null) {
-            routeResultLabel.setText(routeResult.toUiString(strings));
+        List<RouteResult> allRoutes = manager.findAllFeasibleRoutes(a, b);
+        routeSearchResult = new RouteSearchResult(allRoutes);
+        updateRouteResultList();
+    }
+    
+    public void setInitCities(City from, City to) {
+        Platform.runLater(() -> {
+            departureBox.getSelectionModel().select(from);
+            destinationBox.getSelectionModel().select(to);
+            searchRouteAction();
+            
+            if (!searchResultsView.getItems().isEmpty()) {
+                searchResultsView.getSelectionModel().select(0);
+            }
+        });
+    }
+    
+    private void updateRouteResultList() {
+        searchResultsView.getItems().clear();
+        if (routeSearchResult == null || routeSearchResult.routeResults.isEmpty()) {
+            return;
         }
+        routeSearchResult.filterAndSort(
+                directOnlyBox.isSelected(), 
+                flightsOnlyBox.isSelected(), 
+                resultSortBox.getValue());
+        
+        searchResultsView.getItems().addAll(routeSearchResult.shownResults);
     }
 
-    private void setBoxes() {
+    private void setupControls() {
         trainsBox.selectedProperty().addListener((_, oldValue, newValue) -> {
             if (oldValue != newValue) scheduleOverlayUpdate();
         });
@@ -187,17 +214,44 @@ public class GeographicView extends ChildInitializable {
         List<City> allCities = manager.getCityList();
         departureBox.getItems().addAll(allCities);
         destinationBox.getItems().addAll(allCities);
+        
+        directOnlyBox.selectedProperty().addListener(((_, oldValue, newValue) -> {
+            if (oldValue != newValue) {
+                updateRouteResultList();
+            }
+        }));
+        flightsOnlyBox.selectedProperty().addListener(((_, oldValue, newValue) -> {
+            if (oldValue != newValue) {
+                updateRouteResultList();
+            }
+        }));
+        resultSortBox.getSelectionModel().selectedItemProperty().addListener(((_, oldValue, newValue) -> {
+            if (newValue != null && newValue != oldValue) {
+                updateRouteResultList();
+            }
+        }));
+        
+        resultSortBox.getItems().addAll(RouteResultSort.values());
+        resultSortBox.getSelectionModel().select(0);
+        
+        searchResultsView.setCellFactory(_ -> new RouteResultListCell());
+        searchResultsView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if (routeSearchResult != null) {
+                routeSearchResult.selected = newValue;
+                scheduleOverlayUpdate();
+            }
+        }));
     }
     
     private void setCityBoxFactory(ComboBox<City> comboBox) {
-        comboBox.setCellFactory(param -> new ListCell<>(){
+        comboBox.setCellFactory(_ -> new ListCell<>(){
             @Override
             protected void updateItem(City item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getName(strings.getLocale()) + ", " + item.getCountry());
+                    setText(item.getName(strings.getLocale()) + ", " + item.getCountryDisplay(strings));
                 }
             }
         });
@@ -209,7 +263,7 @@ public class GeographicView extends ChildInitializable {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getName(strings.getLocale()) + ", " + item.getCountry());
+                    setText(item.getName(strings.getLocale()) + ", " + item.getCountryDisplay(strings));
                 }
             }
         });
@@ -462,6 +516,9 @@ public class GeographicView extends ChildInitializable {
         mapViewport.addEventFilter(
                 MouseEvent.MOUSE_CLICKED,
                 event -> {
+                    if (event.getClickCount() == 1) {
+                        updateRouteResultList();
+                    }
                     if (event.getClickCount() >= 2) {
                         event.consume();
                     }
@@ -677,6 +734,10 @@ public class GeographicView extends ChildInitializable {
     }
 
     private boolean shouldShowRoute(Route route) {
+        if (routeSearchResult != null && routeSearchResult.selected != null) {
+            if (routeSearchResult.selected.containsRoute(route)) return true;
+        }
+        
         if (!route.isFlight()) {
             return trainsBox.isSelected();
         }
@@ -964,9 +1025,11 @@ public class GeographicView extends ChildInitializable {
     }
 
     private void onRouteClicked(Route route) {
-        System.out.println(
-                "Clicked route: " + route.getId()
-        );
+        RouteResult.RouteStep routeStep = new RouteResult.RouteStep(route, route.getCity1(), route.getCity2());
+        RouteResult single = new RouteResult(route.getCity1(), route.getCity2(), List.of(routeStep));
+        
+        searchResultsView.getItems().clear();
+        searchResultsView.getItems().add(single);
     }
 
     private void onCityClicked(City city) {
@@ -2013,6 +2076,138 @@ public class GeographicView extends ChildInitializable {
                                 ? 1.0
                                 : 0.75
                 );
+            }
+        }
+    }
+    
+    enum RouteResultSort {
+        PRICE("sortByPrice"),
+        TIME("sortByTime");
+        
+        final String stringKey;
+        
+        RouteResultSort(String stringKey) {
+            this.stringKey = stringKey;
+        }
+
+        @Override
+        public String toString() {
+            return App.getStrings().getString(stringKey);
+        }
+    }
+    
+    static class RouteSearchResult {
+        final List<RouteResult> routeResults;
+        final List<RouteResult> shownResults = new ArrayList<>();
+        RouteResult selected;
+        
+        RouteSearchResult(List<RouteResult> routeResults) {
+            this.routeResults = routeResults;
+        }
+        
+        public void filterAndSort(boolean directOnly, boolean flightOnly, RouteResultSort sort) {
+            shownResults.clear();
+            for (RouteResult rr : routeResults) {
+                if (directOnly && rr.getTransitCount() != 0) continue;
+                if (flightOnly && !rr.isAllFlight()) continue;
+                shownResults.add(rr);
+            }
+            
+            shownResults.sort((o1, o2) -> {
+                int priceCmp = Double.compare(o1.getTotalEconomyPrice(), o2.getTotalEconomyPrice());
+                int totalTimeCmp = Double.compare(o1.getTotalTimeMinutes(), o2.getTotalTimeMinutes());
+                if (sort == RouteResultSort.PRICE) {
+                    if (priceCmp != 0) return priceCmp;
+                    else return totalTimeCmp;
+                } else if (sort == RouteResultSort.TIME) {
+                    if (totalTimeCmp != 0) return totalTimeCmp;
+                    else return priceCmp;
+                } else {
+                    throw new RuntimeException("Unsupported comparison " + sort);
+                }
+            });
+        }
+    }
+    
+    class RouteResultListCell extends ListCell<RouteResult> {
+        
+        private final GridPane basePane = new GridPane();
+        private final Label routeCitiesLabel = new Label();
+        private final Label transitsLabel = new Label();
+        private final Label totalTimeTextLabel = new Label();
+        private final Label totalTimeLabel = new Label();
+        private final Label onboardTimeLabel = new Label();
+        private final Label distanceLabel = new Label();
+        private final Label economyLabel = new Label();
+        private final Label businessLabel = new Label();
+        private final Label firstLabel = new Label();
+        
+        RouteResultListCell() {
+            basePane.setVgap(5.0);
+            basePane.setHgap(5.0);
+            
+            basePane.setPrefWidth(220.0);
+            basePane.setMaxWidth(220.0);
+            
+            int row = 0;
+            routeCitiesLabel.setWrapText(true);
+            basePane.add(routeCitiesLabel, 0, row++, 2, 1); 
+            
+            basePane.add(transitsLabel, 0, row++);
+
+            totalTimeTextLabel.setText(strings.getString("routeTotalTime"));
+            basePane.add(totalTimeTextLabel, 0, row);
+            basePane.add(totalTimeLabel, 1, row++);
+
+            basePane.add(new Label(strings.getString("routeOnboardTime")), 0, row);
+            basePane.add(onboardTimeLabel, 1, row++);
+
+            basePane.add(new Label(strings.getString("routeDistance")), 0, row);
+            basePane.add(distanceLabel, 1, row++);
+
+            basePane.add(new Label(strings.getString("economyClass")), 0, row);
+            basePane.add(economyLabel, 1, row++);
+
+            basePane.add(new Label(strings.getString("businessClass")), 0, row);
+            basePane.add(businessLabel, 1, row++);
+
+            basePane.add(new Label(strings.getString("firstClass")), 0, row);
+            basePane.add(firstLabel, 1, row++);
+        }
+
+        @Override
+        protected void updateItem(RouteResult item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+                setGraphic(null);
+            } else {
+                routeCitiesLabel.setText(item.cityNamesOnUi(strings));
+                
+                int nTrans = item.getTransitCount();
+                if (nTrans == 0) {
+                    transitsLabel.setText(strings.getString("directRoute"));
+                    totalTimeTextLabel.setVisible(false);
+                    totalTimeTextLabel.setManaged(false);
+                    totalTimeLabel.setVisible(false);
+                    totalTimeLabel.setManaged(false);
+                } else {
+                    transitsLabel.setText(String.format(strings.getString("transitsFmt"), nTrans));
+                    totalTimeTextLabel.setVisible(true);
+                    totalTimeTextLabel.setManaged(true);
+                    totalTimeLabel.setVisible(true);
+                    totalTimeLabel.setManaged(true);
+                }
+                
+                totalTimeLabel.setText(RouteResult.formatTime(item.getTotalTimeMinutes()));
+                onboardTimeLabel.setText(RouteResult.formatTime(item.getOnBoardTimeMinutes()));
+                distanceLabel.setText(String.format("%.0f km", item.getTotalDistance()));
+                
+                economyLabel.setText(String.format("%d", item.getTotalEconomyPrice()));
+                businessLabel.setText(String.format("%d", item.getTotalBusinessPrice()));
+                firstLabel.setText(String.format("%d", item.getTotalFirstPrice()));
+                
+                setGraphic(basePane);
             }
         }
     }

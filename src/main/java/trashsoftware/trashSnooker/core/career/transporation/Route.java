@@ -19,7 +19,7 @@ public class Route {
     private final int businessPrice;
     private final int firstPrice;
 
-    Route(
+    private Route(
             String id,
             boolean flight,
             City city1,
@@ -122,8 +122,21 @@ public class Route {
         return firstPrice;
     }
 
-    public static Route fromJson(String id, 
-                                 boolean isFlight, 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Route route) {
+            return id.equals(route.id) && flight == route.flight;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s->%s, %b", city1.getId(), city2.getId(), isFlight());
+    }
+
+    public static Route fromJson(String id,
+                                 boolean isFlight,
                                  Function<String, City> idToCity,
                                  JSONObject json) {
         JSONObject prices = json.getJSONObject("prices");

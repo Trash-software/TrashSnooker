@@ -75,6 +75,7 @@
 
     <HBox GridPane.rowIndex="3" spacing="10.0" alignment="CENTER_LEFT">
         <Label fx:id="currentDateLabel"/>
+        <Label fx:id="currentLocationLabel"/>
         <Button text="%seeToursList" onAction="#seeToursListAction"/>
         <Button text="%careerChallenges" onAction="#trainingChallengeAction"/>
     </HBox>

@@ -47,6 +47,7 @@ public class Cue {
         lastSelectTime = new Date(0);
 
         System.out.println("Created cue instance " + instanceId);
+//        throw new RuntimeException();
     }
 
     public static Cue createRest(CueBrand brand) {

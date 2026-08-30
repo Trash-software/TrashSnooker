@@ -18,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
@@ -63,7 +65,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Label myRankLabel;
     @FXML
-    Label currentDateLabel;
+    Label currentDateLabel, currentLocationLabel;
     @FXML
     Label availPerksLabel;
     @FXML
@@ -459,6 +461,10 @@ public class CareerView extends ChildInitializable {
                 String.format(strings.getString("currentDateFmt"),
                         CareerManager.calendarToString(careerManager.getTimestamp()))
         );
+        currentLocationLabel.setText(
+                String.format(strings.getString("currentLocationFmt"),
+                        careerManager.getHumanPlayerCareer().getCurrentLocation().getName(strings.getLocale()))
+        );
 
         Championship inProgress = careerManager.getChampionshipInProgress();
 //        System.out.println(inProgress);
@@ -480,12 +486,16 @@ public class CareerView extends ChildInitializable {
                 joinChampBox.setDisable(true);
                 joinChampBox.setSelected(false);
             }
-            nextChampionshipLabel.setText(nextData.fullName());
+            nextChampionshipLabel.setText(nextData.fullName() + " (" + data.getLocation().city().getName(strings.getLocale()) + ")");
             int registryFee = careerManager.getHumanRegistryFee(data, humanQualified);
             registryFeeLabel.setText(String.valueOf(registryFee));
-            int travelFee = data.getFlightFee() + data.getHotelFee();
-            travelFeeLabel.setText(String.valueOf(travelFee));
+//            int travelFee = data.getFlightFee() + data.getHotelFee();
+//            travelFeeLabel.setText(String.valueOf(travelFee));
 
+            int[] travelHotelFees = getTravelAndHotelFees(data);
+            int travelFee = travelHotelFees[0] + travelHotelFees[1];
+            travelFeeLabel.setText(String.valueOf(travelFee));
+            
             int fixedFees = 0;
             Map<String, Integer> feesMap = careerManager.getHumanPlayerCareer().calculateFixedFees(nextData);
             if (!feesMap.isEmpty()) {
@@ -916,6 +926,21 @@ public class CareerView extends ChildInitializable {
             }
         }
     }
+    
+    private int[] getTravelAndHotelFees(ChampionshipData data) {
+        TransportationManager transMan = TransportationManager.getInstance();
+        TransportationManager.Mode mode = TransportationManager.Mode.PRICE;  // todo: ComboBox
+        RouteResult routeResult = transMan.findRoute(
+                careerManager.getHumanPlayerCareer().getCurrentLocation(),
+                data.getLocation().city(),
+                mode);
+        double routeFee;
+        // todo: 舱
+        routeFee = routeResult.getTotalEconomyPrice();
+        int hotelFee = careerManager.getInventory().hasResidenceIn(data.getLocation().city()) ? 0 : data.getHotelFee();
+        // todo: 实际上要待到下一次比赛时间
+        return new int[]{(int) Math.round(routeFee), hotelFee};
+    }
 
     @FXML
     public void nextChamp() {
@@ -930,8 +955,10 @@ public class CareerView extends ChildInitializable {
         championship.startChampionship(joinChampBox.isSelected(), !joinChampBox.isDisabled());
 
         if (humanJoin) {
+            int[] travelHotelFees = getTravelAndHotelFees(championship.getData());
             humanCareer.receiveInviteAward(championship);  // 接收邀请金
-            humanCareer.payParticipateFees(championship);  // 扣报名费、住宿费、机票
+            humanCareer.payParticipateFees(championship, travelHotelFees[0], travelHotelFees[1]);  // 扣报名费
+            humanCareer.setCurrentLocation(nextData.data.getLocation().city());
         }
 
         CareerManager.getInstance().saveToDisk();
@@ -945,6 +972,7 @@ public class CareerView extends ChildInitializable {
     public void skipNextChamp() {
         if (!joinChampBox.isSelected()) {
             careerManager.getHumanPlayerCareer().updateMoneyChampStart(careerManager.nextChampionshipData());  // 扣生活费
+            // todo
 
             Championship championship = careerManager.startNextChampionship();
 
@@ -1000,6 +1028,10 @@ public class CareerView extends ChildInitializable {
             view.setParent(selfStage.getScene());
 
             view.setup(careerManager);
+            if (careerManager.getChampionshipInProgress() == null) {
+                view.setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), 
+                        careerManager.nextChampionshipData().data.getLocation().city());
+            }
             App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);

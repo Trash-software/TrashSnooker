@@ -7,6 +7,8 @@ import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import java.util.*;
 
 public class TransportationManager {
+    
+    public static final String DEFAULT_SPAWN_CITY_ID = "Chongqing";
 
     private static TransportationManager instance;
 
@@ -25,7 +27,7 @@ public class TransportationManager {
 
             cities.put(id, city);
         }
-        
+
         JSONObject routesJson = DataLoader.loadFromDisk(DataLoader.ROUTES_JSON_PATH);
         loadGroup(routesJson.optJSONObject("flights"), true);
         loadGroup(routesJson.optJSONObject("trains"), false);
@@ -37,7 +39,7 @@ public class TransportationManager {
         }
         return instance;
     }
-    
+
     public String getCityShownName(String cityId) {
         City city = cities.get(cityId);
         return city.getName(ConfigLoader.getInstance().getLocale());
@@ -56,7 +58,7 @@ public class TransportationManager {
         list.sort(Comparator.comparing(City::getCountry).thenComparing(City::getId));
         return list;
     }
-    
+
     public City getCityById(String cityId) {
         return cities.get(cityId);
     }
@@ -67,6 +69,10 @@ public class TransportationManager {
 
     public RouteResult findCheapestRoute(City startCity, City endCity) {
         return findRoute(startCity, endCity, Mode.PRICE);
+    }
+
+    public RouteResult findShortestRoute(City startCity, City endCity) {
+        return findRoute(startCity, endCity, Mode.DISTANCE);
     }
 
     private void loadGroup(JSONObject group, boolean isFlight) {
@@ -96,7 +102,7 @@ public class TransportationManager {
         }
     }
 
-    private RouteResult findRoute(
+    public RouteResult findRoute(
             City startCity,
             City endCity,
             Mode mode
@@ -124,8 +130,8 @@ public class TransportationManager {
                         Comparator.comparing(Node::cost)
                 );
 
-        Cost zero = new Cost(0, 0);
-        Cost max = new Cost(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        Cost zero = new Cost(0, 0, 0);
+        Cost max = new Cost(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
         best.put(start, zero);
         queue.add(new Node(start, zero));
 
@@ -170,7 +176,8 @@ public class TransportationManager {
 
                 Cost newCost = new Cost(
                         oldCost.primary() + edgeCost.primary(),
-                        oldCost.secondary() + edgeCost.secondary()
+                        oldCost.secondary() + edgeCost.secondary(),
+                        oldCost.ternary() + edgeCost.ternary()
                 );
 
                 Cost known = best.get(nextState);
@@ -212,19 +219,19 @@ public class TransportationManager {
             Route route,
             Mode mode
     ) {
-        int time = (int) Math.round(route.getTimeMinutes()
+        double time = route.getTimeMinutes()
                 + transferTime(
                 current.previousFlight(),
-                route.isFlight()
-        ));
+                route.isFlight());
 
         int price = route.getEconomyPrice();
-
-        if (mode == Mode.TIME) {
-            return new Cost(time, price);
-        } else {
-            return new Cost(price, time);
-        }
+        double distance = route.getDistance();
+        
+        return switch (mode) {
+            case TIME -> new Cost(time, distance, price);
+            case PRICE -> new Cost(price, time, distance);
+            case DISTANCE -> new Cost(distance, time, price);
+        };
     }
 
     private int transferTime(
@@ -289,9 +296,10 @@ public class TransportationManager {
         );
     }
 
-    private enum Mode {
+    public enum Mode {
         TIME,
-        PRICE
+        PRICE,
+        DISTANCE
     }
 
     private record State(
@@ -312,23 +320,79 @@ public class TransportationManager {
     ) {
     }
 
-    private record Cost(int primary, int secondary)
+    public List<RouteResult> findAllFeasibleRoutes(City startCity, City endCity) {
+//        double distance = Route.computeDistance(startCity, endCity);
+//        double maxRouteDistance = Math.min(40000, (distance + 500) * 2);
+//        RouteResult.RoutesTree root = addPathsToAdjacentCities(startCity, endCity, maxRouteDistance, null);
+//        System.out.println(root);
+        
+        RouteResult shortest = findShortestRoute(startCity, endCity);
+        double maxRouteDistance = Math.min(40000, shortest.getTotalDistance() * 1.5);
+        RouteResult.RoutesTree root = addPathsToAdjacentCities(startCity, endCity, maxRouteDistance, null);
+
+        List<RouteResult> results = new ArrayList<>();
+        root.addToRouteResults(results, new ArrayList<>(), graph, endCity);
+        return results;
+    }
+
+    private RouteResult.RoutesTree addPathsToAdjacentCities(City city,
+                                                            City finalDestination,
+                                                            double maxRouteDistance,
+                                                            RouteResult.RoutesTree parent) {
+        RouteResult.RoutesTree node = new RouteResult.RoutesTree(city, parent);
+        if (city.equals(finalDestination)) {
+            return node;
+        }
+        
+        Set<City> adjacent = findAdjacentCities(city);
+        for (City adj : adjacent) {
+            if (parent == null || !node.alreadyPassedCity(adj)) {
+                double dt = Route.computeDistance(city, adj);
+                double cumulativeDt = dt + node.routeDistance();
+                if (cumulativeDt <= maxRouteDistance) {
+                    node.addChild(addPathsToAdjacentCities(adj, finalDestination, maxRouteDistance, node));
+                }
+            }
+        }
+        return node;
+    }
+
+    private Set<City> findAdjacentCities(City city) {
+        // 用Set以避免既有飞机又有火车的城市线路被加两遍
+        Set<City> result = new HashSet<>();
+        for (Route route : routes) {
+
+            if (route.getCity1().equals(city)) {
+                result.add(route.getCity2());
+            } else if (route.getCity2().equals(city)) {
+                result.add(route.getCity1());
+            }
+        }
+        return result;
+    }
+
+    private record Cost(double primary, double secondary, double ternary)
             implements Comparable<Cost> {
 
         @Override
         public int compareTo(Cost other) {
-            int cmp = Integer.compare(primary, other.primary);
+            int cmp = Double.compare(primary, other.primary);
             if (cmp != 0) {
                 return cmp;
             }
 
-            return Integer.compare(secondary, other.secondary);
+            return Double.compare(secondary, other.secondary);
         }
     }
 
     static void main() {
         TransportationManager tm = TransportationManager.getInstance();
-        RouteResult cqToDgp1 = tm.findCheapestRoute(tm.getCityById("Chongqing"), tm.getCityById("Doggivepower"));
-        System.out.println(cqToDgp1);
+//        RouteResult cqToDgp1 = tm.findCheapestRoute(tm.getCityById("Chongqing"), tm.getCityById("Doggivepower"));
+//        System.out.println(cqToDgp1);
+
+        List<RouteResult> cqToDgp2 = tm.findAllFeasibleRoutes(tm.getCityById("Harbin"), tm.getCityById("Doggivepower"));
+        for (RouteResult routeResult : cqToDgp2) {
+            System.out.println(routeResult);
+        }
     }
 }

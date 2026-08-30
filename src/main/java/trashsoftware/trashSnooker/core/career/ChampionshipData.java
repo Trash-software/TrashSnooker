@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.Country;
 import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
@@ -128,16 +129,20 @@ public class ChampionshipData {
         ChampionshipLocation cl = null;
         if (location != null) {
             try {
-                ChampionshipLocation.TaxCountry tc = ChampionshipLocation.TaxCountry.valueOf(location.optString("country"));
+                Country tc = Country.valueOf(location.optString("country"));
                 City city = TransportationManager.getInstance().getCityById(location.optString("city"));
                 if (city != null) cl = new ChampionshipLocation(city, tc);
             } catch (JSONException | IllegalArgumentException iae) {
                 System.err.println("Championship " + data.id + " cannot get location.");
+                iae.printStackTrace();
             }
         }
-        if (cl == null) cl = ChampionshipLocation.getDefaultSpawn();
+        if (cl == null) {
+            City city = ChampionshipLocation.getDefaultSpawn();
+            cl = new ChampionshipLocation(city, city.getCountry());
+        }
         data.location = cl;
-        
+
         // Check: 有可能与种子选手/仅职业/ranked等前置条件冲突
         JSONArray clubs = jsonObject.optJSONArray("clubs", null);
         if (clubs == null) {
@@ -380,7 +385,7 @@ public class ChampionshipData {
     public int getForbidden() {
         return forbidden;
     }
-    
+
     public boolean hasClubRestriction() {
         return clubsRestriction != null && !clubsRestriction.isEmpty();
     }
@@ -388,7 +393,7 @@ public class ChampionshipData {
     public List<String> getClubsRestriction() {
         return clubsRestriction == null ? List.of() : clubsRestriction;
     }
-    
+
     public boolean hasSexRestriction() {
         return sexRestriction != null && !sexRestriction.isEmpty();
     }
@@ -396,7 +401,11 @@ public class ChampionshipData {
     public List<String> getSexRestriction() {
         return sexRestriction == null ? List.of() : sexRestriction;
     }
-    
+
+    public ChampionshipLocation getLocation() {
+        return location;
+    }
+
     public List<PlayerPerson.Sex> getSexRestriction2() {
         List<PlayerPerson.Sex> result = new ArrayList<>();
         if (sexRestriction != null) {

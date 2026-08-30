@@ -4,7 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.Residence;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -168,6 +169,7 @@ public class CareerManager {
             if (currentSave == null) throw new RuntimeException("Career not set");
             try {
                 instance = loadFromFile(currentSave);
+                instance.getHumanPlayerCareer().validateLocation();
             } catch (IOException e) {
                 throw new RuntimeException("Career not readable");
             }
@@ -204,7 +206,8 @@ public class CareerManager {
                                        double playerGoodness,
                                        double aiGoodness,
                                        boolean includeCustomPlayers,
-                                       int initLevel) {
+                                       int initLevel,
+                                       City spawnLocation) {
 //        if (getInstance() != null) throw new RuntimeException("Shouldn't be");
         CareerSave save = new CareerSave(new File(CAREER_DIR, playerPlayer.getPlayerId()));
         try {
@@ -234,7 +237,9 @@ public class CareerManager {
         if (cm.humanPlayerCareer == null) {
             throw new RuntimeException("No human player???");
         }
-        cm.getHumanPlayerCareer().setInitLevel(initLevel);
+        cm.getHumanPlayerCareer().setInitParams(initLevel, spawnLocation);
+        Residence initHome = Residence.createForCareer(spawnLocation, Residence.DEFAULT_AREA, cm.timestamp, save);
+        cm.inventoryManager.addResidence(initHome);
         cm.cache = new JSONObject();
         instance = cm;
 
@@ -364,6 +369,16 @@ public class CareerManager {
         }
 
         careerManager.updateRanking();
+        
+        if (careerManager.inventoryManager.getResidences().isEmpty()) {
+            // 从旧版本更新过来的
+            Residence residence = Residence.createForCareer(
+                    careerManager.getHumanPlayerCareer().getSpawnLocation(), 
+                    Residence.DEFAULT_AREA,
+                    careerManager.getTimestamp(),
+                    careerSave);
+            careerManager.inventoryManager.addResidence(residence);
+        }
 
         careerManager.cache = DataLoader.loadFromDisk(new File(careerSave.getDir(), CACHE).getAbsolutePath());
 

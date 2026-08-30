@@ -12,7 +12,8 @@ public class PermanentCounters {
     private final File file;
     private int cueInstanceCounter;
     private int tipInstanceCounter;
-    private int fastGamesCounter;
+    private int fastGameCounter;
+    private int residenceCounter;
 
     private PermanentCounters() {
         file = new File(DataLoader.COUNTERS_FILE);
@@ -39,13 +40,19 @@ public class PermanentCounters {
     }
 
     public int nextFastGame() {
-        int rtn = fastGamesCounter++;
+        int rtn = fastGameCounter++;
         save();
         return rtn;
     }
 
     public int currentFastGame() {
-        return fastGamesCounter;
+        return fastGameCounter;
+    }
+
+    public int nextResidence() {
+        int rtn = residenceCounter++;
+        save();
+        return rtn;
     }
 
     private void load() {
@@ -55,7 +62,8 @@ public class PermanentCounters {
                 JSONObject root = jsonObject.getJSONObject("counters");
                 cueInstanceCounter = root.optInt("cueInstanceCounter", 0);
                 tipInstanceCounter = root.optInt("tipInstanceCounter", 0);
-                fastGamesCounter = root.optInt("fastGameCounter", 0);
+                fastGameCounter = root.optInt("fastGameCounter", 0);
+                residenceCounter = root.optInt("residenceCounter", 0);
             } catch (JSONException e) {
                 EventLogger.error(e);
                 save();
@@ -69,7 +77,8 @@ public class PermanentCounters {
 
         root.put("cueInstanceCounter", cueInstanceCounter);
         root.put("tipInstanceCounter", tipInstanceCounter);
-        root.put("fastGameCounter", fastGamesCounter);
+        root.put("fastGameCounter", fastGameCounter);
+        root.put("residenceCounter", residenceCounter);
         
         json.put("counters", root);
         DataLoader.saveToDisk(json, file.getAbsolutePath());

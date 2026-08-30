@@ -3,6 +3,9 @@ package trashsoftware.trashSnooker.core.career;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.Residence;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
@@ -25,6 +28,7 @@ public class InventoryManager {
     private final File file;
     private final Map<String, CueTip> cueTips = new HashMap<>();
     private final Map<String, Cue> cues = new HashMap<>();  // key是instance的id
+    private final List<Residence> residences = new ArrayList<>();
     
     private InventoryManager(CareerSave save, File file) {
         this.file = file;
@@ -108,6 +112,19 @@ public class InventoryManager {
                     }
                 }
             }
+            if (inventory.has("residences")) {
+                JSONArray jsonArray = inventory.getJSONArray("residences");
+                TransportationManager tm = TransportationManager.getInstance();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        JSONObject resObj = jsonArray.getJSONObject(i);
+                        Residence residence = Residence.fromJson(resObj, tm.getCities());
+                        residences.add(residence);
+                    } catch (JSONException e) {
+                        EventLogger.error(e);
+                    }
+                }
+            }
         } else {
             throw new JSONException("No inventory root specified");
         }
@@ -130,6 +147,12 @@ public class InventoryManager {
             cueInstanceRoot.put(cueObj);
         }
         inventory.put("cueInstances", cueInstanceRoot);
+        
+        JSONArray residenceRoot = new JSONArray();
+        for (Residence residence : residences) {
+            residenceRoot.put(residence.toJson());
+        }
+        inventory.put("residences", residenceRoot);
         
         root.put("inventory", inventory);
         return root;
@@ -169,6 +192,21 @@ public class InventoryManager {
         cues.put(cue.getInstanceId(), cue);
     }
     
+    public void addResidence(Residence residence) {
+        residences.add(residence);
+    }
+
+    public List<Residence> getResidences() {
+        return residences;
+    }
+    
+    public boolean hasResidenceIn(City city) {
+        for (Residence residence : residences) {
+            if (residence.getCity().equals(city)) return true;
+        }
+        return false;
+    }
+
     public void installTip(CueTip cueTip, Cue cue) {
         cueTips.put(cueTip.getInstanceId(), cueTip);
         cue.setCueTip(cueTip);

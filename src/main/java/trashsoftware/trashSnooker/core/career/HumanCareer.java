@@ -13,6 +13,9 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeReward;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.challenge.RewardCondition;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.Country;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
@@ -38,17 +41,19 @@ public class HumanCareer extends Career {
     private FinancialManager finance;
     private AwardDistributionHint unShownAwd;
     private final CareerManager careerManager;
-    private ChampionshipLocation liveLocation;  // 居住地
+    private City currentLocation;
+    private City spawnLocation;
 
-    HumanCareer(PlayerPerson playerPerson, CareerManager careerManager) {
+    HumanCareer(PlayerPerson playerPerson, 
+                CareerManager careerManager) {
         super(playerPerson, true, careerManager);
 
         this.careerManager = careerManager;
-        liveLocation = ChampionshipLocation.getDefaultSpawn();  // todo
     }
 
     @Override
     protected void initNew() {
+        super.initNew();
         finance = new FinancialManager(careerManager.getCareerSave());
         finance.availPerks = CareerManager.INIT_PERKS;
         finance.totalPerks = finance.availPerks;
@@ -56,7 +61,7 @@ public class HumanCareer extends Career {
         finance.money = CareerManager.INIT_MONEY;
     }
 
-    void setInitLevel(int tarLevel) {
+    void setInitParams(int tarLevel, City spawnLocation) {
         for (int i = getLevel(); i < tarLevel; i++) {
             List<AwardMaterial> result = new ArrayList<>();
             int expNeed = CareerManager.getExpNeededToLevelUp(finance.level);
@@ -74,6 +79,8 @@ public class HumanCareer extends Career {
             levelAwards.put(finance.level, result);
         }
         finance.remFreePerks = finance.availPerks;
+        this.spawnLocation = spawnLocation;
+        this.currentLocation = spawnLocation;
     }
 
     @Override
@@ -122,6 +129,16 @@ public class HumanCareer extends Career {
         } catch (JSONException e) {
             EventLogger.log(e, EventLogger.INFO, true);
         }
+
+        if (jsonObject.has("spawnLocation")) {
+            spawnLocation = TransportationManager.getInstance().getCityById(jsonObject.getString("spawnLocation"));
+        }
+        if (jsonObject.has("currentLocation")) {
+            currentLocation = TransportationManager.getInstance().getCityById(jsonObject.getString("currentLocation"));
+        }
+        if (spawnLocation == null) {
+            spawnLocation = ChampionshipLocation.getDefaultSpawn();
+        }
     }
 
     @Override
@@ -149,6 +166,9 @@ public class HumanCareer extends Career {
             }
         }
         out.put("levelAwards", levelAwdObj);
+        
+        out.put("currentLocation", currentLocation == null ? JSONObject.NULL : currentLocation.getId());
+        out.put("spawnLocation", spawnLocation.getId());
     }
 
     @Override
@@ -178,8 +198,27 @@ public class HumanCareer extends Career {
         }
     }
 
-    public void setLiveLocation(ChampionshipLocation liveLocation) {
-        this.liveLocation = liveLocation;
+    public void setCurrentLocation(City currentLocation) {
+        this.currentLocation = currentLocation;
+    }
+
+    public City getSpawnLocation() {
+        return spawnLocation;
+    }
+
+    public City getCurrentLocation() {
+        return currentLocation;
+    }
+    
+    public void validateLocation() {
+        if (currentLocation == null) {
+            Championship inProgress = careerManager.getChampionshipInProgress();
+            if (inProgress == null) {
+                currentLocation = spawnLocation;
+            } else {
+                currentLocation = inProgress.getData().location.city();
+            }
+        }
     }
 
     public void completeChallenge(ChallengeSet challengeSet, boolean clearance, int score) {
@@ -211,7 +250,7 @@ public class HumanCareer extends Career {
                 finance.totalExp += cr.getExp();
                 finance.expInThisLevel += cr.getExp();
                 int raw = cr.getMoney();
-                earnMoney(raw, liveLocation);
+                earnMoney(raw, currentLocation.getCountry());
                 int real = finance.money - before;
 
                 challengeEarnItems.put(entry.getKey().toJsonString(), new Invoice.TaxedIncome(raw, real));
@@ -245,10 +284,10 @@ public class HumanCareer extends Career {
      *
      * @param earned  标价
      */
-    public void earnMoney(int earned, ChampionshipLocation location) {
+    public void earnMoney(int earned, Country location) {
         finance.cumulativeAwards += earned;
 
-        double tax = location.taxCountry.tax(earned);
+        double tax = location.tax(earned);
 
         finance.money += (int) Math.round(earned - tax);
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
@@ -340,7 +379,7 @@ public class HumanCareer extends Career {
 
             int before = finance.money;
             int raw = score.data.getAwardByRank(rank);
-            earnMoney(raw, score.data.location);
+            earnMoney(raw, score.data.location.city().getCountry());
             int real = finance.money - before;
 
 //            JSONObject subItem = new JSONObject();
@@ -691,12 +730,12 @@ public class HumanCareer extends Career {
      * 这个方法可以把钱扣到负数
      * 目前没做债务管理器
      */
-    public void payParticipateFees(Championship championship) {
+    public void payParticipateFees(Championship championship, int travelFee, int hotelFee) {
         ChampionshipData data = championship.getData();
         int moneyBefore = finance.money;
         int registryFee = data.getRegistryFee();
-        int travelFee = data.getFlightFee();
-        int hotelFee = data.getHotelFee();
+//        int travelFee = data.getFlightFee();
+//        int hotelFee = data.getHotelFee();
 
         finance.money -= (registryFee + travelFee + hotelFee);
 

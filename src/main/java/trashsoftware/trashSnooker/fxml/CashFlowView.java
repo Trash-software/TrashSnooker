@@ -62,7 +62,7 @@ public class CashFlowView extends ChildInitializable {
                     "oweInterest", 0)
     );
     @FXML
-    ListView<Invoice> listPane;
+    ListView<Invoice> listView;
     @FXML
     Label moneyLabel;
     @FXML
@@ -87,7 +87,7 @@ public class CashFlowView extends ChildInitializable {
         this.stage = stage;
         this.humanCareer = humanCareer;
 
-        listPane.setCellFactory(param -> new InvoiceListCell());
+        listView.setCellFactory(_ -> new InvoiceListCell());
         createObjects(humanCareer);
 
         dateAxis.setTickLabelFormatter(new StringConverter<>() {
@@ -110,12 +110,12 @@ public class CashFlowView extends ChildInitializable {
     }
 
     public void renderInvoiceList() {
-        listPane.getItems().clear();
+        listView.getItems().clear();
         InvoiceListCell.last = CareerManager.getInstance().getBeginTimestamp();
 
         for (Invoice invoice : invoiceObjects) {
             if (isTypeSelected(invoice.type)) {
-                listPane.getItems().add(invoice);
+                listView.getItems().add(invoice);
             } else {
                 InvoiceListCell.last = invoice.inGameDate;
             }

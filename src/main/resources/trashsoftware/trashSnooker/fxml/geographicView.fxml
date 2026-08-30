@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import org.controlsfx.control.WorldMapView?>
-<?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.GeographicView"
       spacing="5.0">
-    
+
     <padding>
         <Insets topRightBottomLeft="10.0"/>
     </padding>
-    
+
     <VBox spacing="10.0">
         <HBox>
             <Button text="%backIcon" onAction="#backAction"/>
         </HBox>
-        
+
         <CheckBox fx:id="internationalFlightsBox" text="%intlFlights"/>
         <CheckBox fx:id="domesticFlightsBox" text="%domesticFlights"/>
         <CheckBox fx:id="trainsBox" text="%trainsTransport"/>
-        
+
         <Separator/>
-        
+
         <GridPane vgap="10.0" hgap="5.0">
             <Label text="%departurePlace"/>
             <ComboBox fx:id="departureBox" GridPane.columnIndex="1"/>
             <Label text="%destinationPlace" GridPane.rowIndex="1"/>
             <ComboBox fx:id="destinationBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-            
-            <Button text="%search" onAction="#searchRouteAction" GridPane.rowIndex="3"/>
-            <Label fx:id="routeResultLabel" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+
+            <CheckBox fx:id="directOnlyBox" text="%directRouteOnly" GridPane.rowIndex="2"/>
+            <CheckBox fx:id="flightsOnlyBox" text="%flightsOnly" GridPane.rowIndex="3"/>
+
+            <ComboBox fx:id="resultSortBox" GridPane.rowIndex="4"/>
+            <Button text="%search" onAction="#searchRouteAction" GridPane.rowIndex="4"
+                    GridPane.columnIndex="1"/>
+
+            <ListView fx:id="searchResultsView" GridPane.rowIndex="5" GridPane.columnSpan="2" 
+                      prefWidth="240.0">
+                <placeholder>
+                    <Label text="%noRoutesFound"/>
+                </placeholder>
+            </ListView>
         </GridPane>
     </VBox>
 

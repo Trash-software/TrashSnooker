@@ -5,7 +5,7 @@
         "en": "London",
         "zh": "伦敦"
       },
-      "country": "UK",
+      "country": "GBR",
       "capital": true,
       "housePriceM2": 14500,
       "longitude": -0.1278,
@@ -16,7 +16,7 @@
         "en": "Belfast",
         "zh": "贝尔法斯特"
       },
-      "country": "UK",
+      "country": "GBR",
       "capital": false,
       "housePriceM2": 3100,
       "longitude": -5.9301,
@@ -27,7 +27,7 @@
         "en": "Sheffield",
         "zh": "谢菲尔德"
       },
-      "country": "UK",
+      "country": "GBR",
       "capital": false,
       "housePriceM2": 3500,
       "longitude": -1.4701,
@@ -38,7 +38,7 @@
         "en": "Leicester",
         "zh": "莱斯特"
       },
-      "country": "UK",
+      "country": "GBR",
       "capital": false,
       "housePriceM2": 3500,
       "longitude": -1.1337,
@@ -49,7 +49,7 @@
         "en": "Birmingham",
         "zh": "伯明翰"
       },
-      "country": "UK",
+      "country": "GBR",
       "capital": false,
       "housePriceM2": 4100,
       "longitude": -1.8904,
@@ -60,7 +60,7 @@
         "en": "York",
         "zh": "约克"
       },
-      "country": "UK",
+      "country": "GBR",
       "capital": false,
       "housePriceM2": 4500,
       "longitude": -1.0827,
@@ -71,7 +71,7 @@
         "en": "Berlin",
         "zh": "柏林"
       },
-      "country": "Germany",
+      "country": "GER",
       "capital": true,
       "housePriceM2": 6700,
       "longitude": 13.4050,
@@ -82,7 +82,7 @@
         "en": "Doggivepower",
         "zh": "狗给力"
       },
-      "country": "GP",
+      "country": "GPW",
       "capital": false,
       "housePriceM2": 3500,
       "longitude": 23.7275,
@@ -93,7 +93,7 @@
         "en": "Catgivepower",
         "zh": "猫给力"
       },
-      "country": "GP",
+      "country": "GPW",
       "capital": true,
       "housePriceM2": 2200,
       "longitude": 19.8187,
@@ -115,7 +115,7 @@
         "en": "Toronto",
         "zh": "多伦多"
       },
-      "country": "Canada",
+      "country": "CAN",
       "capital": false,
       "housePriceM2": 6500,
       "longitude": -79.3832,
@@ -137,7 +137,7 @@
         "en": "Beijing",
         "zh": "北京"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": true,
       "housePriceM2": 9000,
       "longitude": 116.4074,
@@ -148,7 +148,7 @@
         "en": "Shanghai",
         "zh": "上海"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": false,
       "housePriceM2": 8500,
       "longitude": 121.4737,
@@ -159,7 +159,7 @@
         "en": "Guangzhou",
         "zh": "广州"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": false,
       "housePriceM2": 5000,
       "longitude": 113.2644,
@@ -170,7 +170,7 @@
         "en": "Wuhan",
         "zh": "武汉"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": false,
       "housePriceM2": 2500,
       "longitude": 114.3055,
@@ -181,7 +181,7 @@
         "en": "Chongqing",
         "zh": "重庆"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": false,
       "housePriceM2": 2300,
       "longitude": 106.5516,
@@ -192,7 +192,7 @@
         "en": "Harbin",
         "zh": "哈尔滨"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": false,
       "housePriceM2": 1800,
       "longitude": 126.6424,
@@ -203,7 +203,7 @@
         "en": "Xi'an",
         "zh": "西安"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": false,
       "housePriceM2": 2800,
       "longitude": 108.9398,
@@ -214,7 +214,7 @@
         "en": "Shijiazhuang",
         "zh": "石家庄"
       },
-      "country": "China",
+      "country": "CHN",
       "capital": false,
       "housePriceM2": 1800,
       "longitude": 114.5149,
@@ -225,7 +225,7 @@
         "en": "Riyadh",
         "zh": "利雅得"
       },
-      "country": "Saudi Arabia",
+      "country": "KSA",
       "capital": true,
       "housePriceM2": 2800,
       "longitude": 46.6753,
@@ -247,11 +247,44 @@
         "en": "Sydney",
         "zh": "悉尼"
       },
-      "country": "Australia",
+      "country": "AUS",
       "capital": false,
       "housePriceM2": 9500,
       "longitude": 151.2075,
       "latitude": -33.8672
+    },
+    "Cape Town": {
+      "names": {
+        "en": "Cape Town",
+        "zh": "开普敦"
+      },
+      "country": "ZAF",
+      "capital": true,
+      "housePriceM2": 2200,
+      "longitude": 18.4241,
+      "latitude": -33.9249
+    },
+    "Sao Paulo": {
+      "names": {
+        "en": "Sao Paulo",
+        "zh": "圣保罗"
+      },
+      "country": "BRA",
+      "capital": false,
+      "housePriceM2": 2300,
+      "longitude": -46.6333,
+      "latitude": -23.5505
+    },
+    "Moscow": {
+      "names": {
+        "en": "Moscow",
+        "zh": "莫斯科"
+      },
+      "country": "RUS",
+      "capital": true,
+      "housePriceM2": 4200,
+      "longitude": 37.6173,
+      "latitude": 55.7558
     }
   }
 }

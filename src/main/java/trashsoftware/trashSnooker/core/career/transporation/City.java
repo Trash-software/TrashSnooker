@@ -2,16 +2,14 @@ package trashsoftware.trashSnooker.core.career.transporation;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class City {
 
     private final String id;
     private final Map<String, String> names;
-    private final String country;
+    private final Country country;
+    private final String countryId;  // 处理一些未知国家的情况
     private final boolean capital;
 
     private final int housePriceM2;
@@ -22,7 +20,8 @@ public class City {
     public City(
             String id,
             Map<String, String> names,
-            String country,
+            Country country,
+            String countryId,
             boolean capital,
             int housePriceM2,
             double longitude,
@@ -31,6 +30,7 @@ public class City {
         this.id = id;
         this.names = Map.copyOf(names);
         this.country = country;
+        this.countryId = countryId;
         this.capital = capital;
         this.housePriceM2 = housePriceM2;
         this.longitude = longitude;
@@ -59,8 +59,16 @@ public class City {
         return id;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
+    }
+    
+    public String getCountryDisplay(ResourceBundle strings) {
+        if (country == Country.OTHERS) {
+            return countryId;
+        } else {
+            return country.shownName(strings);
+        }
     }
 
     public boolean isCapital() {
@@ -89,12 +97,16 @@ public class City {
                     namesJson.getString(language)
             );
         }
+        
+        String countryId = json.getString("country");
+        Country country = Country.fromStringKey(countryId);
 
         return new City(
                 id,
                 names,
-                json.getString("country"),
-                json.getBoolean("capital"),
+                country,
+                countryId,
+                json.optBoolean("capital", false),
                 json.getInt("housePriceM2"),
                 json.getDouble("longitude"),
                 json.getDouble("latitude")

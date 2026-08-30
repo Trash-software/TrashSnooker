@@ -397,9 +397,9 @@
       "city2": "Catgivepower",
       "type": "international",
       "prices": {
-        "economy": 590,
-        "business": 3100,
-        "first": 5000
+        "economy": 710,
+        "business": 4100,
+        "first": 6500
       }
     },
     "DXB-CGP": {
@@ -410,6 +410,46 @@
         "economy": 250,
         "business": 1100,
         "first": 2000
+      }
+    },
+    "DXB-CPT": {
+      "city1": "Dubai",
+      "city2": "Cape Town",
+      "type": "international",
+      "prices": {
+        "economy": 520,
+        "business": 2800,
+        "first": 4700
+      }
+    },
+    "JFK-GRU": {
+      "city1": "New York",
+      "city2": "Sao Paulo",
+      "type": "international",
+      "prices": {
+        "economy": 580,
+        "business": 3000,
+        "first": 5000
+      }
+    },
+    "SVO-PEK": {
+      "city1": "Moscow",
+      "city2": "Beijing",
+      "type": "international",
+      "prices": {
+        "economy": 430,
+        "business": 2300,
+        "first": 3900
+      }
+    },
+    "SVO-DXB": {
+      "city1": "Moscow",
+      "city2": "Dubai",
+      "type": "international",
+      "prices": {
+        "economy": 320,
+        "business": 1700,
+        "first": 2900
       }
     }
   },

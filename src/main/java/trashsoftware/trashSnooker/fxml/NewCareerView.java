@@ -12,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
@@ -36,6 +38,8 @@ public class NewCareerView extends ChildInitializable {
     TextField nameField;
     @FXML
     ComboBox<PlayerPerson> existingPlayersBox;
+    @FXML
+    ComboBox<City> spawnLocationBox;
     @FXML
     Button playerInfoBtn;
     @FXML
@@ -115,6 +119,34 @@ public class NewCareerView extends ChildInitializable {
 
         handBox.getItems().addAll(Hand.values());
         handBox.getSelectionModel().select(1);
+
+        spawnLocationBox.setCellFactory(_ -> new ListCell<>(){
+            @Override
+            protected void updateItem(City item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName(strings.getLocale()) + ", " + item.getCountryDisplay(strings));
+                }
+            }
+        });
+
+        spawnLocationBox.setButtonCell(new ListCell<>(){
+            @Override
+            protected void updateItem(City item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName(strings.getLocale()) + ", " + item.getCountryDisplay(strings));
+                }
+            }
+        });
+        
+        TransportationManager tm = TransportationManager.getInstance();
+        spawnLocationBox.getItems().addAll(tm.getCityList());
+        spawnLocationBox.getSelectionModel().select(tm.getCityById(TransportationManager.DEFAULT_SPAWN_CITY_ID));
 
         existingPlayersBox.setConverter(new StringConverter<>() {
             @Override
@@ -284,7 +316,8 @@ public class NewCareerView extends ChildInitializable {
                                 playerGoodnessBox.getValue().multiplier,
                                 aiGoodnessBox.getValue().multiplier,
                                 includeCustomPlayerBox.isSelected(),
-                                initialLevelBox.getValue());
+                                initialLevelBox.getValue(),
+                                spawnLocationBox.getValue());
                         System.out.println("Start simulating");
                         long st = System.currentTimeMillis();
                         CareerManager.getInstance().simulateMatchesInPastTwoYears();

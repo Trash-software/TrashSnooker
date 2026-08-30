@@ -26,7 +26,7 @@
     </HBox>
 
     <HBox VBox.vgrow="ALWAYS" spacing="10.0">
-        <ListView fx:id="listPane" HBox.hgrow="ALWAYS"/>
+        <ListView fx:id="listView" HBox.hgrow="ALWAYS"/>
 <!--        <ScrollPane HBox.hgrow="ALWAYS">-->
 <!--            <GridPane fx:id="listPane" vgap="5.0" hgap="10.0">-->
 <!--                <columnConstraints>-->

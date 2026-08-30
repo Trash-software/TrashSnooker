@@ -62,7 +62,7 @@ public class ChampDataManager {
     public List<ChampionshipData> getByCity(City city) {
         List<ChampionshipData> result = new ArrayList<>();
         for (ChampionshipData cd : championshipData) {
-            if (cd.location.city.equals(city)) result.add(cd);
+            if (cd.location.city().equals(city)) result.add(cd);
         }
         return result;
     }

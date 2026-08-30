@@ -1,7 +1,7 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 683843,
+    "money": 688093,
     "invoices": [
       {
         "inGameDate": "2026/1/25",
@@ -38,11 +38,15 @@
       },
       {
         "inGameDate": "2026/2/22",
-        "match": "custom_player_160+2026+professional_champ",
         "moneyBefore": 665600,
+        "match": "custom_player_160+2026+professional_champ",
         "moneyAfter": 662600,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -50,10 +54,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-05-23 05:17:09"
@@ -61,8 +61,8 @@
       {
         "inGameDate": "2026/2/22",
         "year": 2026,
-        "match": "professional_champ",
         "moneyBefore": 662600,
+        "match": "professional_champ",
         "moneyAfter": 687493,
         "type": "championshipEarn",
         "items": {"TOP_4": {
@@ -84,11 +84,15 @@
       },
       {
         "inGameDate": "2026/2/27",
-        "match": "custom_player_160+2026+dog_give_power_open",
         "moneyBefore": 686743,
+        "match": "custom_player_160+2026+dog_give_power_open",
         "moneyAfter": 683843,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -96,20 +100,29 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-06-05 05:16:02"
+      },
+      {
+        "inGameDate": "2026/2/27",
+        "year": 2026,
+        "moneyBefore": 683843,
+        "match": "dog_give_power_open",
+        "moneyAfter": 688093,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4250,
+          "raw": 5000
+        }},
+        "timestamp": "2026-08-30 21:22:35"
       }
     ],
     "level": 30,
-    "expInThisLevel": 458,
+    "expInThisLevel": 538,
     "availPerks": 0,
     "totalPerks": 0,
-    "totalExp": 10857
+    "totalExp": 10937
   },
-  "checksum": "1E86E836FEC537C94AA1B34242073C42"
+  "checksum": "56C59F88761C43CB618FFB8F5C497F50"
 }

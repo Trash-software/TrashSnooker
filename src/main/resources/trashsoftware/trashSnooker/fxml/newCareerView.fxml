@@ -6,7 +6,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.NewCareerView" spacing="10.0"
-      alignment="CENTER" prefWidth="640.0" prefHeight="400.0" fx:id="basePane">
+      alignment="CENTER" prefWidth="640.0" prefHeight="440.0" fx:id="basePane">
 
     <padding>
         <Insets topRightBottomLeft="10.0"/>
@@ -76,6 +76,9 @@
 
                 <Label text="%initialLevel" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                 <ComboBox fx:id="initialLevelBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                <Label text="%spawnLocation" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="spawnLocationBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
             </GridPane>
         </VBox>
 
