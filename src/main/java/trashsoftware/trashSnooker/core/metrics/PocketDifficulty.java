@@ -59,9 +59,9 @@ public class PocketDifficulty {
     };
     public static PocketDifficulty[] RUSSIAN_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
-                    10.0, 0.25, -7.5, 80.0,
+                    10.0, 0.5, -5, 80.0,
                     0.5,
-                    10.0, 15, -7.5,
+                    10.0, 15, -5,
                     53.0, 10.0)
     };
 

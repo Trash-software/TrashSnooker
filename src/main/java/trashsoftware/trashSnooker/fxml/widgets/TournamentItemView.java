@@ -73,19 +73,30 @@ public class TournamentItemView extends ScrollPane {
 
         int row = 0;
         Label nameLabel = new Label(data.getName());
-        nameLabel.setFont(new Font(App.FONT.getName(), 18));
+        nameLabel.setFont(new Font(App.FONT.getName(), 16));
+        nameLabel.setStyle("""
+                        -fx-font-weight: bold;
+                        """);
         rootPane.add(nameLabel, 0, row++);
 
-        HBox tourTypeBox = new HBox();
-        tourTypeBox.setSpacing(10.0);
-
+        HBox tourBasicBox = new HBox();
+        tourBasicBox.setSpacing(10.0);
+        
+        Label cityLabel = new Label();
+        cityLabel.setText(data.getLocation().city().getName(strings.getLocale()));
+        tourBasicBox.getChildren().add(cityLabel);
+        
         StringBuilder gameTypeBuilder = new StringBuilder();
         gameTypeBuilder.append(data.getType().toString());
 
         for (SubRule sr : data.getSubRules()) {
             gameTypeBuilder.append('-').append(sr.toString());
         }
-        tourTypeBox.getChildren().add(new Label(gameTypeBuilder.toString()));
+        tourBasicBox.getChildren().add(new Label(gameTypeBuilder.toString()));
+        rootPane.add(tourBasicBox, 0, row++);
+
+        HBox tourTypeBox = new HBox();
+        tourTypeBox.setSpacing(10.0);
 
         tourTypeBox.getChildren().add(new Label(strings.getString("isRanked") + (data.isRanked() ?
                 strings.getString("yes") :
@@ -162,14 +173,14 @@ public class TournamentItemView extends ScrollPane {
         LabelTableColumn<ChampionshipData, Integer> feesCol1 =
                 new LabelTableColumn<>(feesTable, strings.getString("registryFee"),
                         params -> new ReadOnlyObjectWrapper<>(params.getRegistryFee()));
-        LabelTableColumn<ChampionshipData, Integer> feesCol2 =
-                new LabelTableColumn<>(feesTable, strings.getString("flightFee"),
-                        params -> new ReadOnlyObjectWrapper<>(params.getFlightFee()));
-        LabelTableColumn<ChampionshipData, Integer> feesCol3 =
-                new LabelTableColumn<>(feesTable, strings.getString("hotelFee"),
-                        params -> new ReadOnlyObjectWrapper<>(params.getHotelFee()));
+//        LabelTableColumn<ChampionshipData, Integer> feesCol2 =
+//                new LabelTableColumn<>(feesTable, strings.getString("flightFee"),
+//                        params -> new ReadOnlyObjectWrapper<>(params.getFlightFee()));
+//        LabelTableColumn<ChampionshipData, Integer> feesCol3 =
+//                new LabelTableColumn<>(feesTable, strings.getString("hotelFee"),
+//                        params -> new ReadOnlyObjectWrapper<>(params.getHotelFee()));
 
-        feesTable.addColumns(feesCol1, feesCol2, feesCol3);
+        feesTable.addColumns(feesCol1);
         feesTable.addItem(data);
 
         rootPane.add(feesTable, 0, row++);

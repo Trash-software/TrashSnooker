@@ -78,6 +78,10 @@ public class City {
     public int getHousePriceM2() {
         return housePriceM2;
     }
+    
+    public int hotelPricePerDay() {
+        return (int) Math.round(housePriceM2 * 0.015);
+    }
 
     public double getLongitude() {
         return longitude;

@@ -25,7 +25,7 @@ public class TournamentsViewer extends ChildInitializable {
     @FXML
     TableView<ChampionshipData> dataTable;
     @FXML
-    TableColumn<ChampionshipData, String> champNameCol, champDateCol, champRuleCol;
+    TableColumn<ChampionshipData, String> champNameCol, champLocationCol, champDateCol, champRuleCol;
     
     private ChampDataManager champDataManager;
     
@@ -57,8 +57,11 @@ public class TournamentsViewer extends ChildInitializable {
     
     private void initTable() {
         champNameCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getName()));
+        champLocationCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(
+                param.getValue().getLocation().city().getName(strings.getLocale())
+        ));
         champDateCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(
-                param.getValue().getMonth() + "/" + param.getValue().getDay()
+                param.getValue().durationStringInclusive()
         ));
         champRuleCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getType().toString()));
         

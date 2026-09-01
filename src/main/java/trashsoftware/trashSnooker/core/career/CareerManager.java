@@ -403,6 +403,21 @@ public class CareerManager {
                 c.get(Calendar.MONTH) + 1,
                 c.get(Calendar.DAY_OF_MONTH));
     }
+    
+    public static String calendarDurationToString(Calendar start, Calendar end) {
+        String c1 = calendarToString(start);
+        if (start.get(Calendar.YEAR) == end.get(Calendar.YEAR)) {
+            if (start.get(Calendar.MONTH) == end.get(Calendar.MONTH)) {
+                return String.format("%s - %d", c1, end.get(Calendar.DAY_OF_MONTH));
+            } else {
+                return String.format("%s - %d/%d", c1, 
+                        end.get(Calendar.MONTH) + 1, 
+                        end.get(Calendar.DAY_OF_MONTH));
+            }
+        } else {
+            return c1 + " - " + calendarToString(end);
+        }
+    }
 
     public static int[] getExpRequiredLevelUp() {
         return EXP_REQUIRED_LEVEL_UP;

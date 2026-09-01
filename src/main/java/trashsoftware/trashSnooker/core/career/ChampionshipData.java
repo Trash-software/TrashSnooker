@@ -14,6 +14,7 @@ import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.JsonUtil;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
@@ -42,6 +43,7 @@ public class ChampionshipData {
     int expPerFrame;  // 假如每轮打满，每局比赛的exp
     Map<ChampionshipStage, Integer> stageFrames = new HashMap<>();  // 每一轮的总局数
     ChampionshipStage[] stages;  // 决赛在前
+    int[] startDayIndex;  // 和stages对齐
     ChampionshipScore.Rank[] ranksOfLosers;  // 决赛在前，各个的输家的rank
     ChampionshipScore.Rank[] ranksOfAll;  // 也就比ranksOfLosers多一个冠军
     Map<ChampionshipScore.Rank, Integer> awards = new HashMap<>();  // 每个等级的奖金，包含单杆最高
@@ -166,6 +168,12 @@ public class ChampionshipData {
 
         JSONArray frames = jsonObject.getJSONArray("frames");
         data.analyzeFramesStages(frames);
+
+        JSONArray startDays = jsonObject.getJSONArray("day_indexes");
+        data.startDayIndex = JsonUtil.jsonToIntArray(startDays);
+        if (data.startDayIndex.length != data.stages.length) {
+            throw new RuntimeException("Day indexes must have same length to stages");
+        }
 
         JSONArray awards = jsonObject.getJSONArray("awards");
 
@@ -402,10 +410,6 @@ public class ChampionshipData {
         return sexRestriction == null ? List.of() : sexRestriction;
     }
 
-    public ChampionshipLocation getLocation() {
-        return location;
-    }
-
     public List<PlayerPerson.Sex> getSexRestriction2() {
         List<PlayerPerson.Sex> result = new ArrayList<>();
         if (sexRestriction != null) {
@@ -414,6 +418,28 @@ public class ChampionshipData {
             }
         }
         return result;
+    }
+
+    public ChampionshipLocation getLocation() {
+        return location;
+    }
+
+    public int getTotalDaysConsumption() {
+        return startDayIndex[0] + 1;
+    }
+
+    public int[] getStartDayIndex() {
+        return startDayIndex;
+    }
+
+    public int getDaysConsumedAfterStageEnd(ChampionshipStage stage) {
+        int stageIndex = Util.indexOf(stage, stages);
+        return startDayIndex[stageIndex] + 1;
+    }
+
+    public int getDayIndexWhenStageStart(ChampionshipStage stage) {
+        int stageIndex = Util.indexOf(stage, stages);
+        return startDayIndex[stageIndex];
     }
 
     public int getTotalPlaces() {
@@ -535,6 +561,21 @@ public class ChampionshipData {
         return month;
     }
 
+    public String durationStringInclusive() {
+        int duration = getTotalDaysConsumption() - 1;
+        int dayAfter = day + duration;
+        int monthDayCount = MONTH_DAYS[month - 1];
+        if (dayAfter <= monthDayCount) return String.format("%d/%d - %d", month, day, dayAfter);
+
+        int newMonth = month;
+        while (dayAfter > MONTH_DAYS[(newMonth - 1) % 12]) {
+            monthDayCount = MONTH_DAYS[newMonth - 1];
+            newMonth++;
+            dayAfter -= monthDayCount;
+        }
+        return String.format("%d/%d - %d/%d", month, day, newMonth % 12, dayAfter);
+    }
+
     public String getDescription() {
         return description;
     }
@@ -578,6 +619,14 @@ public class ChampionshipData {
 
         public Calendar toCalendar() {
             return data.toCalendar(year);
+        }
+
+        public Calendar[] toCalendarStartEndInclusive() {
+            Calendar begin = toCalendar();
+            int duration = data.getTotalDaysConsumption();
+            Calendar end = (Calendar) begin.clone();
+            end.add(Calendar.DAY_OF_MONTH, duration - 1);  // inclusive
+            return new Calendar[]{begin, end};
         }
 
         public String fullName() {

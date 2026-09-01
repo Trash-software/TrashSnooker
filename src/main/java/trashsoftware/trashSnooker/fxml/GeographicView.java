@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -13,17 +14,20 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.WorldMapView;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
-import trashsoftware.trashSnooker.core.career.transporation.*;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.Route;
+import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 
 import java.net.URL;
 import java.util.*;
@@ -63,6 +67,7 @@ public class GeographicView extends ChildInitializable {
     private TransportationManager manager;
     private CareerManager careerManager;
     private ResourceBundle strings;
+    private Stage stage;
 
     /*
      * 我们自己的地图状态。
@@ -100,8 +105,9 @@ public class GeographicView extends ChildInitializable {
 
     private final Map<String, Node> locationAnchors =
             new HashMap<>();
-    
+
     private RouteSearchResult routeSearchResult;
+    private PopOver cityPopOver;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -112,8 +118,9 @@ public class GeographicView extends ChildInitializable {
     public void backAction() {
         super.backAction();
     }
-
-    public void setup(CareerManager careerManager) {
+    
+    public void setup(Stage stage, @Nullable CareerManager careerManager) {
+        this.stage = stage;
         manager = TransportationManager.getInstance();
         this.careerManager = careerManager;
 
@@ -159,7 +166,7 @@ public class GeographicView extends ChildInitializable {
             resolveLabelOverlaps();
         });
     }
-    
+
     @FXML
     void searchRouteAction() {
         City a = departureBox.getValue();
@@ -171,29 +178,38 @@ public class GeographicView extends ChildInitializable {
         routeSearchResult = new RouteSearchResult(allRoutes);
         updateRouteResultList();
     }
-    
-    public void setInitCities(City from, City to) {
+
+    public void setInitCities(City from, @Nullable City to) {
         Platform.runLater(() -> {
-            departureBox.getSelectionModel().select(from);
-            destinationBox.getSelectionModel().select(to);
-            searchRouteAction();
-            
-            if (!searchResultsView.getItems().isEmpty()) {
-                searchResultsView.getSelectionModel().select(0);
+            if (to != null) {
+                departureBox.getSelectionModel().select(from);
+                destinationBox.getSelectionModel().select(to);
+                searchRouteAction();
+
+                if (!searchResultsView.getItems().isEmpty()) {
+                    searchResultsView.getSelectionModel().select(0);
+                }
+            }
+
+            CityMarker marker =
+                    cityMarkerMap.get(from);
+
+            if (marker != null) {
+                marker.showLocationBubble(true);
             }
         });
     }
-    
+
     private void updateRouteResultList() {
         searchResultsView.getItems().clear();
         if (routeSearchResult == null || routeSearchResult.routeResults.isEmpty()) {
             return;
         }
         routeSearchResult.filterAndSort(
-                directOnlyBox.isSelected(), 
-                flightsOnlyBox.isSelected(), 
+                directOnlyBox.isSelected(),
+                flightsOnlyBox.isSelected(),
                 resultSortBox.getValue());
-        
+
         searchResultsView.getItems().addAll(routeSearchResult.shownResults);
     }
 
@@ -207,14 +223,14 @@ public class GeographicView extends ChildInitializable {
         domesticFlightsBox.selectedProperty().addListener((_, oldValue, newValue) -> {
             if (oldValue != newValue) scheduleOverlayUpdate();
         });
-        
+
         setCityBoxFactory(departureBox);
         setCityBoxFactory(destinationBox);
-        
+
         List<City> allCities = manager.getCityList();
         departureBox.getItems().addAll(allCities);
         destinationBox.getItems().addAll(allCities);
-        
+
         directOnlyBox.selectedProperty().addListener(((_, oldValue, newValue) -> {
             if (oldValue != newValue) {
                 updateRouteResultList();
@@ -230,10 +246,10 @@ public class GeographicView extends ChildInitializable {
                 updateRouteResultList();
             }
         }));
-        
+
         resultSortBox.getItems().addAll(RouteResultSort.values());
         resultSortBox.getSelectionModel().select(0);
-        
+
         searchResultsView.setCellFactory(_ -> new RouteResultListCell());
         searchResultsView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (routeSearchResult != null) {
@@ -242,9 +258,9 @@ public class GeographicView extends ChildInitializable {
             }
         }));
     }
-    
+
     private void setCityBoxFactory(ComboBox<City> comboBox) {
-        comboBox.setCellFactory(_ -> new ListCell<>(){
+        comboBox.setCellFactory(_ -> new ListCell<>() {
             @Override
             protected void updateItem(City item, boolean empty) {
                 super.updateItem(item, empty);
@@ -256,7 +272,7 @@ public class GeographicView extends ChildInitializable {
             }
         });
 
-        comboBox.setButtonCell(new ListCell<>(){
+        comboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(City item, boolean empty) {
                 super.updateItem(item, empty);
@@ -366,7 +382,7 @@ public class GeographicView extends ChildInitializable {
                             city.getLatitude(),
                             city.getLongitude()
                     );
-            
+
             locationCityMap.put(
                     location,
                     city
@@ -737,7 +753,7 @@ public class GeographicView extends ChildInitializable {
         if (routeSearchResult != null && routeSearchResult.selected != null) {
             if (routeSearchResult.selected.containsRoute(route)) return true;
         }
-        
+
         if (!route.isFlight()) {
             return trainsBox.isSelected();
         }
@@ -854,6 +870,7 @@ public class GeographicView extends ChildInitializable {
         private final Circle outer;
         private final Circle inner;
         private final Circle hitCircle;
+        private LocationBubble locationBubble;
 
         CityMarker(
                 City city,
@@ -970,7 +987,7 @@ public class GeographicView extends ChildInitializable {
 
             setOnMouseClicked(event -> {
                 if (event.getButton() == MouseButton.PRIMARY) {
-                    onCityClicked(city);
+                    onCityClicked(city, this);
 
                     /*
                      * 不让城市点击继续冒泡到地图。
@@ -1022,33 +1039,178 @@ public class GeographicView extends ChildInitializable {
                             : 1.0
             );
         }
+
+        void showLocationBubble(boolean show) {
+            if (show) {
+                if (locationBubble == null) {
+                    locationBubble =
+                            new LocationBubble(
+                                    Color.CRIMSON
+                            );
+
+                    locationBubble.setLayoutX(0);
+                    locationBubble.setLayoutY(-6);
+
+                    getChildren().add(
+                            locationBubble
+                    );
+                }
+            } else {
+                if (locationBubble != null) {
+                    getChildren().remove(
+                            locationBubble
+                    );
+
+                    locationBubble = null;
+                }
+            }
+        }
     }
 
     private void onRouteClicked(Route route) {
         RouteResult.RouteStep routeStep = new RouteResult.RouteStep(route, route.getCity1(), route.getCity2());
         RouteResult single = new RouteResult(route.getCity1(), route.getCity2(), List.of(routeStep));
-        
+
         searchResultsView.getItems().clear();
         searchResultsView.getItems().add(single);
     }
 
-    private void onCityClicked(City city) {
-        System.out.println(
-                "Clicked city: " + city.getId()
+    private void onCityClicked(City city, CityMarker cityMarker) {
+        showCityPopOver(city, cityMarker);
+    }
+
+    private void showCityPopOver(
+            City city,
+            CityMarker marker
+    ) {
+        /*
+         * 同一时间只显示一个城市窗口。
+         */
+        if (cityPopOver != null) {
+            cityPopOver.hide();
+        }
+
+        VBox content = new VBox(8);
+        content.setPrefWidth(220);
+        content.setStyle("""
+                -fx-padding: 12px;
+                """);
+
+        Label cityName = new Label(
+                city.getName(
+                        strings.getLocale()
+                )
         );
+
+        cityName.setStyle("""
+                -fx-font-size: 16px;
+                -fx-font-weight: bold;
+                """);
+
+        Label countryLabel = new Label(
+                city.getCountry().shownName(strings)
+        );
+
+        countryLabel.setStyle("""
+                -fx-text-fill: #777777;
+                """);
+
+        Separator separator =
+                new Separator();
+
+        Label housePriceLabel = new Label(
+                String.format(
+                        "House price: £%,d / m²",
+                        city.getHousePriceM2()
+                )
+        );
+
+        Button travelButton =
+                new Button("前往");
+
+        HBox buttonBox =
+                new HBox(travelButton);
+
+        buttonBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        /*
+         * 暂时不实现功能。
+         */
+        travelButton.setOnAction(event -> {
+            // TODO travel to city
+        });
+
+        content.getChildren().addAll(
+                cityName,
+                countryLabel,
+                separator,
+                housePriceLabel,
+                buttonBox
+        );
+
+        PopOver popOver =
+                new PopOver(content);
+
+        popOver.setDetachable(false);
+        popOver.setAutoHide(true);
+        popOver.setHeaderAlwaysVisible(false);
+        popOver.setCloseButtonEnabled(false);
+
+        /*
+         * 根据城市位于屏幕左半还是右半，
+         * 决定 PopOver 放在哪一边。
+         *
+         * 这样靠近地图右边的城市不会让窗口跑出屏幕。
+         */
+        Point2D markerInViewport =
+                mapViewport.sceneToLocal(
+                        marker.localToScene(0, 0)
+                );
+
+        if (markerInViewport.getX()
+                < mapViewport.getWidth() / 2.0) {
+
+            /*
+             * 箭头在 PopOver 左侧，
+             * 因此窗口出现在城市右边。
+             */
+            popOver.setArrowLocation(
+                    PopOver.ArrowLocation.LEFT_CENTER
+            );
+
+        } else {
+
+            /*
+             * 窗口出现在城市左边。
+             */
+            popOver.setArrowLocation(
+                    PopOver.ArrowLocation.RIGHT_CENTER
+            );
+        }
+
+        cityPopOver = popOver;
+
+        /*
+         * marker 就是箭头所指向的 owner。
+         */
+        popOver.show(marker);
     }
 
     private String createCityTooltipText(City city) {
         StringBuilder builder = new StringBuilder();
         builder.append(city.getName(strings.getLocale())).append('\n');
-        
-        List<ChampionshipData> cityChamps = careerManager.getChampDataManager().getByCity(city);
-        if (!cityChamps.isEmpty()) {
-            StringJoiner joiner = new StringJoiner("\n");
-            for (ChampionshipData cd : cityChamps) {
-                joiner.add(cd.getName());
+
+        if (careerManager != null) {
+            List<ChampionshipData> cityChamps = careerManager.getChampDataManager().getByCity(city);
+            if (!cityChamps.isEmpty()) {
+                StringJoiner joiner = new StringJoiner("\n");
+                for (ChampionshipData cd : cityChamps) {
+                    joiner.add(cd.getName());
+                }
+                builder.append(joiner);
             }
-            builder.append(joiner);
         }
         return builder.toString();
     }
@@ -1078,6 +1240,11 @@ public class GeographicView extends ChildInitializable {
                 strings.getString("routeLowPrice"),
                 route.getEconomyPrice()
         );
+    }
+
+
+    private void updateRouteHighlight(RouteView routeView, boolean mouseSelected) {
+        routeView.setHighlighted(mouseSelected, routeSearchResult == null ? null : routeSearchResult.selected);
     }
 
     private interface RouteRenderer {
@@ -1129,6 +1296,8 @@ public class GeographicView extends ChildInitializable {
                         )
                 );
             }
+            
+            updateRouteHighlight(routeView, false);
 
             return result;
         }
@@ -1205,12 +1374,12 @@ public class GeographicView extends ChildInitializable {
                     tooltip
             );
 
-            group.setOnMouseEntered(event ->
-                    routeView.setHighlighted(true)
+            group.setOnMouseEntered(_ ->
+                    updateRouteHighlight(routeView, true)
             );
 
-            group.setOnMouseExited(event ->
-                    routeView.setHighlighted(false)
+            group.setOnMouseExited(_ ->
+                    updateRouteHighlight(routeView, false)
             );
 
             group.setOnMouseClicked(event -> {
@@ -1392,10 +1561,6 @@ public class GeographicView extends ChildInitializable {
                             p2
                     );
 
-            if (projection == null) {
-                return List.of();
-            }
-
             List<GeoPoint> greatCircle =
                     createGreatCirclePoints(
                             city1.getLatitude(),
@@ -1441,6 +1606,8 @@ public class GeographicView extends ChildInitializable {
                         )
                 );
             }
+
+            updateRouteHighlight(routeView, false);
 
             return result;
         }
@@ -1494,11 +1661,11 @@ public class GeographicView extends ChildInitializable {
             Tooltip.install(group, tooltip);
 
             group.setOnMouseEntered(_ ->
-                    routeView.setHighlighted(true)
+                    updateRouteHighlight(routeView, true)
             );
 
             group.setOnMouseExited(_ ->
-                    routeView.setHighlighted(false)
+                    updateRouteHighlight(routeView, false)
             );
 
             group.setOnMouseClicked(event -> {
@@ -2050,7 +2217,9 @@ public class GeographicView extends ChildInitializable {
     private static class RouteView {
 
         private static final double NORMAL_WIDTH = 1.5;
-        private static final double HIGHLIGHT_WIDTH = 3.0;
+        private static final double TARGETED_WIDTH = 2.5;
+        private static final double SELECTED_WIDTH = 3.5;
+        private static final double TARGETED_SELECTED_WIDTH = 5.0;
 
         private final Route route;
         private final List<Shape> visualShapes = new ArrayList<>();
@@ -2063,29 +2232,54 @@ public class GeographicView extends ChildInitializable {
             visualShapes.add(shape);
         }
 
-        void setHighlighted(boolean highlighted) {
+        /**
+         * @param selected 是否被点击选中
+         * @param selectedSearchResult 选中的搜索结果
+         */
+        void setHighlighted(boolean selected, RouteResult selectedSearchResult) {
+            boolean targeted = false;
+            
+            if (selectedSearchResult != null) {
+                for (RouteResult.RouteStep rs : selectedSearchResult.getSteps()) {
+                    if (rs.route().equals(route)) {
+                        targeted = true;
+                        break;
+                    }
+                }
+            }
+            
             for (Shape shape : visualShapes) {
-                shape.setStrokeWidth(
-                        highlighted
-                                ? HIGHLIGHT_WIDTH
-                                : NORMAL_WIDTH
-                );
-
-                shape.setOpacity(
-                        highlighted
-                                ? 1.0
-                                : 0.75
-                );
+                double strokeWidth;
+                double opacity;
+                if (selected) {
+                    if (targeted) {
+                        strokeWidth = TARGETED_SELECTED_WIDTH;
+                        opacity = 1.0;
+                    } else {
+                        strokeWidth = SELECTED_WIDTH;
+                        opacity = 0.9;
+                    }
+                } else {
+                    if (targeted) {
+                        strokeWidth = TARGETED_WIDTH;
+                        opacity = 0.9;
+                    } else {
+                        strokeWidth = NORMAL_WIDTH;
+                        opacity = 0.75;
+                    }
+                }
+                shape.setStrokeWidth(strokeWidth);
+                shape.setOpacity(opacity);
             }
         }
     }
-    
+
     enum RouteResultSort {
         PRICE("sortByPrice"),
         TIME("sortByTime");
-        
+
         final String stringKey;
-        
+
         RouteResultSort(String stringKey) {
             this.stringKey = stringKey;
         }
@@ -2095,16 +2289,16 @@ public class GeographicView extends ChildInitializable {
             return App.getStrings().getString(stringKey);
         }
     }
-    
+
     static class RouteSearchResult {
         final List<RouteResult> routeResults;
         final List<RouteResult> shownResults = new ArrayList<>();
         RouteResult selected;
-        
+
         RouteSearchResult(List<RouteResult> routeResults) {
             this.routeResults = routeResults;
         }
-        
+
         public void filterAndSort(boolean directOnly, boolean flightOnly, RouteResultSort sort) {
             shownResults.clear();
             for (RouteResult rr : routeResults) {
@@ -2112,7 +2306,7 @@ public class GeographicView extends ChildInitializable {
                 if (flightOnly && !rr.isAllFlight()) continue;
                 shownResults.add(rr);
             }
-            
+
             shownResults.sort((o1, o2) -> {
                 int priceCmp = Double.compare(o1.getTotalEconomyPrice(), o2.getTotalEconomyPrice());
                 int totalTimeCmp = Double.compare(o1.getTotalTimeMinutes(), o2.getTotalTimeMinutes());
@@ -2128,9 +2322,9 @@ public class GeographicView extends ChildInitializable {
             });
         }
     }
-    
+
     class RouteResultListCell extends ListCell<RouteResult> {
-        
+
         private final GridPane basePane = new GridPane();
         private final Label routeCitiesLabel = new Label();
         private final Label transitsLabel = new Label();
@@ -2141,18 +2335,22 @@ public class GeographicView extends ChildInitializable {
         private final Label economyLabel = new Label();
         private final Label businessLabel = new Label();
         private final Label firstLabel = new Label();
-        
+
         RouteResultListCell() {
             basePane.setVgap(5.0);
             basePane.setHgap(5.0);
-            
+
             basePane.setPrefWidth(220.0);
             basePane.setMaxWidth(220.0);
-            
+
             int row = 0;
             routeCitiesLabel.setWrapText(true);
-            basePane.add(routeCitiesLabel, 0, row++, 2, 1); 
-            
+            routeCitiesLabel.setStyle("""
+                -fx-font-size: 14px;
+                -fx-font-weight: bold;
+                """);
+            basePane.add(routeCitiesLabel, 0, row++, 2, 1);
+
             basePane.add(transitsLabel, 0, row++);
 
             totalTimeTextLabel.setText(strings.getString("routeTotalTime"));
@@ -2183,7 +2381,7 @@ public class GeographicView extends ChildInitializable {
                 setGraphic(null);
             } else {
                 routeCitiesLabel.setText(item.cityNamesOnUi(strings));
-                
+
                 int nTrans = item.getTransitCount();
                 if (nTrans == 0) {
                     transitsLabel.setText(strings.getString("directRoute"));
@@ -2198,17 +2396,47 @@ public class GeographicView extends ChildInitializable {
                     totalTimeLabel.setVisible(true);
                     totalTimeLabel.setManaged(true);
                 }
-                
+
                 totalTimeLabel.setText(RouteResult.formatTime(item.getTotalTimeMinutes()));
                 onboardTimeLabel.setText(RouteResult.formatTime(item.getOnBoardTimeMinutes()));
                 distanceLabel.setText(String.format("%.0f km", item.getTotalDistance()));
-                
+
                 economyLabel.setText(String.format("%d", item.getTotalEconomyPrice()));
                 businessLabel.setText(String.format("%d", item.getTotalBusinessPrice()));
                 firstLabel.setText(String.format("%d", item.getTotalFirstPrice()));
-                
+
                 setGraphic(basePane);
             }
+        }
+    }
+
+    private static class LocationBubble extends Group {
+
+        LocationBubble(Color color) {
+            Circle circle = new Circle(
+                    0,
+                    -10,
+                    8
+            );
+
+            circle.setFill(color);
+            circle.setStroke(Color.WHITE);
+            circle.setStrokeWidth(2);
+
+            Polygon tip = new Polygon(
+                    -5.0, -5.0,
+                    5.0, -5.0,
+                    0.0, 5.0
+            );
+
+            tip.setFill(color);
+
+            getChildren().addAll(
+                    tip,
+                    circle
+            );
+
+            setMouseTransparent(true);
         }
     }
 }

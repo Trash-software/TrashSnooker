@@ -7,7 +7,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.TournamentsViewer"
-      prefHeight="600.0" prefWidth="720.0" spacing="5.0">
+      prefHeight="600.0" prefWidth="780.0" spacing="5.0">
 
     <padding>
         <Insets topRightBottomLeft="5.0"/>
@@ -19,9 +19,10 @@
 
     <HBox spacing="20.0" fx:id="rootBox" VBox.vgrow="ALWAYS">
 
-        <TableView fx:id="dataTable" prefWidth="300.0">
+        <TableView fx:id="dataTable" prefWidth="400.0">
             <columns>
                 <TableColumn text="%gameEvent" fx:id="champNameCol"/>
+                <TableColumn text="%eventLocation" fx:id="champLocationCol"/>
                 <TableColumn text="%eventTime" fx:id="champDateCol"/>
                 <TableColumn text="%eventRule" fx:id="champRuleCol"/>
             </columns>

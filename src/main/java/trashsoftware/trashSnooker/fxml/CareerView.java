@@ -18,18 +18,21 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
-import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
-import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
+import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.alert.Alert;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
-import trashsoftware.trashSnooker.fxml.widgets.*;
+import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
+import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
+import trashsoftware.trashSnooker.fxml.widgets.PerkAdder;
+import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
@@ -99,7 +102,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Button careerRankHistoryBtn;
     @FXML
-    ImageView expImage, moneyImage, inventoryImage, storeImage, worldMapImage, achIconImage, lineChartImg;
+    ImageView expImage, moneyImage, inventoryImage, storeImage, worldMapImage, trainingImage, achIconImage, lineChartImg;
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
@@ -142,7 +145,7 @@ public class CareerView extends ChildInitializable {
         confirmAddPerkBtn = new Button(strings.getString("applyPerks"));
         confirmAddPerkBtn.setDisable(true);
         confirmAddPerkBtn.setOnAction(e -> applyPerksAction());
-        
+
         box.getChildren().addAll(availPerksLabel, clearPerkBtn, confirmAddPerkBtn);
         return box;
     }
@@ -486,7 +489,12 @@ public class CareerView extends ChildInitializable {
                 joinChampBox.setDisable(true);
                 joinChampBox.setSelected(false);
             }
-            nextChampionshipLabel.setText(nextData.fullName() + " (" + data.getLocation().city().getName(strings.getLocale()) + ")");
+            Calendar[] startEnd = nextData.toCalendarStartEndInclusive();
+            nextChampionshipLabel.setText(String.format("%s (%s)\n%s",
+                    nextData.fullName(),
+                    data.getLocation().city().getName(strings.getLocale()),
+                    CareerManager.calendarDurationToString(startEnd[0], startEnd[1])
+            ));
             int registryFee = careerManager.getHumanRegistryFee(data, humanQualified);
             registryFeeLabel.setText(String.valueOf(registryFee));
 //            int travelFee = data.getFlightFee() + data.getHotelFee();
@@ -495,7 +503,7 @@ public class CareerView extends ChildInitializable {
             int[] travelHotelFees = getTravelAndHotelFees(data);
             int travelFee = travelHotelFees[0] + travelHotelFees[1];
             travelFeeLabel.setText(String.valueOf(travelFee));
-            
+
             int fixedFees = 0;
             Map<String, Integer> feesMap = careerManager.getHumanPlayerCareer().calculateFixedFees(nextData);
             if (!feesMap.isEmpty()) {
@@ -556,7 +564,7 @@ public class CareerView extends ChildInitializable {
             showAwardAlert(awd);
         }
     }
-    
+
     public static void fillChampionshipAwardTable(LabelTable<AwardItem> table, ChampionshipData data) {
         ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
         table.addItem(new CareerView.AwardItem(data, ChampionshipScore.Rank.CHAMPION, ChampionshipStage.FINAL));
@@ -788,7 +796,7 @@ public class CareerView extends ChildInitializable {
             );
         }
     }
-    
+
     private void applyPerks() {
         PerkManager.UpgradeRec used = perkManager.applyPerks();  // 在getCost之后
 
@@ -820,11 +828,11 @@ public class CareerView extends ChildInitializable {
             view.setup(selfStage, careerManager.getHumanPlayerCareer());
             long t1 = System.currentTimeMillis();
             System.out.println("View setup time: " + (t1 - t0));
-            
+
             App.setRoot(root);
             long t2 = System.currentTimeMillis();
             System.out.println("Set root time: " + (t2 - t1));
-            
+
             view.renderInvoiceList();
         } catch (IOException e) {
             EventLogger.error(e);
@@ -903,7 +911,7 @@ public class CareerView extends ChildInitializable {
             EventLogger.error(e);
         }
     }
-    
+
     @FXML
     public void showCareerRankHistory() {
         RankedCareer selected = rankingTable.getSelectionModel().getSelectedItem();
@@ -926,7 +934,7 @@ public class CareerView extends ChildInitializable {
             }
         }
     }
-    
+
     private int[] getTravelAndHotelFees(ChampionshipData data) {
         TransportationManager transMan = TransportationManager.getInstance();
         TransportationManager.Mode mode = TransportationManager.Mode.PRICE;  // todo: ComboBox
@@ -1012,7 +1020,7 @@ public class CareerView extends ChildInitializable {
             EventLogger.error(e);
         }
     }
-    
+
     @FXML
     void showWorldMapAction() {
         try {
@@ -1024,13 +1032,15 @@ public class CareerView extends ChildInitializable {
             root.setStyle(App.FONT_STYLE);
 
             GeographicView view = loader.getController();
-//            view.setStage(selfStage);
             view.setParent(selfStage.getScene());
 
-            view.setup(careerManager);
+            view.setup(selfStage, careerManager);
             if (careerManager.getChampionshipInProgress() == null) {
-                view.setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), 
+                view.setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(),
                         careerManager.nextChampionshipData().data.getLocation().city());
+            } else {
+                view.setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(),
+                        null);
             }
             App.setRoot(root);
         } catch (IOException e) {

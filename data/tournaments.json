@@ -17,6 +17,9 @@
       "awards": [
         250000, 100000, 60000, 30000, 15000
       ],
+      "day_indexes": [
+        3, 2, 1, 0
+      ],
       "frameExp": 90,
       "best_single": 15000,
       "ranked": false,
@@ -44,6 +47,53 @@
       }
     },
     {
+      "id": "fresh_hand_open",
+      "names": {
+        "zh": "斯诺克新手公开赛",
+        "en": "Snooker Noobs Open"
+      },
+      "type": "snooker",
+      "seeds": 0,
+      "places": 16,
+      "pre_matches": [
+        32
+      ],
+      "frames": [
+        5, 3, 3, 3, 3
+      ],
+      "awards": [
+        50000, 20000, 12000, 6000
+      ],
+      "day_indexes": [
+        2, 1, 1, 0, 0
+      ],
+      "frameExp": 40,
+      "best_single": 10000,
+      "ranked": true,
+      "professional": false,
+      "forbidden": 32,
+      "class": 3,
+      "date": "01/22",
+      "fees": {
+        "registry": 200,
+        "flight": 2000,
+        "hotel": 500
+      },
+      "invite": {
+      },
+      "location": {
+        "country": "GBR",
+        "city": "London"
+      },
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "cushionSpec": "soft",
+        "pocketSize": "large",
+        "pocketDifficulty": "normal"
+      }
+    },
+    {
       "id": "eight_red_pocket_open",
       "names": {
         "zh": "黑八红包公开赛",
@@ -60,11 +110,14 @@
       "awards": [
         25000, 10000, 6000, 3000, 1500, 500
       ],
+      "day_indexes": [
+        2, 1, 1, 0, 0
+      ],
       "frameExp": 20,
       "ranked": true,
       "professional": false,
       "forbidden": 32,
-      "date": "01/22",
+      "date": "01/27",
       "location": {
         "country": "CHN",
         "city": "Beijing"
@@ -88,50 +141,6 @@
       ]
     },
     {
-      "id": "fresh_hand_open",
-      "names": {
-        "zh": "斯诺克新手公开赛",
-        "en": "Snooker Noobs Open"
-      },
-      "type": "snooker",
-      "seeds": 0,
-      "places": 16,
-      "pre_matches": [
-        32
-      ],
-      "frames": [
-        5, 3, 3, 3, 3
-      ],
-      "awards": [
-        50000, 20000, 12000, 6000
-      ],
-      "frameExp": 40,
-      "best_single": 10000,
-      "ranked": true,
-      "professional": false,
-      "forbidden": 32,
-      "class": 3,
-      "date": "01/25",
-      "fees": {
-        "registry": 200,
-        "flight": 2000,
-        "hotel": 500
-      },
-      "invite": {
-      },
-      "location": {
-        "country": "GBR",
-        "city": "London"
-      },
-      "table": {
-        "goodness": "good",
-        "smoothness": "normal",
-        "cushionSpec": "soft",
-        "pocketSize": "large",
-        "pocketDifficulty": "normal"
-      }
-    },
-    {
       "id": "eight_yangjiaping_mid_cup",
       "names": {
         "zh": "黑八杨家坪中学杯",
@@ -148,6 +157,9 @@
       ],
       "awards": [
         10000, 4000, 2500, 1500, 1000
+      ],
+      "day_indexes": [
+        1, 1, 0, 0, 0
       ],
       "frameExp": 15,
       "ranked": false,
@@ -197,6 +209,9 @@
       "awards": [
         100000, 40000, 25000, 12000, 6000, 3000
       ],
+      "day_indexes": [
+        3, 2, 2, 1, 1, 0, 0
+      ],
       "frameExp": 25,
       "ranked": true,
       "professional": false,
@@ -241,6 +256,9 @@
       ],
       "awards": [
         125000, 50000, 30000, 15000, 10000
+      ],
+      "day_indexes": [
+        3, 2, 1, 0
       ],
       "frameExp": 70,
       "best_single": 10000,
@@ -287,6 +305,9 @@
       "awards": [
         80000, 35000, 20000, 10000, 5000, 2500
       ],
+      "day_indexes": [
+        3, 2, 1, 1, 0, 0
+      ],
       "frameExp": 40,
       "best_single": 5000,
       "ranked": true,
@@ -327,6 +348,9 @@
       ],
       "awards": [
         5000, 2000, 1200, 600, 300, 150
+      ],
+      "day_indexes": [
+        1, 1, 0, 0, 0, 0
       ],
       "frameExp": 10,
       "ranked": false,
@@ -369,6 +393,9 @@
       ],
       "awards": [
         350000, 200000, 100000, 60000
+      ],
+      "day_indexes": [
+        2, 1, 0
       ],
       "frameExp": 80,
       "best_single": 15000,
@@ -419,6 +446,9 @@
       "awards": [
         125000, 50000, 30000, 15000, 8000, 5000
       ],
+      "day_indexes": [
+        3, 2, 1, 1, 0, 0
+      ],
       "frameExp": 55,
       "best_single": 15000,
       "ranked": true,
@@ -463,6 +493,9 @@
       ],
       "awards": [
         80000, 30000, 18000, 9000, 5000
+      ],
+      "day_indexes": [
+        2, 1, 0, 0
       ],
       "frameExp": 25,
       "ranked": true,
@@ -509,6 +542,9 @@
       "awards": [
         80000, 35000, 20000, 10000, 5000, 2500
       ],
+      "day_indexes": [
+        4, 3, 3, 2, 1, 0, 0
+      ],
       "frameExp": 45,
       "best_single": 5000,
       "ranked": true,
@@ -546,6 +582,9 @@
       ],
       "awards": [
         20000, 12000, 6000, 3000, 1500, 800
+      ],
+      "day_indexes": [
+        1, 1, 0, 0, 0, 0
       ],
       "frameExp": 30,
       "ranked": true,
@@ -590,6 +629,9 @@
       "frames": [
         11, 9, 7, 5, 5, 5, 3, 3
       ],
+      "day_indexes": [
+        9, 7, 5, 4, 3, 2, 1, 0
+      ],
       "awards": [
         500000, 200000, 100000, 50000, 30000, 20000, 15000, 10000
       ],
@@ -630,6 +672,9 @@
       ],
       "awards": [
         100000, 40000, 20000, 8000, 5000, 2500, 1000
+      ],
+      "day_indexes": [
+        3, 2, 1, 1, 0, 0
       ],
       "frameExp": 25,
       "ranked": true,
@@ -675,6 +720,9 @@
       "awards": [
         12000, 5500, 2500, 1000, 0
       ],
+      "day_indexes": [
+        4, 3, 2, 1, 0
+      ],
       "frameExp": 50,
       "best_single": 2000,
       "ranked": true,
@@ -709,6 +757,9 @@
       ],
       "awards": [
         80000, 30000, 18000, 9000, 5000
+      ],
+      "day_indexes": [
+        2, 1, 0, 0
       ],
       "frameExp": 25,
       "ranked": true,
@@ -754,6 +805,9 @@
       "awards": [
         20000, 10000, 6000, 3000, 1500
       ],
+      "day_indexes": [
+        1, 1, 0, 0, 0
+      ],
       "frameExp": 20,
       "ranked": true,
       "professional": false,
@@ -792,6 +846,9 @@
       ],
       "awards": [
         50000, 20000, 8000, 5000, 2500, 1000, 0
+      ],
+      "day_indexes": [
+        2, 1, 1, 0, 0, 0
       ],
       "frameExp": 25,
       "ranked": true,
@@ -832,6 +889,9 @@
       "awards": [
         120000, 50000, 25000, 15000, 10000, 2500
       ],
+      "day_indexes": [
+        4, 3, 2, 1, 0, 0
+      ],
       "frameExp": 40,
       "best_single": 10000,
       "ranked": true,
@@ -863,47 +923,6 @@
       }
     },
     {
-      "id": "chongqing_open",
-      "names": {
-        "zh": "斯诺克CQ公开赛",
-        "en": "Snooker CQ Open"
-      },
-      "type": "snooker",
-      "seeds": 0,
-      "places": 32,
-      "pre_matches": [
-        64
-      ],
-      "frames": [
-        5, 3, 3, 3, 3, 1
-      ],
-      "awards": [
-        50000, 20000, 12000, 6000, 3000, 2000
-      ],
-      "frameExp": 40,
-      "best_single": 3000,
-      "ranked": true,
-      "professional": false,
-      "class": 4,
-      "date": "08/10",
-      "location": {
-        "country": "CHN",
-        "city": "Chongqing"
-      },
-      "fees": {
-        "registry": 200,
-        "flight": 400,
-        "hotel": 400
-      },
-      "table": {
-        "goodness": "normal",
-        "smoothness": "normal",
-        "cushionSpec": "normal",
-        "pocketSize": "large",
-        "pocketDifficulty": "loose"
-      }
-    },
-    {
       "id": "american_nine_give_power_open",
       "names": {
         "zh": "美式九球给力国公开赛",
@@ -920,10 +939,13 @@
       "awards": [
         100000, 40000, 20000, 12000, 8000, 5000, 2000
       ],
+      "day_indexes": [
+        3, 2, 1, 1, 0, 0
+      ],
       "frameExp": 25,
       "ranked": true,
       "professional": false,
-      "date": "08/15",
+      "date": "08/05",
       "location": {
         "country": "GPW",
         "city": "Catgivepower"
@@ -942,6 +964,50 @@
       }
     },
     {
+      "id": "chongqing_open",
+      "names": {
+        "zh": "斯诺克CQ公开赛",
+        "en": "Snooker CQ Open"
+      },
+      "type": "snooker",
+      "seeds": 0,
+      "places": 32,
+      "pre_matches": [
+        64
+      ],
+      "frames": [
+        5, 3, 3, 3, 3, 1
+      ],
+      "awards": [
+        50000, 20000, 12000, 6000, 3000, 2000
+      ],
+      "day_indexes": [
+        3, 2, 1, 1, 0, 0
+      ],
+      "frameExp": 40,
+      "best_single": 3000,
+      "ranked": true,
+      "professional": false,
+      "class": 4,
+      "date": "08/13",
+      "location": {
+        "country": "CHN",
+        "city": "Chongqing"
+      },
+      "fees": {
+        "registry": 200,
+        "flight": 400,
+        "hotel": 400
+      },
+      "table": {
+        "goodness": "normal",
+        "smoothness": "normal",
+        "cushionSpec": "normal",
+        "pocketSize": "large",
+        "pocketDifficulty": "loose"
+      }
+    },
+    {
       "id": "eight_master",
       "names": {
         "zh": "中式八球大师赛",
@@ -957,6 +1023,9 @@
       ],
       "awards": [
         500000, 120000, 60000, 30000, 15000
+      ],
+      "day_indexes": [
+        3, 2, 1, 0
       ],
       "frameExp": 30,
       "ranked": false,
@@ -1004,6 +1073,9 @@
       "awards": [
         150000, 60000, 35000, 15000
       ],
+      "day_indexes": [
+        3, 2, 2, 1, 0, 0
+      ],
       "frameExp": 50,
       "best_single": 15000,
       "ranked": false,
@@ -1050,6 +1122,9 @@
       "awards": [
         80000, 30000, 18000, 9000, 5000
       ],
+      "day_indexes": [
+        2, 1, 0, 0
+      ],
       "frameExp": 25,
       "ranked": true,
       "professional": false,
@@ -1095,6 +1170,9 @@
       "awards": [
         150000, 60000, 30000, 17500, 12500
       ],
+      "day_indexes": [
+        3, 2, 1, 0
+      ],
       "frameExp": 80,
       "best_single": 15000,
       "ranked": false,
@@ -1139,6 +1217,9 @@
       "awards": [
         250000, 100000, 50000, 25000, 15000, 10000, 7500, 5000
       ],
+      "day_indexes": [
+        6, 5, 4, 3, 2, 1, 0
+      ],
       "frameExp": 60,
       "best_single": 15000,
       "ranked": true,
@@ -1182,6 +1263,9 @@
       ],
       "awards": [
         25000, 10000, 6000, 3000, 1500, 800
+      ],
+      "day_indexes": [
+        3, 2, 1, 1, 0, 0, 0
       ],
       "frameExp": 15,
       "ranked": true,
