@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.transporation.City;
 import trashsoftware.trashSnooker.core.career.transporation.Residence;
+import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -56,6 +57,7 @@ public class CareerManager {
     private Date careerCreationTime;  // 真实世界的建档时间
     private final Calendar beginTimestamp;  // 建档的游戏内时间
     private final Calendar timestamp;
+    private RouteResult.WithClass scheduledTravel;
     private final List<CareerRanker.ByAwards> snookerRanking = new ArrayList<>();
     private final List<CareerRanker.ByAwards> snookerRankingSingleSeason = new ArrayList<>();
     private final List<CareerRanker.ByTier> chineseEightRanking = new ArrayList<>();
@@ -1020,6 +1022,10 @@ public class CareerManager {
 
     public Calendar getBeginTimestamp() {
         return beginTimestamp;
+    }
+    
+    public void setNextScheduleTravel(RouteResult.WithClass scheduledTravel) {
+        this.scheduledTravel = scheduledTravel;
     }
 
     public ChampDataManager getChampDataManager() {

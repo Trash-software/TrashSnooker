@@ -1036,10 +1036,12 @@ public class CareerView extends ChildInitializable {
 
             view.setup(selfStage, careerManager);
             if (careerManager.getChampionshipInProgress() == null) {
-                view.setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(),
-                        careerManager.nextChampionshipData().data.getLocation().city());
+                view.setNextChampionship(careerManager.getTimestamp(), 
+                        careerManager.getHumanPlayerCareer().getCurrentLocation(),
+                        careerManager.nextChampionshipData());
             } else {
-                view.setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(),
+                view.setNextChampionship(careerManager.getTimestamp(),
+                        careerManager.getHumanPlayerCareer().getCurrentLocation(),
                         null);
             }
             App.setRoot(root);

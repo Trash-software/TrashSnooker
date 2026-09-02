@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.career.transporation.City;
 import trashsoftware.trashSnooker.core.career.transporation.Country;
+import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
 import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
@@ -627,6 +628,14 @@ public class ChampionshipData {
             Calendar end = (Calendar) begin.clone();
             end.add(Calendar.DAY_OF_MONTH, duration - 1);  // inclusive
             return new Calendar[]{begin, end};
+        }
+
+        public Calendar latestDeparture(RouteResult routeResult) {
+            double time = routeResult.getTotalTimeMinutes();
+            int nDays = (int) Math.ceil(time / 1440);
+            Calendar depart = toCalendar();
+            depart.add(Calendar.DAY_OF_MONTH, -nDays);
+            return depart;
         }
 
         public String fullName() {

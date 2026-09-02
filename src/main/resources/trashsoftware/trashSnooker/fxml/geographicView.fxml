@@ -13,9 +13,10 @@
         <Insets topRightBottomLeft="10.0"/>
     </padding>
 
-    <VBox spacing="10.0">
-        <HBox>
+    <VBox spacing="5.0" fx:id="controlsBox">
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
             <Button text="%backIcon" onAction="#backAction"/>
+            <Label fx:id="currentDateLabel"/>
         </HBox>
 
         <CheckBox fx:id="internationalFlightsBox" text="%intlFlights"/>
@@ -24,7 +25,17 @@
 
         <Separator/>
 
-        <GridPane vgap="10.0" hgap="5.0">
+        <GridPane vgap="5.0" hgap="5.0">
+            <Label fx:id="currentLocationLabel"/>
+            <Label fx:id="nextChampLocationLabel" GridPane.rowIndex="1"/>
+            <Label fx:id="nextChampDateLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label fx:id="nextChampLateDepartureLabel" GridPane.rowIndex="2"
+                   GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+        </GridPane>
+
+        <Separator/>
+
+        <GridPane vgap="5.0" hgap="5.0">
             <Label text="%departurePlace"/>
             <ComboBox fx:id="departureBox" GridPane.columnIndex="1"/>
             <Label text="%destinationPlace" GridPane.rowIndex="1"/>
@@ -34,10 +45,10 @@
             <CheckBox fx:id="flightsOnlyBox" text="%flightsOnly" GridPane.rowIndex="3"/>
 
             <ComboBox fx:id="resultSortBox" GridPane.rowIndex="4"/>
-            <Button text="%search" onAction="#searchRouteAction" GridPane.rowIndex="4"
-                    GridPane.columnIndex="1"/>
+<!--            <Button text="%search" onAction="#searchRouteAction" GridPane.rowIndex="4"-->
+<!--                    GridPane.columnIndex="1"/>-->
 
-            <ListView fx:id="searchResultsView" GridPane.rowIndex="5" GridPane.columnSpan="2" 
+            <ListView fx:id="searchResultsView" GridPane.rowIndex="5" GridPane.columnSpan="2"
                       prefWidth="240.0">
                 <placeholder>
                     <Label text="%noRoutesFound"/>

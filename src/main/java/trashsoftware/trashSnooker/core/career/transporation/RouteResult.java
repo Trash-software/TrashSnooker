@@ -77,9 +77,9 @@ public class RouteResult {
     }
 
     public List<RouteStep> getSteps() {
-        return Collections.unmodifiableList(steps);
+        return steps;
     }
-    
+
     public boolean containsRoute(Route route) {
         for (RouteStep rs : steps) {
             if (rs.route.equals(route)) return true;
@@ -114,7 +114,7 @@ public class RouteResult {
     public int getTransitCount() {
         return Math.max(0, steps.size() - 1);
     }
-    
+
     public boolean isAllFlight() {
         for (RouteStep step : steps) {
             if (!step.route.isFlight()) return false;
@@ -125,7 +125,7 @@ public class RouteResult {
     public boolean isEmpty() {
         return steps.isEmpty();
     }
-    
+
     public String cityNamesOnUi(ResourceBundle strings) {
         StringJoiner journey = new StringJoiner(" -> ");
         journey.add(startCity.getName(strings.getLocale()));
@@ -135,7 +135,7 @@ public class RouteResult {
         }
         return journey.toString();
     }
-    
+
     public String toUiString(ResourceBundle strings) {
         String journey = cityNamesOnUi(strings);
 
@@ -189,7 +189,7 @@ public class RouteResult {
                 totalFirstPrice
         );
     }
-    
+
     public boolean equivalent(RouteResult other) {
         if (startCity.equals(other.startCity) && endCity.equals(other.endCity)) {
             if (steps.size() == other.steps.size()) {
@@ -227,35 +227,35 @@ public class RouteResult {
             return false;
         }
     }
-    
+
     public static class RoutesTree {
         final City fromCity;
         final RoutesTree parent;
         private final Map<RoutesTree, Double> children = new HashMap<>();  // children, distance
-        
+
         RoutesTree(@NotNull City fromCity, @Nullable RoutesTree parent) {
             this.fromCity = fromCity;
             this.parent = parent;
         }
-        
+
         void addChild(RoutesTree child) {
             children.put(child, null);
         }
-        
+
         double routeDistance() {
             if (parent == null) return 0;
 
             double dt = parent.children.computeIfAbsent(this, k -> Route.computeDistance(fromCity, parent.fromCity));
             return parent.routeDistance() + dt;
         }
-        
+
         boolean alreadyPassedCity(City city) {
             if (city == fromCity) return true;
             if (parent == null) return false;
             return parent.alreadyPassedCity(city);
         }
-        
-        void addToRouteResults(List<RouteResult> results, 
+
+        void addToRouteResults(List<RouteResult> results,
                                List<RouteStep> building,
                                Map<City, List<Route>> graph,
                                City finalDestination) {
@@ -301,5 +301,8 @@ public class RouteResult {
                     ", children=" + children +
                     '}';
         }
+    }
+
+    public record WithClass(RouteResult route, int classIndex, Calendar date) {
     }
 }

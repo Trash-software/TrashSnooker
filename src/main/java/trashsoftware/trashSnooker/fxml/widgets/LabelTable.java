@@ -2,7 +2,9 @@ package trashsoftware.trashSnooker.fxml.widgets;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 
@@ -57,9 +59,18 @@ public class LabelTable<S> extends ScrollPane {
     private void addItemToView(S item) {
         for (int i = 0; i < columns.size(); i++) {
             LabelTableColumn<S, ?> col = columns.get(i);
-
+            
             Object result = col.cellValueFactoryProperty().get().call(item).getValue();
-            Label label = new Label(result.toString());
+            Labeled label;
+            if (col.getOnClick() != null) {
+                Hyperlink hl = new Hyperlink(result.toString());
+                hl.setOnAction(event -> {
+                    col.getOnClick().call(item);
+                });
+                label = hl;
+            } else {
+                label = new Label(result.toString());
+            }
             label.setWrapText(true);
             content.add(label, i, items.size());  // 第一行是title
         }

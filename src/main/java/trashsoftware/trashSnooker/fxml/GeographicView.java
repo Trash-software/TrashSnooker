@@ -1,11 +1,10 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -28,6 +27,8 @@ import trashsoftware.trashSnooker.core.career.transporation.City;
 import trashsoftware.trashSnooker.core.career.transporation.Route;
 import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
 import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
+import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
+import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
 
 import java.net.URL;
 import java.util.*;
@@ -48,6 +49,8 @@ public class GeographicView extends ChildInitializable {
             Color.FORESTGREEN;
 
     @FXML
+    VBox controlsBox;
+    @FXML
     StackPane mapViewport;
     @FXML
     WorldMapView worldMapView;
@@ -63,9 +66,12 @@ public class GeographicView extends ChildInitializable {
     ListView<RouteResult> searchResultsView;
     @FXML
     CheckBox directOnlyBox, flightsOnlyBox;
+    @FXML
+    Label currentDateLabel, currentLocationLabel, nextChampLocationLabel, nextChampDateLabel, nextChampLateDepartureLabel;
 
     private TransportationManager manager;
     private CareerManager careerManager;
+    private @Nullable ChampionshipData.WithYear nextChampionship;
     private ResourceBundle strings;
     private Stage stage;
 
@@ -84,9 +90,9 @@ public class GeographicView extends ChildInitializable {
     private double dragStartPanX;
     private double dragStartPanY;
 
-    private final RouteRenderer straightRouteRenderer =
+    private final StraightRouteRenderer straightRouteRenderer =
             new StraightRouteRenderer();
-    private final RouteRenderer curvedRouteRenderer =
+    private final CurveRouteRenderer curvedRouteRenderer =
             new CurveRouteRenderer();
 
     private boolean overlayUpdatePending = false;
@@ -108,6 +114,9 @@ public class GeographicView extends ChildInitializable {
 
     private RouteSearchResult routeSearchResult;
     private PopOver cityPopOver;
+    private PopOver ticketPopOver;
+    private AnimationTimer travelAnimation;
+    private TravelAnimationPlayer travelAnimationPlayer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -118,7 +127,7 @@ public class GeographicView extends ChildInitializable {
     public void backAction() {
         super.backAction();
     }
-    
+
     public void setup(Stage stage, @Nullable CareerManager careerManager) {
         this.stage = stage;
         manager = TransportationManager.getInstance();
@@ -166,17 +175,42 @@ public class GeographicView extends ChildInitializable {
             resolveLabelOverlaps();
         });
     }
-
-    @FXML
+    
     void searchRouteAction() {
         City a = departureBox.getValue();
         City b = destinationBox.getValue();
         if (a == null || b == null || a.equals(b)) {
             System.out.println("Cannot");
+            return;
         }
         List<RouteResult> allRoutes = manager.findAllFeasibleRoutes(a, b);
         routeSearchResult = new RouteSearchResult(allRoutes);
         updateRouteResultList();
+    }
+
+    public void setNextChampionship(Calendar current, City location,
+                                    @Nullable ChampionshipData.WithYear next) {
+        nextChampionship = next;
+        City to = next == null ? null : next.data.getLocation().city();
+        setInitCities(location, to);
+
+        currentDateLabel.setText(CareerManager.calendarToString(current));
+        currentLocationLabel.setText(String.format(strings.getString("currentLocationFmt"),
+                location.getName(strings.getLocale())));
+
+        boolean hasNext = nextChampionship != null;
+        nextChampDateLabel.setVisible(hasNext);
+        nextChampDateLabel.setManaged(hasNext);
+        nextChampLocationLabel.setVisible(hasNext);
+        nextChampLocationLabel.setManaged(hasNext);
+        nextChampLateDepartureLabel.setVisible(hasNext);
+        nextChampLateDepartureLabel.setManaged(hasNext);
+
+        if (nextChampionship != null) {
+            Calendar[] se = nextChampionship.toCalendarStartEndInclusive();
+            nextChampDateLabel.setText(CareerManager.calendarDurationToString(se[0], se[1]));
+            nextChampLocationLabel.setText(nextChampionship.data.getLocation().city().getName(strings.getLocale()));
+        }
     }
 
     public void setInitCities(City from, @Nullable City to) {
@@ -198,6 +232,18 @@ public class GeographicView extends ChildInitializable {
                 marker.showLocationBubble(true);
             }
         });
+    }
+
+    private void updateRequiredDepartureTime() {
+        if (nextChampionship != null) {
+            RouteResult first = searchResultsView.getSelectionModel().getSelectedItem();
+            if (first != null) {
+                Calendar latestDeparture = nextChampionship.latestDeparture(first);
+                nextChampLateDepartureLabel.setText(String.format(
+                        strings.getString("latestDepartureTimeFmt"),
+                        CareerManager.calendarToString(latestDeparture)));
+            }
+        }
     }
 
     private void updateRouteResultList() {
@@ -255,6 +301,7 @@ public class GeographicView extends ChildInitializable {
             if (routeSearchResult != null) {
                 routeSearchResult.selected = newValue;
                 scheduleOverlayUpdate();
+                updateRequiredDepartureTime();
             }
         }));
     }
@@ -282,6 +329,10 @@ public class GeographicView extends ChildInitializable {
                     setText(item.getName(strings.getLocale()) + ", " + item.getCountryDisplay(strings));
                 }
             }
+        });
+        
+        comboBox.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> {
+            searchRouteAction();
         });
     }
 
@@ -452,6 +503,47 @@ public class GeographicView extends ChildInitializable {
                     localPoint.getY()
             );
         }
+    }
+
+    private void travelTo(RouteResult routeResult) {
+        startTravelling(routeResult);
+    }
+
+    private void startTravelling(RouteResult routeResult) {
+        controlsBox.setDisable(true);
+
+        travelAnimationPlayer = new TravelAnimationPlayer(routeResult, 0.5);
+        routeLayer.getChildren().add(travelAnimationPlayer.movingGraphics);
+        travelAnimation = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                boolean hasNext = travelAnimationPlayer.oneFrame();
+                if (!hasNext) {
+                    endTravelling();
+                    return;
+                }
+
+                Point2D mapPoint = travelAnimationPlayer.getPoint();
+                if (mapPoint == null) return;
+                travelAnimationPlayer.movingGraphics.setTranslateX(mapPoint.getX());
+                travelAnimationPlayer.movingGraphics.setTranslateY(mapPoint.getY());
+            }
+        };
+        travelAnimation.start();
+    }
+
+    private void endTravelling() {
+        travelAnimation.stop();
+        travelAnimation = null;
+        routeLayer.getChildren().remove(travelAnimationPlayer.movingGraphics);
+        travelAnimationPlayer = null;
+        
+        // todo
+        // set location
+        
+        setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), null);
+
+        controlsBox.setDisable(false);
     }
 
     // ------------------------------------------------------------
@@ -735,6 +827,10 @@ public class GeographicView extends ChildInitializable {
                     nodes
             );
         }
+
+        if (travelAnimationPlayer != null) {
+            routeLayer.getChildren().add(travelAnimationPlayer.movingGraphics);
+        }
     }
 
     private Color getRouteColor(Route route) {
@@ -753,6 +849,8 @@ public class GeographicView extends ChildInitializable {
         if (routeSearchResult != null && routeSearchResult.selected != null) {
             if (routeSearchResult.selected.containsRoute(route)) return true;
         }
+        if (travelAnimationPlayer != null && travelAnimationPlayer.routeResult.containsRoute(route))
+            return true;
 
         if (!route.isFlight()) {
             return trainsBox.isSelected();
@@ -760,9 +858,7 @@ public class GeographicView extends ChildInitializable {
 
         return switch (route.getType()) {
             case "international" -> internationalFlightsBox.isSelected();
-
             case "domestic" -> domesticFlightsBox.isSelected();
-
             default -> false;
         };
     }
@@ -1296,7 +1392,7 @@ public class GeographicView extends ChildInitializable {
                         )
                 );
             }
-            
+
             updateRouteHighlight(routeView, false);
 
             return result;
@@ -1681,7 +1777,7 @@ public class GeographicView extends ChildInitializable {
         /**
          * 使用球面线性插值 SLERP 生成真正的大圆路径。
          */
-        private List<GeoPoint> createGreatCirclePoints(
+        protected List<GeoPoint> createGreatCirclePoints(
                 double lat1,
                 double lon1,
                 double lat2,
@@ -1766,7 +1862,7 @@ public class GeographicView extends ChildInitializable {
             return result;
         }
 
-        private Vector3 latLonToVector(
+        protected Vector3 latLonToVector(
                 double latitude,
                 double longitude
         ) {
@@ -1971,7 +2067,7 @@ public class GeographicView extends ChildInitializable {
          *
          * 这样完全兼容当前 zoom + pan。
          */
-        private Projection createProjection(
+        Projection createProjection(
                 City city1,
                 Point2D p1,
                 City city2,
@@ -2046,6 +2142,142 @@ public class GeographicView extends ChildInitializable {
                     yCenter,
                     mercatorScale
             );
+        }
+
+        private Projection createCurrentProjection() {
+            City city1 = manager.getCities().get("London");
+            City city2 = manager.getCities().get("Beijing");
+
+            if (city1 == null || city2 == null) {
+                return null;
+            }
+
+            CityMarker marker1 =
+                    cityMarkerMap.get(city1);
+
+            CityMarker marker2 =
+                    cityMarkerMap.get(city2);
+
+            if (marker1 == null || marker2 == null) {
+                return null;
+            }
+
+            Point2D p1 =
+                    routeLayer.sceneToLocal(
+                            marker1.localToScene(0, 0)
+                    );
+
+            Point2D p2 =
+                    routeLayer.sceneToLocal(
+                            marker2.localToScene(0, 0)
+                    );
+
+            return createProjection(
+                    city1,
+                    p1,
+                    city2,
+                    p2
+            );
+        }
+
+        private Point2D greatCirclePointOnView(
+                double lat1,
+                double lon1,
+                double lat2,
+                double lon2,
+                double progress
+        ) {
+            progress = Math.clamp(progress,
+                    0.0, 1.0);
+
+            GeoPoint geoPoint =
+                    greatCirclePoint(
+                            lat1,
+                            lon1,
+                            lat2,
+                            lon2,
+                            progress
+                    );
+
+            CurveRouteRenderer.Projection projection = curvedRouteRenderer.createCurrentProjection();
+            if (projection == null) {
+                return null;
+            }
+
+            return projection.project(
+                    geoPoint.latitude(),
+                    geoPoint.longitude()
+            );
+        }
+
+        GeoPoint greatCirclePoint(
+                double lat1,
+                double lon1,
+                double lat2,
+                double lon2,
+                double progress
+        ) {
+            Vector3 a =
+                    latLonToVector(
+                            lat1,
+                            lon1
+                    );
+
+            Vector3 b =
+                    latLonToVector(
+                            lat2,
+                            lon2
+                    );
+
+            double dot =
+                    Math.clamp(
+                            a.dot(b)
+                            ,
+                            -1.0,
+                            1.0);
+
+            double omega =
+                    Math.acos(dot);
+
+            /*
+             * 两点几乎相同。
+             */
+            if (omega < 1e-10) {
+                return new GeoPoint(
+                        lat1,
+                        lon1
+                );
+            }
+
+            double sinOmega =
+                    Math.sin(omega);
+
+            /*
+             * 正常的大圆 SLERP。
+             */
+            double k1 =
+                    Math.sin(
+                            (1.0 - progress) * omega
+                    ) / sinOmega;
+
+            double k2 =
+                    Math.sin(
+                            progress * omega
+                    ) / sinOmega;
+
+            Vector3 v =
+                    new Vector3(
+                            a.x() * k1
+                                    + b.x() * k2,
+
+                            a.y() * k1
+                                    + b.y() * k2,
+
+                            a.z() * k1
+                                    + b.z() * k2
+                    ).normalized();
+
+            return vectorToLatLon(v);
         }
 
         /**
@@ -2238,7 +2470,7 @@ public class GeographicView extends ChildInitializable {
          */
         void setHighlighted(boolean selected, RouteResult selectedSearchResult) {
             boolean targeted = false;
-            
+
             if (selectedSearchResult != null) {
                 for (RouteResult.RouteStep rs : selectedSearchResult.getSteps()) {
                     if (rs.route().equals(route)) {
@@ -2247,7 +2479,7 @@ public class GeographicView extends ChildInitializable {
                     }
                 }
             }
-            
+
             for (Shape shape : visualShapes) {
                 double strokeWidth;
                 double opacity;
@@ -2332,9 +2564,8 @@ public class GeographicView extends ChildInitializable {
         private final Label totalTimeLabel = new Label();
         private final Label onboardTimeLabel = new Label();
         private final Label distanceLabel = new Label();
-        private final Label economyLabel = new Label();
-        private final Label businessLabel = new Label();
-        private final Label firstLabel = new Label();
+        private final LabelTable<double[]> priceTable;
+        private RouteResult routeResult;
 
         RouteResultListCell() {
             basePane.setVgap(5.0);
@@ -2346,31 +2577,134 @@ public class GeographicView extends ChildInitializable {
             int row = 0;
             routeCitiesLabel.setWrapText(true);
             routeCitiesLabel.setStyle("""
-                -fx-font-size: 14px;
-                -fx-font-weight: bold;
-                """);
-            basePane.add(routeCitiesLabel, 0, row++, 2, 1);
-
-            basePane.add(transitsLabel, 0, row++);
-
-            totalTimeTextLabel.setText(strings.getString("routeTotalTime"));
-            basePane.add(totalTimeTextLabel, 0, row);
-            basePane.add(totalTimeLabel, 1, row++);
+                    -fx-font-size: 14px;
+                    -fx-font-weight: bold;
+                    """);
+            basePane.add(routeCitiesLabel, 0, row++, 4, 1);
 
             basePane.add(new Label(strings.getString("routeOnboardTime")), 0, row);
-            basePane.add(onboardTimeLabel, 1, row++);
+            basePane.add(onboardTimeLabel, 1, row);
+
+            totalTimeTextLabel.setText(strings.getString("routeTotalTime"));
+            basePane.add(totalTimeTextLabel, 2, row);
+            basePane.add(totalTimeLabel, 3, row++);
 
             basePane.add(new Label(strings.getString("routeDistance")), 0, row);
-            basePane.add(distanceLabel, 1, row++);
+            basePane.add(distanceLabel, 1, row);
 
-            basePane.add(new Label(strings.getString("economyClass")), 0, row);
-            basePane.add(economyLabel, 1, row++);
+            basePane.add(transitsLabel, 2, row++);
 
-            basePane.add(new Label(strings.getString("businessClass")), 0, row);
-            basePane.add(businessLabel, 1, row++);
+            priceTable = new LabelTable<>();
+            priceTable.addColumns(
+                    new LabelTableColumn<>(priceTable, strings.getString("economyClass"),
+                            value -> new ReadOnlyStringWrapper(String.format("%.0f", value[0]))),
+                    new LabelTableColumn<>(priceTable, strings.getString("businessClass"),
+                            value -> new ReadOnlyStringWrapper(String.format("%.0f", value[1]))),
+                    new LabelTableColumn<>(priceTable, strings.getString("firstClass"),
+                            value -> new ReadOnlyStringWrapper(String.format("%.0f", value[2])))
+            );
+            priceTable.getColumns().get(0).setOnClick(param -> {
+                showBuyTicketPopOver(param, 0, priceTable);
+                return null;
+            });
+            priceTable.getColumns().get(1).setOnClick(param -> {
+                showBuyTicketPopOver(param, 1, priceTable);
+                return null;
+            });
+            priceTable.getColumns().get(2).setOnClick(param -> {
+                showBuyTicketPopOver(param, 2, priceTable);
+                return null;
+            });
 
-            basePane.add(new Label(strings.getString("firstClass")), 0, row);
-            basePane.add(firstLabel, 1, row++);
+            basePane.add(priceTable, 0, row++, 4, 1);
+        }
+
+        private void showBuyTicketPopOver(double[] prices,
+                                          int classIndex,
+                                          Node parent) {
+            if (ticketPopOver != null) {
+                ticketPopOver.hide();
+            }
+            if (careerManager == null) return;
+            if (routeResult == null) return;
+
+            String classType = switch (classIndex) {
+                case 1 -> "businessClass";
+                case 2 -> "firstClass";
+                default -> "economyClass";
+            };
+
+            double price = prices[classIndex];
+            Label priceLabel = new Label(String.format("%.0f", price));
+            Label classLabel = new Label(strings.getString(classType));
+
+            VBox content = new VBox(8);
+            content.setPadding(new Insets(12));
+
+            Button travelButton =
+                    new Button(strings.getString("travelNow"));
+            Button scheduleTravelButton =
+                    new Button(strings.getString("scheduleTravelBeforeChamp"));
+            
+            if (careerManager != null 
+                    && careerManager.getHumanPlayerCareer().getCurrentLocation().equals(departureBox.getValue())) {
+                travelButton.setDisable(false);
+                travelButton.setOnAction(_ -> {
+                    travelTo(routeResult);
+                    ticketPopOver.hide();
+                });
+            } else {
+                travelButton.setDisable(true);
+            }
+
+            if (nextChampionship == null 
+                    || !nextChampionship.data.getLocation().city().equals(destinationBox.getValue()) 
+                    || careerManager == null 
+                    || !careerManager.getHumanPlayerCareer().getCurrentLocation().equals(departureBox.getValue())) {
+                scheduleTravelButton.setDisable(true);
+            } else {
+                scheduleTravelButton.setDisable(false);
+                Calendar latestDeparture = nextChampionship.latestDeparture(routeResult);
+                scheduleTravelButton.setOnAction(_ -> {
+                    careerManager.setNextScheduleTravel(new RouteResult.WithClass(
+                            routeResult, classIndex, latestDeparture
+                    ));
+                    ticketPopOver.hide();
+                });
+            }
+
+            HBox buttonBox =
+                    new HBox(travelButton, scheduleTravelButton);
+            buttonBox.setSpacing(8.0);
+
+            buttonBox.setAlignment(
+                    Pos.CENTER_RIGHT
+            );
+
+            content.getChildren().addAll(
+                    classLabel,
+                    priceLabel,
+                    buttonBox
+            );
+
+            PopOver popOver =
+                    new PopOver(content);
+
+            popOver.setDetachable(false);
+            popOver.setAutoHide(true);
+            popOver.setHeaderAlwaysVisible(false);
+            popOver.setCloseButtonEnabled(false);
+
+            popOver.setArrowLocation(
+                    PopOver.ArrowLocation.LEFT_CENTER
+            );
+
+            ticketPopOver = popOver;
+
+            /*
+             * marker 就是箭头所指向的 owner。
+             */
+            popOver.show(parent);
         }
 
         @Override
@@ -2378,8 +2712,10 @@ public class GeographicView extends ChildInitializable {
             super.updateItem(item, empty);
 
             if (empty || item == null) {
+                routeResult = null;
                 setGraphic(null);
             } else {
+                routeResult = item;
                 routeCitiesLabel.setText(item.cityNamesOnUi(strings));
 
                 int nTrans = item.getTransitCount();
@@ -2401,9 +2737,8 @@ public class GeographicView extends ChildInitializable {
                 onboardTimeLabel.setText(RouteResult.formatTime(item.getOnBoardTimeMinutes()));
                 distanceLabel.setText(String.format("%.0f km", item.getTotalDistance()));
 
-                economyLabel.setText(String.format("%d", item.getTotalEconomyPrice()));
-                businessLabel.setText(String.format("%d", item.getTotalBusinessPrice()));
-                firstLabel.setText(String.format("%d", item.getTotalFirstPrice()));
+                priceTable.clearItems();
+                priceTable.addItem(new double[]{item.getTotalEconomyPrice(), item.getTotalBusinessPrice(), item.getTotalFirstPrice()});
 
                 setGraphic(basePane);
             }
@@ -2437,6 +2772,78 @@ public class GeographicView extends ChildInitializable {
             );
 
             setMouseTransparent(true);
+        }
+    }
+
+    private class TravelAnimationPlayer {
+
+        private final RouteResult routeResult;
+        private double[] curSegmentStart;
+        private double[] curSegmentStop;
+        private double curSegmentTravelledDt;
+        private double curSegmentTotalDt;
+        private final double speed;
+        private int segmentIndex;
+        private final Group movingGraphics;
+
+        private long lastFrameTime;
+
+        TravelAnimationPlayer(RouteResult routeResult, double speed) {
+            this.routeResult = routeResult;
+            this.speed = speed;
+
+            RouteResult.RouteStep first = routeResult.getSteps().getFirst();
+            curSegmentStart = first.fromCity().getLonLat();
+            curSegmentStop = first.toCity().getLonLat();
+            curSegmentTotalDt = first.route().getDistance();
+
+            movingGraphics = new Group();
+            Shape dot = new Circle(10);
+            dot.setFill(Color.RED);
+            movingGraphics.getChildren().add(dot);
+
+//            curvedRouteRenderer
+        }
+
+        /**
+         * @return true if has next frame, false if ends
+         */
+        boolean oneFrame() {
+            long curTime = System.currentTimeMillis();
+            long frameTime;
+            if (lastFrameTime == 0) {
+                frameTime = 20;
+            } else {
+                frameTime = curTime - lastFrameTime;
+            }
+            double speedMul = routeResult.getSteps().get(segmentIndex).route().isFlight() ? 1.0 : 0.5;
+            curSegmentTravelledDt += speed * frameTime * speedMul * 2;
+            if (curSegmentTravelledDt >= curSegmentTotalDt) {
+                List<RouteResult.RouteStep> steps = routeResult.getSteps();
+                segmentIndex++;
+                if (segmentIndex == steps.size()) {
+                    return false;
+                } else {
+                    RouteResult.RouteStep next = routeResult.getSteps().get(segmentIndex);
+                    curSegmentStart = next.fromCity().getLonLat();
+                    curSegmentStop = next.toCity().getLonLat();
+                    curSegmentTotalDt = next.route().getDistance();
+                    curSegmentTravelledDt = 0;
+                }
+            }
+            lastFrameTime = curTime;
+            return true;
+        }
+
+        Point2D getPoint() {
+            double progress = curSegmentTravelledDt / curSegmentTotalDt;
+            return curvedRouteRenderer.greatCirclePointOnView(
+                    curSegmentStart[1],
+                    curSegmentStart[0],
+                    curSegmentStop[1],
+                    curSegmentStop[0],
+                    progress
+            );
         }
     }
 }

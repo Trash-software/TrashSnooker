@@ -90,6 +90,10 @@ public class City {
     public double getLatitude() {
         return latitude;
     }
+    
+    public double[] getLonLat() {
+        return new double[]{longitude, latitude};
+    }
 
     public static City fromJson(String id, JSONObject json) {
         JSONObject namesJson = json.getJSONObject("names");

@@ -327,6 +327,8 @@ public class TransportationManager {
 //        System.out.println(root);
         
         RouteResult shortest = findShortestRoute(startCity, endCity);
+//        if (shortest == null) return List.of();
+        
         double maxRouteDistance = Math.min(40000, shortest.getTotalDistance() * 1.5);
         RouteResult.RoutesTree root = addPathsToAdjacentCities(startCity, endCity, maxRouteDistance, null);
 

@@ -11,6 +11,7 @@ public class LabelTableColumn<S, T> {
     private final LabelTable<S> table;
     private ObjectProperty<Callback<S, ObservableValue<T>>> cellValueFactory;
     private Node title;
+    private Callback<S, Void> onClick;
 
     public LabelTableColumn(LabelTable<S> table, Node title) {
         this(table, title, null);
@@ -53,5 +54,13 @@ public class LabelTableColumn<S, T> {
     public final void setCellValueFactory(Callback<S, ObservableValue<T>> value) {
         cellValueFactoryProperty().set(value);
         if (table != null) table.refresh();
+    }
+
+    public Callback<S, Void> getOnClick() {
+        return onClick;
+    }
+
+    public void setOnClick(Callback<S, Void> onClick) {
+        this.onClick = onClick;
     }
 }
