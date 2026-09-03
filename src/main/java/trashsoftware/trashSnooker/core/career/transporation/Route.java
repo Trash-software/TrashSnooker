@@ -85,6 +85,10 @@ public class Route {
     public boolean isFlight() {
         return flight;
     }
+    
+    public double averageSpeedKmh() {
+        return distance / timeMinutes * 60;
+    }
 
     public City getCity1() {
         return city1;

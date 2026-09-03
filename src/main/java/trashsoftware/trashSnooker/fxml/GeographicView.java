@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.WorldMapView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
@@ -89,6 +90,7 @@ public class GeographicView extends ChildInitializable {
     private double dragStartY;
     private double dragStartPanX;
     private double dragStartPanY;
+    private boolean dragging;
 
     private final StraightRouteRenderer straightRouteRenderer =
             new StraightRouteRenderer();
@@ -512,7 +514,9 @@ public class GeographicView extends ChildInitializable {
     private void startTravelling(RouteResult routeResult) {
         controlsBox.setDisable(true);
 
-        travelAnimationPlayer = new TravelAnimationPlayer(routeResult, 0.5);
+        travelAnimationPlayer = new TravelAnimationPlayer(routeResult, 
+                careerManager.getTimestamp(),
+                0.5);
         routeLayer.getChildren().add(travelAnimationPlayer.movingGraphics);
         travelAnimation = new AnimationTimer() {
             @Override
@@ -522,6 +526,8 @@ public class GeographicView extends ChildInitializable {
                     endTravelling();
                     return;
                 }
+                
+                currentDateLabel.setText(CareerManager.calendarToString(travelAnimationPlayer.getDate()));
 
                 Point2D mapPoint = travelAnimationPlayer.getPoint();
                 if (mapPoint == null) return;
@@ -576,6 +582,8 @@ public class GeographicView extends ChildInitializable {
 
                     dragStartPanX = panX;
                     dragStartPanY = panY;
+                    
+                    dragging = false;
                 }
         );
 
@@ -584,6 +592,13 @@ public class GeographicView extends ChildInitializable {
                 event -> {
                     if (!event.isPrimaryButtonDown()) {
                         return;
+                    }
+
+                    double dx = event.getSceneX() - dragStartX;
+                    double dy = event.getSceneY() - dragStartY;
+
+                    if (Math.hypot(dx, dy) >= 5.0) {
+                        dragging = true;
                     }
 
                     panX =
@@ -624,6 +639,10 @@ public class GeographicView extends ChildInitializable {
         mapViewport.addEventFilter(
                 MouseEvent.MOUSE_CLICKED,
                 event -> {
+                    if (dragging) {
+                        event.consume();
+                        return;
+                    }
                     if (event.getClickCount() == 1) {
                         updateRouteResultList();
                     }
@@ -2776,39 +2795,70 @@ public class GeographicView extends ChildInitializable {
     }
 
     private class TravelAnimationPlayer {
+        
+        static final double SPEED_MUL = 23400;
 
         private final RouteResult routeResult;
-        private double[] curSegmentStart;
-        private double[] curSegmentStop;
+        private final Calendar departureDate;
         private double curSegmentTravelledDt;
-        private double curSegmentTotalDt;
         private final double speed;
-        private int segmentIndex;
         private final Group movingGraphics;
 
         private long lastFrameTime;
+        private double minutesSpent;
+        
+        private final NavigableMap<Double, Calendar> dates = new TreeMap<>();  // 时间和date
+        private final NavigableMap<Double, Segment> routeSegments = new TreeMap<>();
 
-        TravelAnimationPlayer(RouteResult routeResult, double speed) {
+        TravelAnimationPlayer(RouteResult routeResult, Calendar departureDate, double speed) {
             this.routeResult = routeResult;
+            this.departureDate = departureDate;
             this.speed = speed;
 
-            RouteResult.RouteStep first = routeResult.getSteps().getFirst();
-            curSegmentStart = first.fromCity().getLonLat();
-            curSegmentStop = first.toCity().getLonLat();
-            curSegmentTotalDt = first.route().getDistance();
-
             movingGraphics = new Group();
-            Shape dot = new Circle(10);
+            // todo: 飞机火车
+            Shape dot = new Circle(5);
             dot.setFill(Color.RED);
             movingGraphics.getChildren().add(dot);
-
-//            curvedRouteRenderer
+            
+            computeDates();
+        }
+        
+        private void computeDates() {
+            double totalMinutes = routeResult.getTotalTimeMinutes();
+            double remMinutes = (1440 - totalMinutes % 1440) % 1440;
+            // 如果时间充裕，就10点出发
+            // 如果不充裕，就卡在 23:59能到的时间出发
+            double departureMinutes = Math.min(10 * 60, remMinutes);
+            int daysCount = 0;
+            for (double mins = departureMinutes; mins < departureMinutes + totalMinutes; mins += 1440) {
+                Calendar cal = (Calendar) departureDate.clone();
+                cal.add(Calendar.DAY_OF_MONTH, daysCount);
+                dates.put(mins - departureMinutes, cal);
+                daysCount++;
+            }
+            
+            double minutes = 0;
+            List<RouteResult.RouteStep> steps = routeResult.getSteps();
+            for (int i = 0; i < steps.size(); i++) {
+                RouteResult.RouteStep step = steps.get(i);
+                if (i != 0) {
+                    routeSegments.put(minutes, new Segment(Status.TRANSITING, step));
+                    minutes += step.getFromCityTransitTime();
+                }
+                
+                routeSegments.put(minutes, new Segment(Status.MOVING, step));
+                minutes += step.route().getTimeMinutes();
+            }
         }
 
         /**
          * @return true if has next frame, false if ends
          */
         boolean oneFrame() {
+            if (minutesSpent >= routeResult.getTotalTimeMinutes()) {
+                return false;
+            }
             long curTime = System.currentTimeMillis();
             long frameTime;
             if (lastFrameTime == 0) {
@@ -2816,34 +2866,57 @@ public class GeographicView extends ChildInitializable {
             } else {
                 frameTime = curTime - lastFrameTime;
             }
-            double speedMul = routeResult.getSteps().get(segmentIndex).route().isFlight() ? 1.0 : 0.5;
-            curSegmentTravelledDt += speed * frameTime * speedMul * 2;
-            if (curSegmentTravelledDt >= curSegmentTotalDt) {
-                List<RouteResult.RouteStep> steps = routeResult.getSteps();
-                segmentIndex++;
-                if (segmentIndex == steps.size()) {
-                    return false;
-                } else {
-                    RouteResult.RouteStep next = routeResult.getSteps().get(segmentIndex);
-                    curSegmentStart = next.fromCity().getLonLat();
-                    curSegmentStop = next.toCity().getLonLat();
-                    curSegmentTotalDt = next.route().getDistance();
+            var entry = routeSegments.floorEntry(minutesSpent);
+            Segment currentSegment = entry.getValue();
+            double frameMinutes = frameTime * speed * SPEED_MUL / 60000;
+            minutesSpent += frameMinutes;
+            
+            if (currentSegment.status() == Status.MOVING) {
+                double frameKm = currentSegment.step().route().averageSpeedKmh() * frameMinutes / 60;
+                curSegmentTravelledDt += frameKm;
+                if (curSegmentTravelledDt > currentSegment.step().route().getDistance()) {
+                    // 特殊case: 已经到达了
+                    // 如果不设为0，这一帧会渲染到下一段航程里去
                     curSegmentTravelledDt = 0;
                 }
+            } else {
+                curSegmentTravelledDt = 0;
             }
+            
             lastFrameTime = curTime;
             return true;
         }
+        
+        Calendar getDate() {
+            return dates.floorEntry(minutesSpent).getValue();
+        }
 
         Point2D getPoint() {
-            double progress = curSegmentTravelledDt / curSegmentTotalDt;
+            Segment currentSegment = routeSegments.floorEntry(minutesSpent).getValue();
+            RouteResult.RouteStep routeStep = currentSegment.step();
+            double progress = curSegmentTravelledDt / routeStep.route().getDistance();
             return curvedRouteRenderer.greatCirclePointOnView(
-                    curSegmentStart[1],
-                    curSegmentStart[0],
-                    curSegmentStop[1],
-                    curSegmentStop[0],
+                    routeStep.fromCity().getLatitude(),
+                    routeStep.fromCity().getLongitude(),
+                    routeStep.toCity().getLatitude(),
+                    routeStep.toCity().getLongitude(),
                     progress
             );
+        }
+        
+        private enum Status {
+            MOVING,
+            TRANSITING
+        }
+        
+        private record Segment(Status status, RouteResult.RouteStep step) {
+            @Override
+            public @NotNull String toString() {
+                return "Segment{" +
+                        "status=" + status +
+                        ", step=" + step +
+                        '}';
+            }
         }
     }
 }

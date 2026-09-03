@@ -37,7 +37,8 @@ public class RouteResult {
         int first = 0;
 
         for (int i = 0; i < steps.size(); i++) {
-            Route route = steps.get(i).route();
+            RouteStep step = steps.get(i); 
+            Route route = step.route();
 
             onBoardTime += route.getTimeMinutes();
             distance += route.getDistance();
@@ -47,13 +48,16 @@ public class RouteResult {
             first += route.getFirstPrice();
 
             if (i < steps.size() - 1) {
-                Route nextRoute = steps.get(i + 1).route();
+                RouteStep nextStep = steps.get(i + 1);
+                Route nextRoute = nextStep.route();
 
                 // Train -> Train: 1 hour
                 // All other transfers: 3 hours
-                totalTime += (!route.isFlight() && !nextRoute.isFlight())
+                double wait = (!route.isFlight() && !nextRoute.isFlight())
                         ? 60
                         : 180;
+                nextStep.setFromCityTransitTime(wait);
+                totalTime += wait;
             }
         }
 
@@ -213,7 +217,26 @@ public class RouteResult {
         );
     }
 
-    public record RouteStep(Route route, City fromCity, City toCity) {
+    public static final class RouteStep {
+        private final Route route;
+        private final City fromCity;
+        private final City toCity;
+        private double fromCityTransitTime;  // 中转出发之前，在fromCity等候下一段的时间
+
+        public RouteStep(Route route, City fromCity, City toCity) {
+            this.route = route;
+            this.fromCity = fromCity;
+            this.toCity = toCity;
+        }
+
+        public void setFromCityTransitTime(double fromCityTransitTime) {
+            this.fromCityTransitTime = fromCityTransitTime;
+        }
+
+        public double getFromCityTransitTime() {
+            return fromCityTransitTime;
+        }
+
         @Override
         public @NotNull String toString() {
             return route.toString();
@@ -221,11 +244,29 @@ public class RouteResult {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof RouteStep(Route route1, City city, City toCity1)) {
-                return fromCity.equals(city) && toCity.equals(toCity1) && route.equals(route1);
+            if (obj instanceof RouteStep rs) {
+                return fromCity.equals(rs.fromCity) && toCity.equals(rs.toCity) && route.equals(rs.route);
             }
             return false;
         }
+
+        public Route route() {
+            return route;
+        }
+
+        public City fromCity() {
+            return fromCity;
+        }
+
+        public City toCity() {
+            return toCity;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(route, fromCity, toCity);
+        }
+
     }
 
     public static class RoutesTree {
