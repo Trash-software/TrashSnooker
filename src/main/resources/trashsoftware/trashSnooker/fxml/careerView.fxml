@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
 <?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
 <?import trashsoftware.trashSnooker.fxml.widgets.PerkAdder?>
 <GridPane xmlns="http://javafx.com/javafx"
@@ -75,7 +74,7 @@
             <Label text="%careerChallenges"/>
         </HBox>
     </HBox>
-    
+
     <PerkAdder fx:id="abilityShower" GridPane.rowIndex="2"/>
 
     <HBox GridPane.rowIndex="3" spacing="10.0" alignment="CENTER_LEFT">
@@ -84,8 +83,28 @@
         <Button text="%seeToursList" onAction="#seeToursListAction"/>
     </HBox>
 
-    <VBox fx:id="champInProgBox" GridPane.rowIndex="4" spacing="10.0">
-        <HBox spacing="10.0">
+    <HBox GridPane.rowIndex="4" spacing="10.0">
+        <VBox spacing="5.0" alignment="CENTER_LEFT">
+            <HBox fx:id="travelBox" spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="%plannedJourney"/>
+                <Label fx:id="plannedJourneyLabel"/>
+                <HBox spacing="5.0" alignment="CENTER_LEFT">
+                    <Label text="%price"/>
+                    <Label fx:id="ticketPriceLabel"/>
+                </HBox>
+            </HBox>
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="%everydayCost"/>
+                <Label fx:id="dailyAccommodationCostLabel"/>
+                <Label fx:id="dailyLivingCostLabel"/>
+            </HBox>
+        </VBox>
+        <Button fx:id="forwardBtn" text="%calendarForward" onAction="#forwardAction"/>
+    </HBox>
+
+
+    <VBox fx:id="champInProgBox" GridPane.rowIndex="5" spacing="10.0">
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
             <Label text="%tourInProgress"/>
             <Label fx:id="champInProgLabel"/>
             <Label fx:id="champInProgStageLabel"/>
@@ -93,29 +112,29 @@
         </HBox>
     </VBox>
 
-    <VBox fx:id="nextChampInfoBox" GridPane.rowIndex="4" spacing="10.0">
-        <HBox spacing="10.0">
+    <VBox fx:id="nextChampInfoBox" GridPane.rowIndex="5" spacing="10.0">
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
             <Label text="%nextTour"/>
             <Label fx:id="nextChampionshipLabel"/>
             <CheckBox fx:id="joinChampBox" text="%enrol"/>
-            <Button text="%start" onAction="#nextChamp"/>
-            <Button fx:id="skipChampBtn" text="%skip" onAction="#skipNextChamp"/>
+            <!--            <Button text="%start" onAction="#nextChamp"/>-->
+            <!--            <Button fx:id="skipChampBtn" text="%skip" onAction="#skipNextChamp"/>-->
         </HBox>
         <HBox fx:id="feesBoxChecked" spacing="5.0">
             <Label text="%registryFee"/>
             <Label fx:id="registryFeeLabel"/>
-            <Label text="%travelFee"/>
-            <Label fx:id="travelFeeLabel"/>
+            <!--            <Label text="%travelFee"/>-->
+            <!--            <Label fx:id="travelFeeLabel"/>-->
             <!--            <Label text="%otherFee"/>-->
             <Label fx:id="otherFeeLabel1"/>
-            <Label text="%totalFee"/>
-            <Label fx:id="totalFeeLabel"/>
+            <!--            <Label text="%totalFee"/>-->
+            <!--            <Label fx:id="totalFeeLabel"/>-->
         </HBox>
         <HBox fx:id="feesBoxUnchecked" spacing="5.0" visible="false" managed="false">
             <!--            <Label text="%otherFee"/>-->
-            <Label fx:id="otherFeeLabel2"/>
-            <Label text="%totalFee"/>
-            <Label fx:id="totalFeeLabel2"/>
+            <!--            <Label fx:id="otherFeeLabel2"/>-->
+            <!--            <Label text="%totalFee"/>-->
+            <!--            <Label fx:id="totalFeeLabel2"/>-->
         </HBox>
     </VBox>
 
@@ -148,8 +167,8 @@
     <LabelTable fx:id="selectedPlayerInfoTable" GridPane.rowIndex="1" GridPane.columnIndex="2"
                 GridPane.rowSpan="2"
                 visible="false" managed="false" prefWidth="360.0" prefHeight="360.0"/>
-    
-    <Button fx:id="careerRankHistoryBtn" GridPane.rowIndex="3" GridPane.columnIndex="2" 
+
+    <Button fx:id="careerRankHistoryBtn" GridPane.rowIndex="3" GridPane.columnIndex="2"
             visible="false" onAction="#showCareerRankHistory">
         <graphic>
             <ImageView fx:id="lineChartImg"/>

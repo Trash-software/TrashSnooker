@@ -2,7 +2,7 @@
   "achievements": {
     "expenditure": {
       "levelDates": {},
-      "completions": 2700,
+      "completions": 2990,
       "levelAwardReceived": {
         "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
@@ -41,18 +41,18 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "participateTournaments": {
+    "defeatUniqueOpponentsAmerican": {
       "levelDates": {},
-      "completions": 1,
+      "completions": 0,
       "levelAwardReceived": {
         "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
     },
-    "defeatUniqueOpponentsAmerican": {
+    "participateTournaments": {
       "levelDates": {},
-      "completions": 0,
+      "completions": 1,
       "levelAwardReceived": {
         "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
@@ -64,14 +64,10 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "champEarnCumulative": {
-      "levelDates": {},
-      "completions": 500,
-      "levelAwardReceived": {
-        "0": "NOT_COMPLETED",
-        "1": "NOT_COMPLETED",
-        "2": "NOT_COMPLETED"
-      }
+    "potABall": {
+      "levelDates": {"0": "2025-09-09 04:33:06"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "mainOfTournaments": {
       "levelDates": {},
@@ -82,10 +78,14 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "potABall": {
-      "levelDates": {"0": "2025-09-09 04:33:06"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    "champEarnCumulative": {
+      "levelDates": {},
+      "completions": 500,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
     },
     "saveMoney": {
       "levelDates": {},
@@ -105,13 +105,13 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "earnedMoney": {
-      "levelDates": {"0": "2025-06-19 04:40:17"},
+    "continuousLongPot": {
+      "levelDates": {"0": "2025-09-09 04:33:23"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "continuousLongPot": {
-      "levelDates": {"0": "2025-09-09 04:33:23"},
+    "earnedMoney": {
+      "levelDates": {"0": "2025-06-19 04:40:17"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
@@ -125,5 +125,5 @@
       }
     }
   },
-  "checksum": "4B7CE786F9EAA2B71777117CAD19430D"
+  "checksum": "F3F7C8BCEA0457A2BD09CA11727045A3"
 }

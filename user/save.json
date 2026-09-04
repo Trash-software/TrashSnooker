@@ -3,8 +3,8 @@
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.9825,
-    "person": "custom_73125E3FE667D051",
+    "psyStatus": 0.025,
+    "person": "custom_player_5",
     "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
@@ -13,32 +13,35 @@
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 1,
-    "person": "Neil Robertson",
+    "psyStatus": 0.7145435030464595,
+    "person": "Glass Heart",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "codeGameCounter": 1,
+  "codeGameCounter": 2,
   "p2BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
+    "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 7,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 0
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 4,
+      "holeSizeOrdinal": 4
     }
   },
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
-  "startTime": 1788278236327,
+  "winRecords": {
+    "1": 2,
+    "2": 2
+  },
+  "p2Wins": 2,
+  "startTime": 1788464079346,
   "p1BreakLoseChance": 0,
-  "totalFrames": 1,
+  "totalFrames": 9,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": true
+  "p1Breaks": false
 }

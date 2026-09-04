@@ -82,6 +82,14 @@ public class City {
     public int hotelPricePerDay() {
         return (int) Math.round(housePriceM2 * 0.015);
     }
+    
+    public int rentalPricePerDay(double m2) {
+        return (int) Math.round(housePriceM2 * m2 / 200.0 / 30);
+    }
+    
+    public int livingCostPerDay() {
+        return (int) Math.round(Math.pow(housePriceM2, 0.75) * 0.05);
+    }
 
     public double getLongitude() {
         return longitude;

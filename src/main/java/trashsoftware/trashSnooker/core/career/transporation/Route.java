@@ -175,4 +175,12 @@ public class Route {
 
         return hours * 60 + minutes;
     }
+
+    public int getPriceByClass(RouteResult.SeatClass seatClass) {
+        return switch (seatClass) {
+            case ECONOMY -> getEconomyPrice();
+            case BUSINESS -> getBusinessPrice();
+            case FIRST -> getFirstPrice();
+        };
+    }
 }

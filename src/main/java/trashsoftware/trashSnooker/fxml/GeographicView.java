@@ -75,6 +75,7 @@ public class GeographicView extends ChildInitializable {
     private @Nullable ChampionshipData.WithYear nextChampionship;
     private ResourceBundle strings;
     private Stage stage;
+    private CareerView careerView;
 
     /*
      * 我们自己的地图状态。
@@ -127,11 +128,15 @@ public class GeographicView extends ChildInitializable {
 
     @Override
     public void backAction() {
+        if (careerView != null) careerView.refreshGui();
         super.backAction();
     }
 
-    public void setup(Stage stage, @Nullable CareerManager careerManager) {
+    public void setup(Stage stage, 
+                      @Nullable CareerView careerView,
+                      @Nullable CareerManager careerManager) {
         this.stage = stage;
+        this.careerView = careerView;
         manager = TransportationManager.getInstance();
         this.careerManager = careerManager;
 
@@ -182,6 +187,8 @@ public class GeographicView extends ChildInitializable {
         City a = departureBox.getValue();
         City b = destinationBox.getValue();
         if (a == null || b == null || a.equals(b)) {
+            routeSearchResult = null;
+            updateRouteResultList();
             System.out.println("Cannot");
             return;
         }
@@ -197,8 +204,6 @@ public class GeographicView extends ChildInitializable {
         setInitCities(location, to);
 
         currentDateLabel.setText(CareerManager.calendarToString(current));
-        currentLocationLabel.setText(String.format(strings.getString("currentLocationFmt"),
-                location.getName(strings.getLocale())));
 
         boolean hasNext = nextChampionship != null;
         nextChampDateLabel.setVisible(hasNext);
@@ -217,14 +222,13 @@ public class GeographicView extends ChildInitializable {
 
     public void setInitCities(City from, @Nullable City to) {
         Platform.runLater(() -> {
+            departureBox.getSelectionModel().select(from);
             if (to != null) {
-                departureBox.getSelectionModel().select(from);
                 destinationBox.getSelectionModel().select(to);
-                searchRouteAction();
-
-                if (!searchResultsView.getItems().isEmpty()) {
-                    searchResultsView.getSelectionModel().select(0);
-                }
+            }
+            searchRouteAction();
+            if (!searchResultsView.getItems().isEmpty()) {
+                searchResultsView.getSelectionModel().select(0);
             }
 
             CityMarker marker =
@@ -233,6 +237,9 @@ public class GeographicView extends ChildInitializable {
             if (marker != null) {
                 marker.showLocationBubble(true);
             }
+            
+            currentLocationLabel.setText(String.format(strings.getString("currentLocationFmt"),
+                    from.getName(strings.getLocale())));
         });
     }
 
@@ -507,16 +514,26 @@ public class GeographicView extends ChildInitializable {
         }
     }
 
-    private void travelTo(RouteResult routeResult) {
-        startTravelling(routeResult);
+    private void travelTo(RouteResult.Ticket ticket) {
+        careerManager.getHumanPlayerCareer().payTravelFees(ticket);
+        
+        startTravelling(ticket);
     }
 
-    private void startTravelling(RouteResult routeResult) {
+    private void startTravelling(RouteResult.Ticket ticket) {
         controlsBox.setDisable(true);
 
-        travelAnimationPlayer = new TravelAnimationPlayer(routeResult, 
-                careerManager.getTimestamp(),
-                0.5);
+        CityMarker marker =
+                cityMarkerMap.get(careerManager.getHumanPlayerCareer().getCurrentLocation());
+
+        if (marker != null) {
+            // 消掉当前的标
+            marker.showLocationBubble(false);
+        }
+
+        travelAnimationPlayer = new TravelAnimationPlayer(ticket.route(), 
+                ticket.date(),
+                1.0);
         routeLayer.getChildren().add(travelAnimationPlayer.movingGraphics);
         travelAnimation = new AnimationTimer() {
             @Override
@@ -539,15 +556,21 @@ public class GeographicView extends ChildInitializable {
     }
 
     private void endTravelling() {
+        RouteResult routeResult = travelAnimationPlayer.routeResult;
+        Calendar dateArrival = routeResult.computeArrivalDate(travelAnimationPlayer.departureDate);
         travelAnimation.stop();
         travelAnimation = null;
         routeLayer.getChildren().remove(travelAnimationPlayer.movingGraphics);
         travelAnimationPlayer = null;
         
-        // todo
-        // set location
+        // 移动，推进日期
+        careerManager.getHumanPlayerCareer().setCurrentLocation(routeResult.getEndCity());
+        careerManager.setTimestamp(dateArrival);
+        careerManager.saveToDisk();
         
         setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), null);
+        // 确保日期没有意外bug
+        currentDateLabel.setText(CareerManager.calendarToString(careerManager.getTimestamp()));
 
         controlsBox.setDisable(false);
     }
@@ -2647,15 +2670,11 @@ public class GeographicView extends ChildInitializable {
             if (careerManager == null) return;
             if (routeResult == null) return;
 
-            String classType = switch (classIndex) {
-                case 1 -> "businessClass";
-                case 2 -> "firstClass";
-                default -> "economyClass";
-            };
+            RouteResult.SeatClass classType = RouteResult.SeatClass.fromIndex(classIndex);
 
             double price = prices[classIndex];
             Label priceLabel = new Label(String.format("%.0f", price));
-            Label classLabel = new Label(strings.getString(classType));
+            Label classLabel = new Label(classType.getShown(strings));
 
             VBox content = new VBox(8);
             content.setPadding(new Insets(12));
@@ -2669,7 +2688,12 @@ public class GeographicView extends ChildInitializable {
                     && careerManager.getHumanPlayerCareer().getCurrentLocation().equals(departureBox.getValue())) {
                 travelButton.setDisable(false);
                 travelButton.setOnAction(_ -> {
-                    travelTo(routeResult);
+                    travelTo(new RouteResult.Ticket(
+                            routeResult, 
+                            classType, 
+                            careerManager.getTimestamp(), 
+                            routeResult.computeArrivalDate(careerManager.getTimestamp())
+                    ));
                     ticketPopOver.hide();
                 });
             } else {
@@ -2685,8 +2709,11 @@ public class GeographicView extends ChildInitializable {
                 scheduleTravelButton.setDisable(false);
                 Calendar latestDeparture = nextChampionship.latestDeparture(routeResult);
                 scheduleTravelButton.setOnAction(_ -> {
-                    careerManager.setNextScheduleTravel(new RouteResult.WithClass(
-                            routeResult, classIndex, latestDeparture
+                    careerManager.setNextScheduleTravel(new RouteResult.Ticket(
+                            routeResult, 
+                            classType, 
+                            latestDeparture, 
+                            routeResult.computeArrivalDate(latestDeparture)
                     ));
                     ticketPopOver.hide();
                 });
@@ -2796,7 +2823,7 @@ public class GeographicView extends ChildInitializable {
 
     private class TravelAnimationPlayer {
         
-        static final double SPEED_MUL = 23400;
+        static final double SPEED_MUL = 11520;
 
         private final RouteResult routeResult;
         private final Calendar departureDate;
@@ -2816,7 +2843,6 @@ public class GeographicView extends ChildInitializable {
             this.speed = speed;
 
             movingGraphics = new Group();
-            // todo: 飞机火车
             Shape dot = new Circle(5);
             dot.setFill(Color.RED);
             movingGraphics.getChildren().add(dot);

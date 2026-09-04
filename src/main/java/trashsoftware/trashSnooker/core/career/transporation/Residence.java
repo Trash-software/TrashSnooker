@@ -1,12 +1,9 @@
 package trashsoftware.trashSnooker.core.career.transporation;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
-import trashsoftware.trashSnooker.util.JsonUtil;
 import trashsoftware.trashSnooker.util.PermanentCounters;
-import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -18,22 +15,28 @@ public class Residence {
     private final City city;
     private final double area;
     private final double unitPrice;
-    
+    private final Ownership ownership;
+
+    /**
+     * 也能是起租的时间
+     */
     private final Calendar purchaseTime;
     
     Residence(String id,
               City city,
               double area,
               double unitPrice,
+              Ownership ownership,
               Calendar purchaseTime) {
         this.id = id;
         this.city = city;
         this.area = area;
         this.unitPrice = unitPrice;
+        this.ownership = ownership;
         this.purchaseTime = purchaseTime;
     }
     
-    public static Residence createForCareer(City city, double area, Calendar purchaseTime, CareerSave owner) {
+    public static Residence createInitForCareer(City city, double area, Calendar purchaseTime, CareerSave owner) {
         String instanceId = "residence-" + city.getId() + ":" +
                 owner.getPlayerId() + "-" + PermanentCounters.getInstance().nextResidence();
         return new Residence(
@@ -41,6 +44,7 @@ public class Residence {
                 city,
                 area,
                 city.getHousePriceM2(),
+                Ownership.INITIAL,
                 purchaseTime
         );
     }
@@ -54,6 +58,7 @@ public class Residence {
                 city,
                 json.getDouble("area"),
                 json.getDouble("unitPrice"),
+                Ownership.valueOf(json.optString("ownership", Ownership.INITIAL.name())),
                 purchaseTime
         );
     }
@@ -64,8 +69,13 @@ public class Residence {
         object.put("city", city.getId());
         object.put("area", area);
         object.put("unitPrice", unitPrice);
+        object.put("ownership", ownership.name());
         object.put("purchaseTime", CareerManager.calendarToString(purchaseTime));
         return object;
+    }
+
+    public Ownership getOwnership() {
+        return ownership;
     }
 
     public Calendar getPurchaseTime() {
@@ -86,5 +96,11 @@ public class Residence {
     
     public double getTotalPrice() {
         return area * unitPrice;
+    }
+    
+    public enum Ownership {
+        OWN,
+        RENT,
+        INITIAL
     }
 }

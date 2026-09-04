@@ -1,7 +1,7 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 7688,
+    "money": 7398,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -81,21 +81,21 @@
       },
       {
         "inGameDate": "2023/1/22",
-        "match": "custom_82639CC3C1075363+2023+eight_red_pocket_open",
         "moneyBefore": 8300,
+        "match": "custom_82639CC3C1075363+2023+eight_red_pocket_open",
         "moneyAfter": 7300,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -104,8 +104,8 @@
       {
         "inGameDate": "2023/1/22",
         "year": 2023,
-        "match": "eight_red_pocket_open",
         "moneyBefore": 7300,
+        "match": "eight_red_pocket_open",
         "moneyAfter": 7688,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -116,12 +116,48 @@
       },
       {
         "inGameDate": "2023/1/22",
-        "match": "snooker-5-score-fixed",
         "moneyBefore": 7688,
+        "match": "snooker-5-score-fixed",
         "moneyAfter": 7688,
         "type": "challengeEarn",
         "items": {},
         "timestamp": "2025-09-09 04:33:55"
+      },
+      {
+        "dateOnTicket": "2023/1/22",
+        "inGameDate": "2023/1/22",
+        "moneyBefore": 7688,
+        "moneyAfter": 7543,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "PEK-CKG",
+          "departureCityId": "Chongqing",
+          "seatClass": "ECONOMY",
+          "payedPrice": 145
+        }],
+        "timestamp": "2026-09-04 18:27:11"
+      },
+      {
+        "dateOnTicket": "2023/1/23",
+        "inGameDate": "2023/1/23",
+        "moneyBefore": 7543,
+        "moneyAfter": 7398,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "XIY-CKG",
+            "departureCityId": "Chongqing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 80
+          },
+          {
+            "routeId": "PEK-XIY+T",
+            "departureCityId": "Xi'an",
+            "seatClass": "ECONOMY",
+            "payedPrice": 65
+          }
+        ],
+        "timestamp": "2026-09-04 18:32:29"
       }
     ],
     "level": 5,
@@ -130,5 +166,5 @@
     "totalPerks": 20,
     "totalExp": 471
   },
-  "checksum": "B2158F87523AF7B47DBA9D0A0FAA75AF"
+  "checksum": "D9B275A78AABC545C5F3A3FB8F6B19B3"
 }

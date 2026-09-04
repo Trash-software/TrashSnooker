@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.career.transporation;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -98,6 +99,16 @@ public class RouteResult {
     public double getOnBoardTimeMinutes() {
         return onBoardTimeMinutes;
     }
+    
+    public int getDaysConsumed() {
+        return (int) Math.ceil(getTotalTimeMinutes() / 1440);
+    }
+
+    public Calendar computeArrivalDate(Calendar departure) {
+        Calendar arrival = (Calendar) departure.clone();
+        arrival.add(Calendar.DAY_OF_MONTH, getDaysConsumed());
+        return arrival;
+    }
 
     public double getTotalDistance() {
         return totalDistance;
@@ -113,6 +124,14 @@ public class RouteResult {
 
     public int getTotalFirstPrice() {
         return totalFirstPrice;
+    }
+    
+    public int getTotalPriceByClass(SeatClass seatClass) {
+        return switch (seatClass) {
+            case ECONOMY -> getTotalEconomyPrice();
+            case BUSINESS -> getTotalBusinessPrice();
+            case FIRST -> getTotalFirstPrice();
+        };
     }
 
     public int getTransitCount() {
@@ -343,7 +362,32 @@ public class RouteResult {
                     '}';
         }
     }
-
-    public record WithClass(RouteResult route, int classIndex, Calendar date) {
+    
+    public enum SeatClass {
+        ECONOMY(0),
+        BUSINESS(1),
+        FIRST(2);
+        
+        public final int index;
+        
+        SeatClass(int index) {
+            this.index = index;
+        }
+        
+        public static SeatClass fromIndex(int index) {
+            for (SeatClass sc : values()) {
+                if (sc.index == index) return sc;
+            }
+            throw new IllegalArgumentException("Unknown class index " + index);
+        }
+        
+        public String getShown(ResourceBundle strings) {
+            String key = Util.toLowerCamelCase(name() + "_CLASS");
+            if (strings.containsKey(key)) return strings.getString(key);
+            else return name();
+        }
+    }
+    
+    public record Ticket(RouteResult route, SeatClass seatClass, Calendar date, Calendar dateArrival) {
     }
 }

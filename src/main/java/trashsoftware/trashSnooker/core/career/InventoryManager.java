@@ -200,11 +200,15 @@ public class InventoryManager {
         return residences;
     }
     
-    public boolean hasResidenceIn(City city) {
+    public Residence getResidenceAt(City city) {
         for (Residence residence : residences) {
-            if (residence.getCity().equals(city)) return true;
+            if (residence.getCity().equals(city)) return residence;
         }
-        return false;
+        return null;
+    }
+    
+    public boolean hasResidenceIn(City city) {
+        return getResidenceAt(city) != null;
     }
 
     public void installTip(CueTip cueTip, Cue cue) {

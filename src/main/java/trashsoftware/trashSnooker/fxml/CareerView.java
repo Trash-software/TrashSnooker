@@ -23,6 +23,7 @@ import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
+import trashsoftware.trashSnooker.core.career.transporation.City;
 import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
 import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -41,6 +42,9 @@ import trashsoftware.trashSnooker.util.db.DBAccess;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class CareerView extends ChildInitializable {
@@ -68,17 +72,21 @@ public class CareerView extends ChildInitializable {
     @FXML
     Label myRankLabel;
     @FXML
-    Label currentDateLabel, currentLocationLabel;
+    Label currentDateLabel, currentLocationLabel, plannedJourneyLabel, ticketPriceLabel;
     @FXML
+    Label dailyAccommodationCostLabel, dailyLivingCostLabel;
+    //    @FXML
     Label availPerksLabel;
-    @FXML
+    //    @FXML
     Button confirmAddPerkBtn, clearPerkBtn;
     @FXML
     Label nextChampionshipLabel, champInProgLabel, champInProgStageLabel;
     @FXML
-    Label registryFeeLabel, travelFeeLabel,
-            otherFeeLabel1, otherFeeLabel2,
-            totalFeeLabel, totalFeeLabel2;
+    Label registryFeeLabel,
+    //            travelFeeLabel,
+    otherFeeLabel1;
+    //        otherFeeLabel2;
+//            totalFeeLabel, totalFeeLabel2;
     @FXML
     HBox feesBoxChecked, feesBoxUnchecked;
     @FXML
@@ -90,15 +98,17 @@ public class CareerView extends ChildInitializable {
     @FXML
     ComboBox<ChampionshipData.Selection> rankMethodBox;
     @FXML
-    Pane champInProgBox, nextChampInfoBox;
+    Pane champInProgBox, nextChampInfoBox, travelBox;
+    @FXML
+    Button forwardBtn;
     @FXML
     LabelTable<PlayerAward> selectedPlayerInfoTable;
     @FXML
     VBox selectedPlayerAchBox;
     @FXML
     Label selectedPlayerAchievements, selectedPlayerGameTypesLabel;
-    @FXML
-    Button skipChampBtn;
+    //    @FXML
+//    Button skipChampBtn;
     @FXML
     Button careerRankHistoryBtn;
     @FXML
@@ -108,6 +118,7 @@ public class CareerView extends ChildInitializable {
     private Stage selfStage;
     private EntryView parent;
     private ResourceBundle strings;
+    private ForwardAnimationPlayer forwardAnimationPlayer;
 
     private ChampionshipData activeOrNext;
 
@@ -169,7 +180,7 @@ public class CareerView extends ChildInitializable {
     }
 
     private void refreshFeesTexts(boolean join) {
-        skipChampBtn.setDisable(join);
+//        skipChampBtn.setDisable(join);
         feesBoxChecked.setVisible(join);
         feesBoxChecked.setManaged(join);
         feesBoxUnchecked.setVisible(!join);
@@ -440,6 +451,10 @@ public class CareerView extends ChildInitializable {
     }
 
     public void refreshGui() {
+        refreshGui(true);
+    }
+
+    public void refreshGui(boolean recomputeTables) {
         HumanCareer myCareer = careerManager.getHumanPlayerCareer();
         levelLabel.setText("Lv." + myCareer.getLevel());
         int curExp = myCareer.getExpInThisLevel();
@@ -458,8 +473,10 @@ public class CareerView extends ChildInitializable {
         int ach = AchManager.getInstance().getNCompletedAchievements();
         achievementsLabel.setText(String.valueOf(ach));
 
-        refreshRanks();
-        refreshPersonalAwardsTable();
+        if (recomputeTables) {
+            refreshRanks();
+            refreshPersonalAwardsTable();
+        }
         currentDateLabel.setText(
                 String.format(strings.getString("currentDateFmt"),
                         CareerManager.calendarToString(careerManager.getTimestamp()))
@@ -468,6 +485,11 @@ public class CareerView extends ChildInitializable {
                 String.format(strings.getString("currentLocationFmt"),
                         careerManager.getHumanPlayerCareer().getCurrentLocation().getName(strings.getLocale()))
         );
+        
+        dailyAccommodationCostLabel.setText(String.format(strings.getString("accommodationCostFmt"),
+                careerManager.getDailyAccommodationAt(careerManager.getHumanPlayerCareer().getCurrentLocation())));
+        dailyLivingCostLabel.setText(String.format(strings.getString("livingCostFmt"),
+                careerManager.getDailyLivingAt(careerManager.getHumanPlayerCareer().getCurrentLocation())));
 
         Championship inProgress = careerManager.getChampionshipInProgress();
 //        System.out.println(inProgress);
@@ -475,6 +497,9 @@ public class CareerView extends ChildInitializable {
         if (inProgress == null) {
             champInProgBox.setVisible(false);
             champInProgBox.setManaged(false);
+
+            travelBox.setVisible(true);
+            travelBox.setManaged(true);
 
             nextChampInfoBox.setVisible(true);
             nextChampInfoBox.setManaged(true);
@@ -497,14 +522,16 @@ public class CareerView extends ChildInitializable {
             ));
             int registryFee = careerManager.getHumanRegistryFee(data, humanQualified);
             registryFeeLabel.setText(String.valueOf(registryFee));
+
 //            int travelFee = data.getFlightFee() + data.getHotelFee();
 //            travelFeeLabel.setText(String.valueOf(travelFee));
 
-            int[] travelHotelFees = getTravelAndHotelFees(data);
-            int travelFee = travelHotelFees[0] + travelHotelFees[1];
-            travelFeeLabel.setText(String.valueOf(travelFee));
+//            int[] travelHotelFees = getTravelAndHotelFees(data);
+//            int travelFee = travelHotelFees[0] + travelHotelFees[1];
+//            travelFeeLabel.setText(String.valueOf(travelFee));
 
             int fixedFees = 0;
+            // 主要就是欠债的事情
             Map<String, Integer> feesMap = careerManager.getHumanPlayerCareer().calculateFixedFees(nextData);
             if (!feesMap.isEmpty()) {
                 StringBuilder builder = new StringBuilder();
@@ -520,19 +547,38 @@ public class CareerView extends ChildInitializable {
                 }
                 String sbs = builder.toString();
                 otherFeeLabel1.setText(sbs);
-                otherFeeLabel2.setText(sbs);
+//                otherFeeLabel2.setText(sbs);
             } else {
                 otherFeeLabel1.setText("");
-                otherFeeLabel2.setText("");
+//                otherFeeLabel2.setText("");
             }
 
-            totalFeeLabel.setText(String.valueOf(registryFee + travelFee + fixedFees));
-            totalFeeLabel2.setText(String.valueOf(fixedFees));
+//            totalFeeLabel.setText(String.valueOf(registryFee + travelFee + fixedFees));
+//            totalFeeLabel2.setText(String.valueOf(fixedFees));
+
+            RouteResult.Ticket plannedJourney = careerManager.getOrUpdateScheduleTravel(nextData);
+            if (plannedJourney != null) {
+                plannedJourneyLabel.setText(String.format(
+                        "%s -> %s, %s",
+                        plannedJourney.route().getStartCity().getName(strings.getLocale()),
+                        plannedJourney.route().getEndCity().getName(strings.getLocale()),
+                        CareerManager.calendarToString(plannedJourney.date())
+                ));
+                ticketPriceLabel.setText(String.format("%s: %d",
+                        plannedJourney.seatClass().getShown(strings),
+                        plannedJourney.route().getTotalPriceByClass(plannedJourney.seatClass())));
+            } else {
+                plannedJourneyLabel.setText("");
+                ticketPriceLabel.setText("");
+            }
 
             refreshFeesTexts(joinChampBox.isSelected());
         } else {
             champInProgBox.setVisible(true);
             champInProgBox.setManaged(true);
+
+            travelBox.setVisible(false);
+            travelBox.setManaged(false);
 
             nextChampInfoBox.setVisible(false);
             nextChampInfoBox.setManaged(false);
@@ -664,6 +710,27 @@ public class CareerView extends ChildInitializable {
                         myRank.getWinRate()));
             }
         }
+    }
+
+    @FXML
+    void forwardAction() {
+        if (forwardAnimationPlayer == null) {
+            forwardBtn.setText(strings.getString("calendarPause"));
+            City city = careerManager.getHumanPlayerCareer().getCurrentLocation();
+            forwardAnimationPlayer = new ForwardAnimationPlayer(0.5,
+                    careerManager.getTimestamp(),
+                    careerManager.getHumanPlayerCareer().getMoney(),
+                    careerManager.getDailyAccommodationAt(city) + careerManager.getDailyLivingAt(city));
+        } else {
+            processForwardEnd(forwardAnimationPlayer.beginDate, careerManager.getTimestamp());
+
+            forwardBtn.setText(strings.getString("calendarForward"));
+            forwardAnimationPlayer = null;
+        }
+    }
+
+    private void processForwardEnd(Calendar forwardBegin, Calendar forwardEnd) {
+        
     }
 
     @FXML
@@ -1034,9 +1101,9 @@ public class CareerView extends ChildInitializable {
             GeographicView view = loader.getController();
             view.setParent(selfStage.getScene());
 
-            view.setup(selfStage, careerManager);
+            view.setup(selfStage, this, careerManager);
             if (careerManager.getChampionshipInProgress() == null) {
-                view.setNextChampionship(careerManager.getTimestamp(), 
+                view.setNextChampionship(careerManager.getTimestamp(),
                         careerManager.getHumanPlayerCareer().getCurrentLocation(),
                         careerManager.nextChampionshipData());
             } else {
@@ -1121,6 +1188,32 @@ public class CareerView extends ChildInitializable {
             this.data = data;
             this.rank = rank;
             this.winnerStage = winnerStage;
+        }
+    }
+
+    class ForwardAnimationPlayer {
+        private final double daySeconds;
+        private final Calendar beginDate;
+        private int moneyBefore;
+        private int dailyCost;
+
+        private ScheduledExecutorService executor;
+
+        ForwardAnimationPlayer(double daySeconds,
+                               Calendar beginDate,
+                               int moneyBefore,
+                               int dailyCost) {
+            this.daySeconds = daySeconds;
+            this.beginDate = beginDate;
+            this.moneyBefore = moneyBefore;
+            this.dailyCost = dailyCost;
+
+            executor = Executors.newSingleThreadScheduledExecutor();
+            executor.scheduleAtFixedRate(this::oneFrame, 0, (long) (daySeconds * 1000), TimeUnit.MILLISECONDS);
+        }
+
+        void oneFrame() {
+
         }
     }
 }

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.transporation.City;
 import trashsoftware.trashSnooker.core.career.transporation.Residence;
 import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -57,7 +58,7 @@ public class CareerManager {
     private Date careerCreationTime;  // 真实世界的建档时间
     private final Calendar beginTimestamp;  // 建档的游戏内时间
     private final Calendar timestamp;
-    private RouteResult.WithClass scheduledTravel;
+    private RouteResult.Ticket scheduledTravel;
     private final List<CareerRanker.ByAwards> snookerRanking = new ArrayList<>();
     private final List<CareerRanker.ByAwards> snookerRankingSingleSeason = new ArrayList<>();
     private final List<CareerRanker.ByTier> chineseEightRanking = new ArrayList<>();
@@ -240,7 +241,7 @@ public class CareerManager {
             throw new RuntimeException("No human player???");
         }
         cm.getHumanPlayerCareer().setInitParams(initLevel, spawnLocation);
-        Residence initHome = Residence.createForCareer(spawnLocation, Residence.DEFAULT_AREA, cm.timestamp, save);
+        Residence initHome = Residence.createInitForCareer(spawnLocation, Residence.DEFAULT_AREA, cm.timestamp, save);
         cm.inventoryManager.addResidence(initHome);
         cm.cache = new JSONObject();
         instance = cm;
@@ -374,7 +375,7 @@ public class CareerManager {
         
         if (careerManager.inventoryManager.getResidences().isEmpty()) {
             // 从旧版本更新过来的
-            Residence residence = Residence.createForCareer(
+            Residence residence = Residence.createInitForCareer(
                     careerManager.getHumanPlayerCareer().getSpawnLocation(), 
                     Residence.DEFAULT_AREA,
                     careerManager.getTimestamp(),
@@ -1019,13 +1020,60 @@ public class CareerManager {
     public Calendar getTimestamp() {
         return timestamp;
     }
+    
+    public void setTimestamp(Calendar targetTime) {
+        timestamp.setTimeInMillis(targetTime.getTimeInMillis());
+    }
 
     public Calendar getBeginTimestamp() {
         return beginTimestamp;
     }
     
-    public void setNextScheduleTravel(RouteResult.WithClass scheduledTravel) {
+    public void setNextScheduleTravel(RouteResult.Ticket scheduledTravel) {
         this.scheduledTravel = scheduledTravel;
+    }
+
+    public RouteResult.Ticket getOrUpdateScheduleTravel(ChampionshipData.WithYear target) {
+        City here = getHumanPlayerCareer().getCurrentLocation();
+        City destination = target.data.getLocation().city();
+        if (scheduledTravel != null) {
+            if (here.equals(scheduledTravel.route().getStartCity()) 
+                    && destination.equals(scheduledTravel.route().getEndCity())) {
+                if (!scheduledTravel.dateArrival().after(target.toCalendar())) {
+                    return scheduledTravel;
+                }
+            }
+        }
+        if (here.equals(destination)) {
+            return null;
+        }
+        // todo: 默认舱位
+        RouteResult autoFound = TransportationManager.getInstance().findCheapestRoute(here, destination);
+        Calendar latestDeparture = target.latestDeparture(autoFound);
+        scheduledTravel = new RouteResult.Ticket(
+                autoFound,
+                RouteResult.SeatClass.ECONOMY,
+                latestDeparture,
+                autoFound.computeArrivalDate(latestDeparture)
+        );
+        return scheduledTravel;
+    }
+    
+    public int getDailyAccommodationAt(City city) {
+        Residence residence = inventoryManager.getResidenceAt(city);
+        if (residence == null) {
+            return city.hotelPricePerDay();
+        } else {
+            if (residence.getOwnership() == Residence.Ownership.RENT) {
+                return city.rentalPricePerDay(Residence.DEFAULT_AREA);
+            } else {
+                return 0;
+            }
+        }
+    }
+    
+    public int getDailyLivingAt(City city) {
+        return city.livingCostPerDay();
     }
 
     public ChampDataManager getChampDataManager() {

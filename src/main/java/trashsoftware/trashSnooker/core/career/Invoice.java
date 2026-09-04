@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
+import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueTip;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -109,6 +110,14 @@ public abstract class Invoice {
                     json.getInt("level"),
                     json.getInt("moneyEarn")
             );
+            case "travelTicket" -> new TravelTicket(
+                    realTimestamp,
+                    inGameDate,
+                    moneyBefore,
+                    moneyAfter,
+                    CareerManager.stringToCalendar(json.getString("dateOnTicket")),
+                    TravelTicket.loadTicketSegments(json.getJSONArray("items"))
+            );
             case "fees" -> new Fees(
                     realTimestamp,
                     inGameDate,
@@ -158,8 +167,19 @@ public abstract class Invoice {
     public record TaxedIncome(int raw, int actual) {
     }
     
-    public interface CostItemsHolder {
-        Map<String, Integer> getItems();
+    public abstract static class CostItemsHolder extends Invoice {
+        protected final Map<String, Integer> items;
+        
+        protected CostItemsHolder(String type, Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
+                                  Map<String, Integer> items) {
+            super(type, realTimestamp, inGameDate, moneyBefore, moneyAfter);
+            
+            this.items = items;
+        }
+
+        public Map<String, Integer> getItems() {
+            return items;
+        }
     }
 
     protected abstract void fillJson(JSONObject json);
@@ -444,16 +464,51 @@ public abstract class Invoice {
             return achievement.getDescriptionOfLevel(level);
         }
     }
+    
+    public static class TravelTicket extends Invoice {
+        
+        protected final Calendar dateOnTicket;
+        protected final List<TicketSegment> ticketSegments;
+        
+        protected TravelTicket(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
+                               Calendar dateOnTicket, List<TicketSegment> ticketSegments) {
+            super("travelTicket", realTimestamp, inGameDate, moneyBefore, moneyAfter);
+            
+            this.dateOnTicket = dateOnTicket;
+            this.ticketSegments = ticketSegments;
+        }
 
-    public static class Fees extends Invoice implements CostItemsHolder {
+        @Override
+        protected void fillJson(JSONObject json) {
+            JSONArray array = new JSONArray();
+            for (TicketSegment ts : ticketSegments) {
+                array.put(JsonUtil.recordToJson(ts));
+            }
+            
+            json.put("items", array);
+            json.put("dateOnTicket", CareerManager.calendarToString(dateOnTicket));
+        }
+        
+        static List<TicketSegment> loadTicketSegments(JSONArray jsonArray) {
+            List<TicketSegment> segments = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                segments.add(JsonUtil.jsonToRecord(TicketSegment.class, jsonArray.getJSONObject(i)));
+            }
+            return segments;
+        }
+    }
+    
+    public record TicketSegment(String routeId,
+                                String departureCityId,
+                                RouteResult.SeatClass seatClass,
+                                int payedPrice) {
+    }
 
-        protected final Map<String, Integer> items;
+    public static class Fees extends  CostItemsHolder {
 
         protected Fees(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
                        Map<String, Integer> items) {
-            super("fees", realTimestamp, inGameDate, moneyBefore, moneyAfter);
-
-            this.items = items;
+            super("fees", realTimestamp, inGameDate, moneyBefore, moneyAfter, items);
         }
         
         protected static Map<String, Integer> loadFeeItems(JSONArray subArray) {
@@ -480,11 +535,6 @@ public abstract class Invoice {
         @Override
         public String getItemDes(ResourceBundle strings, HumanCareer humanCareer) {
             return strings.getString("fixedExpenditure");
-        }
-
-        @Override
-        public Map<String, Integer> getItems() {
-            return items;
         }
     }
 
@@ -513,17 +563,15 @@ public abstract class Invoice {
         }
     }
 
-    public static class Participation extends Invoice implements CostItemsHolder {
+    public static class Participation extends CostItemsHolder {
 
         public final String match;
-        protected final Map<String, Integer> items;
 
         protected Participation(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
                                 String match, Map<String, Integer> itemsCosts) {
-            super("participation", realTimestamp, inGameDate, moneyBefore, moneyAfter);
+            super("participation", realTimestamp, inGameDate, moneyBefore, moneyAfter, itemsCosts);
 
             this.match = match;
-            this.items = itemsCosts;
         }
         
         protected static Map<String, Integer> loadItemCosts(JSONArray subArray) {
@@ -533,11 +581,6 @@ public abstract class Invoice {
                 res.put(jo.getString("item"), jo.getInt("moneyCost"));
             }
             return res;
-        }
-
-        @Override
-        public Map<String, Integer> getItems() {
-            return items;
         }
 
         @Override
