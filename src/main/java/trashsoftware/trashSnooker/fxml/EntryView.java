@@ -71,6 +71,7 @@ public class EntryView implements Initializable {
         App.setRoot(root);
 
 //        App.scaleWindow(stage);
+        stage.centerOnScreen();
         
         restoreScene();
     }

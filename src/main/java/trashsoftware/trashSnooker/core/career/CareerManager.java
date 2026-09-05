@@ -1017,12 +1017,46 @@ public class CareerManager {
         return result;
     }
 
+    /**
+     * 不要get之后去修改
+     */
     public Calendar getTimestamp() {
         return timestamp;
     }
     
-    public void setTimestamp(Calendar targetTime) {
-        timestamp.setTimeInMillis(targetTime.getTimeInMillis());
+    public void pushDateTo(Calendar targetDate) {
+        if (Util.dateBefore(targetDate, timestamp)) {
+            EventLogger.warning("Date overshoot, current is " + calendarToString(timestamp) + ", target is " + calendarToString(targetDate));
+            timestamp.setTimeInMillis(targetDate.getTimeInMillis());
+        } else {
+            while (Util.dateBefore(timestamp, targetDate)) {
+                toNextDay();
+            }
+        }
+    }
+    
+    public void toNextDay() {
+        timestamp.add(Calendar.DAY_OF_MONTH, 1);
+        boolean isMonthBegin = timestamp.get(Calendar.DAY_OF_MONTH) == 1;
+        if (isMonthBegin) {
+            payMonthlyFees();
+        }
+        
+        if (!humanPlayerCareer.isTravelling()) {
+            City location = humanPlayerCareer.getCurrentLocation();
+            int hotelFee = getDailyHotelFee(location);
+            int livingFee = getDailyLivingAt(location);
+            int oweInterest = humanPlayerCareer.dailyOweInterest();
+            if (oweInterest > 0) {
+                humanPlayerCareer.addTemporalFee(Map.of("hotel", hotelFee, "living", livingFee, "oweInterest", oweInterest));
+            } else {
+                humanPlayerCareer.addTemporalFee(Map.of("hotel", hotelFee, "living", livingFee));
+            }
+        }
+    }
+    
+    private void payMonthlyFees() {
+        
     }
 
     public Calendar getBeginTimestamp() {
@@ -1059,16 +1093,12 @@ public class CareerManager {
         return scheduledTravel;
     }
     
-    public int getDailyAccommodationAt(City city) {
+    public int getDailyHotelFee(City city) {
         Residence residence = inventoryManager.getResidenceAt(city);
         if (residence == null) {
             return city.hotelPricePerDay();
         } else {
-            if (residence.getOwnership() == Residence.Ownership.RENT) {
-                return city.rentalPricePerDay(Residence.DEFAULT_AREA);
-            } else {
-                return 0;
-            }
+            return 0;
         }
     }
     

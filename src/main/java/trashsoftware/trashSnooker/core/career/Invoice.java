@@ -503,8 +503,25 @@ public abstract class Invoice {
                                 RouteResult.SeatClass seatClass,
                                 int payedPrice) {
     }
+    
+    public static class CumulativeFees extends CostItemsHolder {
+        
+        protected final Calendar durationBegin;
+        
+        protected CumulativeFees(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
+                       Map<String, Integer> items, Calendar durationBegin) {
+            super("cumulativeFees", realTimestamp, inGameDate, moneyBefore, moneyAfter, items);
+            
+            this.durationBegin = durationBegin;
+        }
 
-    public static class Fees extends  CostItemsHolder {
+        @Override
+        protected void fillJson(JSONObject json) {
+            
+        }
+    }
+
+    public static class Fees extends CostItemsHolder {
 
         protected Fees(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
                        Map<String, Integer> items) {

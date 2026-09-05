@@ -91,15 +91,18 @@
                 <HBox spacing="5.0" alignment="CENTER_LEFT">
                     <Label text="%price"/>
                     <Label fx:id="ticketPriceLabel"/>
+                    <Hyperlink text="%change" onAction="#showWorldMapAction"/>
                 </HBox>
             </HBox>
             <HBox spacing="10.0" alignment="CENTER_LEFT">
                 <Label text="%everydayCost"/>
                 <Label fx:id="dailyAccommodationCostLabel"/>
                 <Label fx:id="dailyLivingCostLabel"/>
+                <Label fx:id="otherCostLabel"/>
             </HBox>
         </VBox>
         <Button fx:id="forwardBtn" text="%calendarForward" onAction="#forwardAction"/>
+        <Button fx:id="forwardOppositeBtn" text="%notGoto" onAction="#forwardAction"/>
     </HBox>
 
 
@@ -117,25 +120,18 @@
             <Label text="%nextTour"/>
             <Label fx:id="nextChampionshipLabel"/>
             <CheckBox fx:id="joinChampBox" text="%enrol"/>
+            <Label fx:id="registryFeeLabel"/>
+<!--            <HBox fx:id="feesBoxChecked" spacing="5.0">-->
+<!--                <Label text="%registryFee"/>-->
+<!--                <Label fx:id="registryFeeLabel"/>-->
+<!--            </HBox>-->
             <!--            <Button text="%start" onAction="#nextChamp"/>-->
             <!--            <Button fx:id="skipChampBtn" text="%skip" onAction="#skipNextChamp"/>-->
         </HBox>
-        <HBox fx:id="feesBoxChecked" spacing="5.0">
-            <Label text="%registryFee"/>
-            <Label fx:id="registryFeeLabel"/>
-            <!--            <Label text="%travelFee"/>-->
-            <!--            <Label fx:id="travelFeeLabel"/>-->
-            <!--            <Label text="%otherFee"/>-->
-            <Label fx:id="otherFeeLabel1"/>
-            <!--            <Label text="%totalFee"/>-->
-            <!--            <Label fx:id="totalFeeLabel"/>-->
-        </HBox>
-        <HBox fx:id="feesBoxUnchecked" spacing="5.0" visible="false" managed="false">
-            <!--            <Label text="%otherFee"/>-->
-            <!--            <Label fx:id="otherFeeLabel2"/>-->
-            <!--            <Label text="%totalFee"/>-->
-            <!--            <Label fx:id="totalFeeLabel2"/>-->
-        </HBox>
+
+<!--        <HBox fx:id="feesBoxUnchecked" spacing="5.0" visible="false" managed="false">-->
+
+<!--        </HBox>-->
     </VBox>
 
     <LabelTable fx:id="champAwardsTable" GridPane.rowIndex="6"/>

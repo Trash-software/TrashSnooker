@@ -447,6 +447,23 @@ public class Util {
         stream.write(s.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * @return whether subject is at an  earlier date than object
+     */
+    public static boolean dateBefore(Calendar subject, Calendar object) {
+        Calendar a = (Calendar) subject.clone();
+        Calendar b = (Calendar) object.clone();
+        a.set(Calendar.HOUR_OF_DAY, 0);
+        a.set(Calendar.MINUTE, 0);
+        a.set(Calendar.SECOND, 0);
+        a.set(Calendar.MILLISECOND, 0);
+        b.set(Calendar.HOUR_OF_DAY, 0);
+        b.set(Calendar.MINUTE, 0);
+        b.set(Calendar.SECOND, 0);
+        b.set(Calendar.MILLISECOND, 0);
+        return a.before(b);
+    }
+
     public static class IntList extends ArrayList<Integer> {
 
     }

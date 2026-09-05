@@ -3,22 +3,22 @@
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.025,
-    "person": "custom_player_5",
-    "playerType": "PLAYER",
+    "psyStatus": 0.95,
+    "person": "Wang ming",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.7145435030464595,
-    "person": "Glass Heart",
+    "psyStatus": 1,
+    "person": "Li chengzhen",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "codeGameCounter": 2,
+  "codeGameCounter": 3,
   "p2BreakLoseChance": 0,
   "gameValues": {
     "ball": "SNOOKER_BALL",
@@ -27,21 +27,22 @@
     "devMode": true,
     "table": {
       "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 4,
-      "holeSizeOrdinal": 4
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 2
     }
   },
   "winRecords": {
-    "1": 2,
-    "2": 2
+    "1": 1,
+    "2": 2,
+    "3": 2
   },
   "p2Wins": 2,
-  "startTime": 1788464079346,
+  "startTime": 1788628430463,
   "p1BreakLoseChance": 0,
-  "totalFrames": 9,
+  "totalFrames": 3,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": false
+  "p1Breaks": true
 }

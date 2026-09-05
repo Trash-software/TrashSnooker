@@ -535,6 +535,7 @@ public class GeographicView extends ChildInitializable {
                 ticket.date(),
                 1.0);
         routeLayer.getChildren().add(travelAnimationPlayer.movingGraphics);
+        careerManager.getHumanPlayerCareer().startTravelling();
         travelAnimation = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -544,7 +545,12 @@ public class GeographicView extends ChildInitializable {
                     return;
                 }
                 
-                currentDateLabel.setText(CareerManager.calendarToString(travelAnimationPlayer.getDate()));
+                Calendar lastDate = careerManager.getTimestamp();
+                Calendar newDate = travelAnimationPlayer.getDate();
+                if (!lastDate.equals(newDate)) {
+                    careerManager.pushDateTo(newDate);
+                }
+                currentDateLabel.setText(CareerManager.calendarToString(careerManager.getTimestamp()));
 
                 Point2D mapPoint = travelAnimationPlayer.getPoint();
                 if (mapPoint == null) return;
@@ -563,9 +569,10 @@ public class GeographicView extends ChildInitializable {
         routeLayer.getChildren().remove(travelAnimationPlayer.movingGraphics);
         travelAnimationPlayer = null;
         
-        // 移动，推进日期
+        // 移动
+        careerManager.pushDateTo(dateArrival);  // 只是为了预防bug，本身应该没问题
+        careerManager.getHumanPlayerCareer().endTravelling();
         careerManager.getHumanPlayerCareer().setCurrentLocation(routeResult.getEndCity());
-        careerManager.setTimestamp(dateArrival);
         careerManager.saveToDisk();
         
         setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), null);

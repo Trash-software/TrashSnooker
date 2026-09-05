@@ -20,9 +20,7 @@ import trashsoftware.trashSnooker.core.career.transporation.TransportationManage
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
-import trashsoftware.trashSnooker.util.DataLoader;
-import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.JsonChecksum;
+import trashsoftware.trashSnooker.util.*;
 
 import java.io.File;
 import java.text.ParseException;
@@ -42,6 +40,7 @@ public class HumanCareer extends Career {
     private FinancialManager finance;
     private AwardDistributionHint unShownAwd;
     private final CareerManager careerManager;
+    private boolean travelling;
     private City currentLocation;
     private City spawnLocation;
 
@@ -95,6 +94,7 @@ public class HumanCareer extends Career {
                 finance.level = jsonObject.getInt("level");
                 finance.expInThisLevel = jsonObject.getInt("expInThisLevel");
                 finance.money = jsonObject.getInt("money");
+                finance.temporalRecord = TemporalRecord.fromJson(jsonObject.optJSONObject("temporalRecord"));
             } catch (JSONException e) {
                 finance.availPerks = 0;
                 finance.totalPerks = 0;
@@ -102,6 +102,7 @@ public class HumanCareer extends Career {
                 finance.level = 1;
                 finance.expInThisLevel = 0;
                 finance.money = 0;
+                finance.temporalRecord = null;
                 System.err.println("No financial info loaded");
             }
         }
@@ -140,6 +141,11 @@ public class HumanCareer extends Career {
         if (spawnLocation == null) {
             spawnLocation = ChampionshipLocation.getDefaultSpawn();
         }
+        travelling = jsonObject.optBoolean("travelling", false);
+        
+        if (!travelling && finance.temporalRecord == null) {
+            endTravelling();
+        }
     }
 
     @Override
@@ -170,6 +176,7 @@ public class HumanCareer extends Career {
         
         out.put("currentLocation", currentLocation == null ? JSONObject.NULL : currentLocation.getId());
         out.put("spawnLocation", spawnLocation.getId());
+        out.put("travelling", travelling);
     }
 
     @Override
@@ -234,15 +241,7 @@ public class HumanCareer extends Career {
         );
 
         int moneyBefore = finance.money;
-
-//        JSONObject invoice = new JSONObject();
-//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-//        invoice.put("timestamp", timestamp);
-//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-//        invoice.put("inGameDate", inGameDate);
-//        invoice.put("type", "challengeEarn");
-//        invoice.put("match", challengeSet.getId());
-//        JSONObject items = new JSONObject();
+        
         Map<String, Invoice.TaxedIncome> challengeEarnItems = new TreeMap<>();
 
         Map<RewardCondition, ChallengeReward> newFulfills = history.newComplete(challengeSet, clearance, score);
@@ -284,6 +283,54 @@ public class HumanCareer extends Career {
         return completedChallenges == null ? null : completedChallenges.get(challengeId);
     }
     
+    public void beginTemporalFeeRecord(Calendar startDate) {
+        finance.temporalRecord = new TemporalRecord((Calendar) startDate.clone(), finance.money);
+    }
+    
+    public void addTemporalFee(Map<String, Integer> items) {
+        for (var entry : items.entrySet()) {
+            Integer cur = finance.temporalRecord.temporalFees.computeIfAbsent(entry.getKey(), _ -> 0);
+            cur += entry.getValue();
+            finance.temporalRecord.temporalFees.put(entry.getKey(), cur);
+            finance.money -= entry.getValue();
+        }
+    }
+    
+    public void recordTemporalFees() {
+        Invoice invoice = new Invoice.CumulativeFees(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                finance.temporalRecord.moneyBefore,
+                finance.money,
+                finance.temporalRecord.temporalFees,
+                finance.temporalRecord.currentTemporalFeesStart
+        );
+        finance.invoices.add(invoice);
+
+        checkScoreAchievements();
+        saveFinance();
+        
+        finance.temporalRecord = null;
+    }
+
+    public void startTravelling() {
+        this.travelling = true;
+        
+        // 说明离开了当前的位置
+        recordTemporalFees();
+    }
+
+    public void endTravelling() {
+        this.travelling = false;
+        
+        // 到达一个地方，开始住宾馆/付生活费
+        beginTemporalFeeRecord(careerManager.getTimestamp());
+    }
+
+    public boolean isTravelling() {
+        return travelling;
+    }
+
     public void payTravelFees(RouteResult.Ticket ticket) {
         int moneyBefore = finance.money;
         finance.money -= ticket.route().getTotalPriceByClass(ticket.seatClass());
@@ -616,74 +663,82 @@ public class HumanCareer extends Career {
         return (int) (Math.round(lifeFee / 10) * 10);  // 整10
     }
 
-    /**
-     * 返回开始下一个赛事时，应缴的强制费用
-     */
-    public Map<String, Integer> calculateFixedFees(ChampionshipData.WithYear nextChampData) {
-        ChampionshipData.WithYear last = careerManager.getChampDataManager().getPreviousChampionship(
-                nextChampData.year, nextChampData.data.month, nextChampData.data.day
-        );
+//    /**
+//     * 返回开始下一个赛事时，应缴的强制费用
+//     */
+//    public Map<String, Integer> calculateFixedFees(ChampionshipData.WithYear nextChampData) {
+//        ChampionshipData.WithYear last = careerManager.getChampDataManager().getPreviousChampionship(
+//                nextChampData.year, nextChampData.data.month, nextChampData.data.day
+//        );
+//
+//        Calendar lastTime = last.toCalendar();
+//        if (lastTime.before(careerManager.getBeginTimestamp())) return Map.of();
+//
+//        Calendar nextTime = nextChampData.toCalendar();
+//        int diffDays = (int) Duration.between(lastTime.toInstant(), nextTime.toInstant()).toDays();
+//
+//        Map<String, Integer> res = new HashMap<>();
+//
+//        int lifeFee = diffDays * calculateDailyLifeFee();
+//        System.out.println("Life fee: " + diffDays + " * " + calculateDailyLifeFee());
+//        res.put("lifeFee", lifeFee);
+//        if (finance.money < 0) {
+//            double owe = -finance.money;
+//            int loanInterest = (int) Math.round(diffDays / 365.0 * owe * YEAR_IZE_INTEREST_RATE);
+//            res.put("oweInterest", loanInterest);
+//        }
+//
+//        return res;
+//    }
+//
+//    /**
+//     * 收取一些固定费用，如利息
+//     * 不包含参赛费用
+//     */
+//    public void updateMoneyChampStart(ChampionshipData.WithYear nextChampData) {
+//        Map<String, Integer> feesMap = calculateFixedFees(nextChampData);
+//        int fees = feesMap.values().stream().reduce(0, Integer::sum);
+//
+//        if (fees > 0) {
+//            int moneyBefore = finance.money;
+//            finance.money -= fees;
+//
+////            JSONObject invoice = new JSONObject();
+////            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+////            invoice.put("timestamp", timestamp);
+////            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+////            invoice.put("inGameDate", inGameDate);
+////            invoice.put("type", "fees");
+////            invoice.put("moneyBefore", moneyBefore);
+////            JSONArray subArray = new JSONArray();
+////            for (Map.Entry<String, Integer> feeItem : feesMap.entrySet()) {
+////                JSONObject sub = new JSONObject();
+////                sub.put("item", feeItem.getKey());
+////                sub.put("moneyCost", feeItem.getValue());
+////                subArray.put(sub);
+////            }
+////            invoice.put("items", subArray);
+////            invoice.put("moneyAfter", finance.money);
+//            Invoice.Fees invoice = new Invoice.Fees(
+//                    new Date(),
+//                    getCareerManager().getTimestamp(),
+//                    moneyBefore,
+//                    finance.money,
+//                    feesMap
+//            );
+//
+//            finance.invoices.add(invoice);
+//
+//            saveFinance();
+//        }
+//    }
 
-        Calendar lastTime = last.toCalendar();
-        if (lastTime.before(careerManager.getBeginTimestamp())) return Map.of();
-
-        Calendar nextTime = nextChampData.toCalendar();
-        int diffDays = (int) Duration.between(lastTime.toInstant(), nextTime.toInstant()).toDays();
-
-        Map<String, Integer> res = new HashMap<>();
-
-        int lifeFee = diffDays * calculateDailyLifeFee();
-        System.out.println("Life fee: " + diffDays + " * " + calculateDailyLifeFee());
-        res.put("lifeFee", lifeFee);
+    public int dailyOweInterest() {
         if (finance.money < 0) {
             double owe = -finance.money;
-            int loanInterest = (int) Math.round(diffDays / 365.0 * owe * YEAR_IZE_INTEREST_RATE);
-            res.put("oweInterest", loanInterest);
+            return (int) Math.round(owe * YEAR_IZE_INTEREST_RATE / 365);
         }
-
-        return res;
-    }
-
-    /**
-     * 收取一些固定费用，如利息
-     * 不包含参赛费用
-     */
-    public void updateMoneyChampStart(ChampionshipData.WithYear nextChampData) {
-        Map<String, Integer> feesMap = calculateFixedFees(nextChampData);
-        int fees = feesMap.values().stream().reduce(0, Integer::sum);
-
-        if (fees > 0) {
-            int moneyBefore = finance.money;
-            finance.money -= fees;
-
-//            JSONObject invoice = new JSONObject();
-//            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-//            invoice.put("timestamp", timestamp);
-//            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-//            invoice.put("inGameDate", inGameDate);
-//            invoice.put("type", "fees");
-//            invoice.put("moneyBefore", moneyBefore);
-//            JSONArray subArray = new JSONArray();
-//            for (Map.Entry<String, Integer> feeItem : feesMap.entrySet()) {
-//                JSONObject sub = new JSONObject();
-//                sub.put("item", feeItem.getKey());
-//                sub.put("moneyCost", feeItem.getValue());
-//                subArray.put(sub);
-//            }
-//            invoice.put("items", subArray);
-//            invoice.put("moneyAfter", finance.money);
-            Invoice.Fees invoice = new Invoice.Fees(
-                    new Date(),
-                    getCareerManager().getTimestamp(),
-                    moneyBefore,
-                    finance.money,
-                    feesMap
-            );
-
-            finance.invoices.add(invoice);
-
-            saveFinance();
-        }
+        return 0;
     }
 
     public void receiveInviteAward(Championship championship) {
@@ -734,49 +789,15 @@ public class HumanCareer extends Career {
      * 这个方法可以把钱扣到负数
      * 目前没做债务管理器
      */
-    public void payParticipateFees(Championship championship, int travelFee, int hotelFee) {
+    public void payParticipateFee(Championship championship) {
         ChampionshipData data = championship.getData();
         int moneyBefore = finance.money;
         int registryFee = data.getRegistryFee();
-//        int travelFee = data.getFlightFee();
-//        int hotelFee = data.getHotelFee();
 
-        finance.money -= (registryFee + travelFee + hotelFee);
-
-//        JSONObject invoice = new JSONObject();
-//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-//        invoice.put("timestamp", timestamp);
-//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-//        invoice.put("inGameDate", inGameDate);
-//        invoice.put("type", "participation");
-//        invoice.put("match", championship.uniqueId());
-//        invoice.put("moneyBefore", moneyBefore);
-//
-//        JSONObject o1 = new JSONObject();
-//        o1.put("item", "registry");
-//        o1.put("moneyCost", registryFee);
-//
-//        JSONObject o2 = new JSONObject();
-//        o2.put("item", "travel");
-//        o2.put("moneyCost", travelFee);
-//
-//        JSONObject o3 = new JSONObject();
-//        o3.put("item", "hotel");
-//        o3.put("moneyCost", hotelFee);
-//
-//        JSONArray subArray = new JSONArray();
-//        subArray.put(o1);
-//        subArray.put(o2);
-//        subArray.put(o3);
-//
-//        invoice.put("items", subArray);
-//
-//        invoice.put("moneyAfter", finance.money);
+        finance.money -= registryFee;
 
         Map<String, Integer> itemsCosts = Map.of(
-                "registry", registryFee,
-                "travel", travelFee,
-                "hotel", hotelFee
+                "registry", registryFee
         );
 
         Invoice.Participation invoice = new Invoice.Participation(
@@ -927,6 +948,8 @@ public class HumanCareer extends Career {
         private int expInThisLevel;
         private int money;
         private int cumulativeAwards;  // 历史上的税前总奖金
+        
+        private TemporalRecord temporalRecord;
 
         FinancialManager(CareerSave save) {
             jsonFile = new File(save.getDir(), "financial.json");
@@ -991,6 +1014,8 @@ public class HumanCareer extends Career {
                 invoiceArr.put(inv.toJson());
             }
             out.put("invoices", invoiceArr);
+            
+            out.put("temporalRecord", temporalRecord.toJson());
 
             json.put("financial", out);
 
@@ -1004,6 +1029,35 @@ public class HumanCareer extends Career {
         void writeToDisk() {
             JSONObject json = toJson();
             DataLoader.saveToDisk(json, jsonFile.getAbsolutePath());
+        }
+    }
+    
+    static class TemporalRecord {
+        final Map<String, Integer> temporalFees = new TreeMap<>();
+        final Calendar currentTemporalFeesStart;
+        final int moneyBefore;
+        
+        TemporalRecord(Calendar currentTemporalFeesStart, int moneyBefore) {
+            this.currentTemporalFeesStart = currentTemporalFeesStart;
+            this.moneyBefore = moneyBefore;
+        }
+        
+        JSONObject toJson() {
+            JSONObject json = new JSONObject();
+            json.put("items", JsonUtil.mapToJson(temporalFees));
+            json.put("currentTemporalFeesStart", CareerManager.calendarToString(currentTemporalFeesStart));
+            json.put("moneyBefore", moneyBefore);
+            return json;
+        }
+        
+        static TemporalRecord fromJson(JSONObject jsonObject) {
+            if (jsonObject == null) return null;
+            TemporalRecord tr = new TemporalRecord(
+                    CareerManager.stringToCalendar(jsonObject.getString("currentTemporalFeesStart")),
+                    jsonObject.getInt("moneyBefore")
+            );
+            tr.temporalFees.putAll(JsonUtil.jsonToIntMap(jsonObject.getJSONObject("items")));
+            return tr;
         }
     }
 
