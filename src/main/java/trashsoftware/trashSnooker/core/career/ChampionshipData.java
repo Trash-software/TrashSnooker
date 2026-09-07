@@ -509,7 +509,7 @@ public class ChampionshipData {
     }
 
     public Calendar toCalendar(int year) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Util.getCalendarInstance();
         calendar.set(year, month - 1, day);
         return calendar;
     }

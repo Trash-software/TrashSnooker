@@ -74,6 +74,7 @@ public class CareerManager {
     private int lastSavedVersion;
     private final List<SettingsHistory> settingsHistories = new ArrayList<>();
     private JSONObject cache;
+//    private transient ChampionshipData.WithYear ongoingNextChampionship;
 
     private double playerGoodness;
     private double aiGoodness;
@@ -81,9 +82,9 @@ public class CareerManager {
 
     private CareerManager(CareerSave save) {
         this.careerSave = save;
-        this.timestamp = Calendar.getInstance();
+        this.timestamp = Util.getCalendarInstance();
         this.timestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);  // 初始日期
-        this.beginTimestamp = Calendar.getInstance();
+        this.beginTimestamp = Util.getCalendarInstance();
         this.beginTimestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);
 
         inventoryManager = InventoryManager.createInstance(save);
@@ -282,7 +283,7 @@ public class CareerManager {
         if (jsonObject.has("beginTimestamp")) {
             begin = stringToCalendar(jsonObject.getString("beginTimestamp"));
         } else {
-            begin = Calendar.getInstance();
+            begin = Util.getCalendarInstance();
             begin.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);
         }
         CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time), begin);
@@ -393,7 +394,7 @@ public class CareerManager {
     public static Calendar stringToCalendar(String s) {
         String[] split = s.split("/");
         if (split.length != 3) throw new RuntimeException("Exact day must formed by 3 parts");
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Util.getCalendarInstance();
         calendar.set(Integer.parseInt(split[0]),
                 Integer.parseInt(split[1]) - 1,
                 Integer.parseInt(split[2]));
@@ -478,18 +479,21 @@ public class CareerManager {
     public void simulateMatchesInPastTwoYears() {
         updateRanking();  // 按照能力初始化排名
 
-        Calendar pastTime = Calendar.getInstance();
+        Calendar pastTime = Util.getCalendarInstance();
         pastTime.setTimeInMillis(timestamp.getTimeInMillis());
         pastTime.set(Calendar.YEAR, pastTime.get(Calendar.YEAR) - 2);
 
         while (pastTime.before(timestamp)) {
             try {
-                Championship nextChamp = nextChampionship(pastTime);
+                ChampionshipData.WithYear data = getNextChampionshipData();
+                Championship nextChamp = nextChampionship(data);
                 System.out.println("Simulating " + nextChamp.fullName());
                 nextChamp.startChampionship(false, false, false);
                 while (nextChamp.hasNextRound()) {
-                    nextChamp.startNextRound(false);
+                    nextChamp.startNextRound(this, false);
                 }
+                timestamp.setTimeInMillis(data.toCalendar().getTimeInMillis());
+                timestamp.add(Calendar.DAY_OF_MONTH, 1);
             } catch (Exception e) {
                 System.err.println("Failed to simulate one");
                 e.printStackTrace();
@@ -1073,7 +1077,8 @@ public class CareerManager {
         if (scheduledTravel != null) {
             if (here.equals(scheduledTravel.route().getStartCity()) 
                     && destination.equals(scheduledTravel.route().getEndCity())) {
-                if (!scheduledTravel.dateArrival().after(target.toCalendar())) {
+//                if (!scheduledTravel.dateArrival().after(target.toCalendar())) {
+                if (!Util.dateAfter(scheduledTravel.dateArrival(), target.toCalendar())) {
                     return scheduledTravel;
                 }
             }
@@ -1113,7 +1118,7 @@ public class CareerManager {
     /**
      * @return 只返回下一个比赛是什么，不推进时间
      */
-    public ChampionshipData.WithYear nextChampionshipData() {
+    public ChampionshipData.WithYear getNextChampionshipData() {
         return champDataManager.getNextChampionship(
                 timestamp.get(Calendar.YEAR),
                 timestamp.get(Calendar.MONTH) + 1,
@@ -1122,30 +1127,19 @@ public class CareerManager {
     }
 
     public Championship startNextChampionship() {
-        return nextChampionship(timestamp);
+        return nextChampionship(getNextChampionshipData());
     }
 
-    private Championship nextChampionship(Calendar timestamp) {
-        int curMonth = timestamp.get(Calendar.MONTH) + 1;
-        ChampionshipData.WithYear nextDataWithYear = champDataManager.getNextChampionship(
-                timestamp.get(Calendar.YEAR),
-                curMonth,
-                timestamp.get(Calendar.DAY_OF_MONTH) + 1);
-        ChampionshipData nextData = nextDataWithYear.data;
-
-        if (nextData.month < curMonth) {
-            timestamp.set(Calendar.YEAR, timestamp.get(Calendar.YEAR) + 1);
-        }
-        timestamp.set(Calendar.MONTH, nextData.month - 1);
-        timestamp.set(Calendar.DAY_OF_MONTH, nextData.day);
+    public Championship nextChampionship(ChampionshipData.WithYear dataWithYear) {
+        pushDateTo(dataWithYear.toCalendar());
 
         updateRanking();
         updateEfforts();  // 在update ranking之后
 
-        Championship championship = switch (nextData.getType()) {
-            case SNOOKER -> new SnookerChampionship(nextData, timestamp);
-            case CHINESE_EIGHT -> new ChineseEightChampionship(nextData, timestamp);
-            case AMERICAN_NINE -> new AmericanNineChampionship(nextData, timestamp);
+        Championship championship = switch (dataWithYear.data.getType()) {
+            case SNOOKER -> new SnookerChampionship(dataWithYear.data, timestamp);
+            case CHINESE_EIGHT -> new ChineseEightChampionship(dataWithYear.data, timestamp);
+            case AMERICAN_NINE -> new AmericanNineChampionship(dataWithYear.data, timestamp);
             default -> throw new UnsupportedOperationException();
         };
         inProgress = championship;
@@ -1154,7 +1148,7 @@ public class CareerManager {
 
     private void createRankingHistory() {
         System.out.println("Creating rank history");
-        Calendar time = Calendar.getInstance();
+        Calendar time = Util.getCalendarInstance();
         time.setTimeInMillis(beginTimestamp.getTimeInMillis());
         while (time.before(timestamp)) {
             ChampionshipData.WithYear cdy = champDataManager.getNextChampionship(
@@ -1356,7 +1350,7 @@ public class CareerManager {
             }
         }
 
-        Calendar check = Calendar.getInstance();
+        Calendar check = Util.getCalendarInstance();
         check.setTimeInMillis(beginTimestamp.getTimeInMillis());
 
         // 一年

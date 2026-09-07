@@ -204,12 +204,12 @@ public abstract class CareerRanker {
             twoSeasonsAwards = 0;
             totalAwards = 0;
 
-            Calendar twoYearBefore = Calendar.getInstance();
+            Calendar twoYearBefore = Util.getCalendarInstance();
             twoYearBefore.set(timestamp.get(Calendar.YEAR) - 2,
                     timestamp.get(Calendar.MONTH),
                     timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算
 
-            Calendar oneYearBefore = Calendar.getInstance();
+            Calendar oneYearBefore = Util.getCalendarInstance();
             oneYearBefore.set(timestamp.get(Calendar.YEAR) - 1,
                     timestamp.get(Calendar.MONTH),
                     timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算

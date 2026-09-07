@@ -22,7 +22,7 @@ public class JsonChecksum {
     public void hash(String key, Object object) {
         if ("checksum".equals(key)) return;
         md.update(key.getBytes(StandardCharsets.UTF_8));  // 先存key
-        if (object == null) {
+        if (object == null || JSONObject.NULL.equals(object)) {
             // do nothing  
         } else if (object instanceof Long l) {
             Util.intToBytesN(l, buffer, 0, 8);

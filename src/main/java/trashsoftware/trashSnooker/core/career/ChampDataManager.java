@@ -79,7 +79,7 @@ public class ChampDataManager {
         int dayOfYear = ChampionshipData.dayOfYear(month, day);
         for (ChampionshipData data : championshipData) {
             int champDay = ChampionshipData.dayOfYear(data.month, data.day);
-            if (champDay > dayOfYear) {
+            if (champDay >= dayOfYear) {
                 return new ChampionshipData.WithYear(data, year);
             }
         }

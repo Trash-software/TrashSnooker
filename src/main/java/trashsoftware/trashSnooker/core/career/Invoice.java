@@ -125,6 +125,14 @@ public abstract class Invoice {
                     moneyAfter,
                     Fees.loadFeeItems(json.getJSONArray("items"))
             );
+            case "cumulativeFees" -> new CumulativeFees(
+                    realTimestamp,
+                    inGameDate,
+                    moneyBefore,
+                    moneyAfter,
+                    CumulativeFees.loadItems(json.getJSONObject("items")),
+                    CareerManager.stringToCalendar(json.getString("durationBegin"))
+            );
             case "invitation" -> new Invitation(
                     realTimestamp,
                     inGameDate,
@@ -517,7 +525,12 @@ public abstract class Invoice {
 
         @Override
         protected void fillJson(JSONObject json) {
-            
+            json.put("durationBegin", CareerManager.calendarToString(durationBegin));
+            json.put("items", JsonUtil.mapToJson(items));
+        }
+
+        protected static Map<String, Integer> loadItems(JSONObject itemsObject) {
+            return JsonUtil.jsonToIntMap(itemsObject);
         }
     }
 

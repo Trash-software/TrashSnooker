@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.career.ChampDataManager;
 import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
 import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class AiVsAiTest {
     
     @Test
     public void testCalendar() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Util.getCalendarInstance();
         calendar.set(1993, 2, 31);
         calendar.set(Calendar.MONTH, 3);
         System.out.println(calendar.get(Calendar.YEAR));

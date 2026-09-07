@@ -451,17 +451,39 @@ public class Util {
      * @return whether subject is at an  earlier date than object
      */
     public static boolean dateBefore(Calendar subject, Calendar object) {
-        Calendar a = (Calendar) subject.clone();
-        Calendar b = (Calendar) object.clone();
-        a.set(Calendar.HOUR_OF_DAY, 0);
+        Calendar a = standardDate(subject);
+        Calendar b = standardDate(object);
+        return a.before(b);
+    }
+    
+    public static boolean dateEquals(Calendar subject, Calendar object) {
+        Calendar a = standardDate(subject);
+        Calendar b = standardDate(object);
+        return a.equals(b);
+    }
+
+    public static boolean dateAfter(Calendar subject, Calendar object) {
+        Calendar a = standardDate(subject);
+        Calendar b = standardDate(object);
+        return a.after(b);
+    }
+    
+    public static Calendar standardDate(Calendar calendar) {
+        Calendar a = (Calendar) calendar.clone();
+        a.set(Calendar.HOUR_OF_DAY, 8);  // 设定为那一天的8点
         a.set(Calendar.MINUTE, 0);
         a.set(Calendar.SECOND, 0);
         a.set(Calendar.MILLISECOND, 0);
-        b.set(Calendar.HOUR_OF_DAY, 0);
-        b.set(Calendar.MINUTE, 0);
-        b.set(Calendar.SECOND, 0);
-        b.set(Calendar.MILLISECOND, 0);
-        return a.before(b);
+        return a;
+    }
+    
+    public static Calendar getCalendarInstance() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 8);  // 设定为那一天的8点
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
 
     public static class IntList extends ArrayList<Integer> {

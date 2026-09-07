@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -73,7 +74,9 @@ public class CareerView extends ChildInitializable {
     @FXML
     Label myRankLabel;
     @FXML
-    Label currentDateLabel, currentLocationLabel, plannedJourneyLabel, ticketPriceLabel;
+    Label currentDateLabel, currentLocationLabel , ticketPriceLabel;
+    @FXML
+    Text plannedJourneyLabel;
     @FXML
     Label dailyAccommodationCostLabel, dailyLivingCostLabel, otherCostLabel;
     //    @FXML
@@ -102,7 +105,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Pane champInProgBox, nextChampInfoBox, travelBox;
     @FXML
-    Button forwardBtn, forwardOppositeBtn;
+    Button forwardBtn, gotoBtn, notGotoBtn, startChampBtn, skipChampBtn;
     @FXML
     LabelTable<PlayerAward> selectedPlayerInfoTable;
     @FXML
@@ -120,7 +123,7 @@ public class CareerView extends ChildInitializable {
     private Stage selfStage;
     private EntryView parent;
     private ResourceBundle strings;
-    private ForwardEventRecord forwardEventRecord;
+//    private ForwardEventRecord forwardEventRecord;
     private Timeline forwardTimeline;
 
     private ChampionshipData activeOrNext;
@@ -178,14 +181,17 @@ public class CareerView extends ChildInitializable {
         careerManager.checkRankingAchievements();
         DBAccess.getInstance().checkAchievements();
         AchManager.getInstance().showAchievementPopup();
-
+        
         refreshGui();
     }
 
     private void refreshFeesTexts(boolean join) {
-//        skipChampBtn.setDisable(join);
+        skipChampBtn.setDisable(join);
         registryFeeLabel.setVisible(join);
         registryFeeLabel.setManaged(join);
+        
+//        plannedJourneyLabel.setStyle(join ? "-fx-line-through: false;" : "-fx-line-through: true;");
+        plannedJourneyLabel.setStrikethrough(!join);
 //        feesBoxChecked.setVisible(join);
 //        feesBoxChecked.setManaged(join);
 //        feesBoxUnchecked.setVisible(!join);
@@ -517,7 +523,7 @@ public class CareerView extends ChildInitializable {
 
             nextChampInfoBox.setVisible(true);
             nextChampInfoBox.setManaged(true);
-            ChampionshipData.WithYear nextData = careerManager.nextChampionshipData();
+            ChampionshipData.WithYear nextData = careerManager.getNextChampionshipData();
             data = nextData.data;
 
             boolean humanQualified = careerManager.humanPlayerQualifiedToJoin(data, data.getSelection());
@@ -536,39 +542,6 @@ public class CareerView extends ChildInitializable {
             ));
             int registryFee = careerManager.getHumanRegistryFee(data, humanQualified);
             registryFeeLabel.setText(String.valueOf(registryFee));
-
-//            int travelFee = data.getFlightFee() + data.getHotelFee();
-//            travelFeeLabel.setText(String.valueOf(travelFee));
-
-//            int[] travelHotelFees = getTravelAndHotelFees(data);
-//            int travelFee = travelHotelFees[0] + travelHotelFees[1];
-//            travelFeeLabel.setText(String.valueOf(travelFee));
-
-//            int fixedFees = 0;
-//            // 主要就是欠债的事情
-////            Map<String, Integer> feesMap = careerManager.getHumanPlayerCareer().calculateFixedFees(nextData);
-//            if (!feesMap.isEmpty()) {
-//                StringBuilder builder = new StringBuilder();
-//                for (Map.Entry<String, Integer> feesItem : feesMap.entrySet()) {
-//                    fixedFees += feesItem.getValue();
-//                    String label;
-//                    if (strings.containsKey(feesItem.getKey())) {
-//                        label = strings.getString(feesItem.getKey());
-//                    } else {
-//                        label = feesItem.getKey();
-//                    }
-//                    builder.append(label).append(" ").append(feesItem.getValue()).append(' ');
-//                }
-//                String sbs = builder.toString();
-//                otherFeeLabel1.setText(sbs);
-////                otherFeeLabel2.setText(sbs);
-//            } else {
-//                otherFeeLabel1.setText("");
-////                otherFeeLabel2.setText("");
-//            }
-
-//            totalFeeLabel.setText(String.valueOf(registryFee + travelFee + fixedFees));
-//            totalFeeLabel2.setText(String.valueOf(fixedFees));
 
             RouteResult.Ticket plannedJourney = careerManager.getOrUpdateScheduleTravel(nextData);
             if (plannedJourney != null) {
@@ -609,6 +582,8 @@ public class CareerView extends ChildInitializable {
         champAwardsTable.getColumns().getFirst().setTitleText(data.isRanked() ?
                 strings.getString("rankedGame") :
                 strings.getString("nonRankedGame"));
+        
+        updateForwardButtonGroups();
 
         fillChampionshipAwardTable(champAwardsTable, data);
 
@@ -725,15 +700,50 @@ public class CareerView extends ChildInitializable {
             }
         }
     }
+    
+    @FXML
+    void gotoAction() {
+        RouteResult.Ticket ticket = careerManager.getOrUpdateScheduleTravel(careerManager.getNextChampionshipData());
+        if (ticket == null) {
+            EventLogger.warning("No ticket found");
+            return;
+        }
+        HumanCareer humanCareer = careerManager.getHumanPlayerCareer();
+        careerManager.pushDateTo(ticket.date());
+        humanCareer.startTravelling();
+        humanCareer.payTravelFees(ticket);
+        humanCareer.setCurrentLocation(ticket.route().getEndCity());
+        careerManager.pushDateTo(ticket.dateArrival());
+        humanCareer.endTravelling();
+        careerManager.saveToDisk();
+        
+        refreshGui();
+    }
+    
+    @FXML
+    void notGotoAction() {
+        careerManager.toNextDay();
+        careerManager.saveToDisk();
+        
+        refreshGui();
+    }
 
     @FXML
     void forwardAction() {
         if (forwardTimeline == null) {
-            forwardBtn.setText(strings.getString("calendarPause"));
-            City city = careerManager.getHumanPlayerCareer().getCurrentLocation();
-            final Calendar forwardBegin = (Calendar) careerManager.getTimestamp().clone();
+//            forwardBtn.setText(strings.getString("calendarPause"));
+//            City city = careerManager.getHumanPlayerCareer().getCurrentLocation();
+//            final Calendar forwardBegin = (Calendar) careerManager.getTimestamp().clone();
 
-            ChampionshipData.WithYear nextData = careerManager.nextChampionshipData();
+            ChampionshipData.WithYear nextData = careerManager.getNextChampionshipData();
+            if (Util.dateEquals(careerManager.getTimestamp(), nextData.toCalendar())) {
+                // 已经到比赛这天了
+                // 但forward到这里就是默认不参赛了
+                // 所以推进到下一个比赛
+                careerManager.toNextDay();
+                nextData = careerManager.getNextChampionshipData();
+            }
+            
             Calendar scheduledStop;
             RouteResult.Ticket ticket = careerManager.getOrUpdateScheduleTravel(nextData);
             if (ticket != null && joinChampBox.isSelected()) {
@@ -741,15 +751,15 @@ public class CareerView extends ChildInitializable {
             } else {
                 scheduledStop = nextData.toCalendar();
             }
-            forwardEventRecord = new ForwardEventRecord(
-                    forwardBegin, 
-                    scheduledStop,
-                    careerManager.getHumanPlayerCareer().getMoney(),
-                    careerManager.getDailyHotelFee(city) + careerManager.getDailyLivingAt(city)
-            );
+//            forwardEventRecord = new ForwardEventRecord(
+//                    forwardBegin, 
+//                    scheduledStop,
+//                    careerManager.getHumanPlayerCareer().getMoney(),
+//                    careerManager.getDailyHotelFee(city) + careerManager.getDailyLivingAt(city)
+//            );
             
             forwardTimeline = new Timeline(
-                    new KeyFrame(Duration.seconds(0.5), _ -> {
+                    new KeyFrame(Duration.seconds(0.33), _ -> {
                         Calendar now = careerManager.getTimestamp();
                         if (Util.dateBefore(now, scheduledStop)) {
                             careerManager.toNextDay();
@@ -757,34 +767,126 @@ public class CareerView extends ChildInitializable {
                             refreshGui();
                         } else {
                             forwardTimeline.stop();
-                            processForwardEnd(forwardEventRecord, careerManager.getTimestamp());
-                            forwardEventRecord = null;
                             forwardTimeline = null;
+                            processForwardEnd();
+//                            forwardEventRecord = null;
                         }
                     })
             );
             forwardTimeline.setCycleCount(Animation.INDEFINITE);
             forwardTimeline.play();
-            
+            refreshGui();
         } else {
             forwardTimeline.stop();
-            processForwardEnd(forwardEventRecord, careerManager.getTimestamp());
-            forwardEventRecord = null;
             forwardTimeline = null;
+            processForwardEnd();
+//            forwardEventRecord = null;
+
         }
     }
 
-    private void processForwardEnd(ForwardEventRecord eventRecord, Calendar actualEnd) {
-//        careerManager.saveToDisk();
+    private void processForwardEnd() {
+        careerManager.saveToDisk();
         updateUiForwardEnd();
     }
     
     private void updateUiForwardEnd() {
-        Calendar date = careerManager.getTimestamp();
-        
-        forwardBtn.setText(strings.getString("calendarForward"));
-        
         refreshGui();
+    }
+    
+    private void updateForwardButtonGroups() {
+        Calendar date = careerManager.getTimestamp();
+        ChampionshipData.WithYear next = careerManager.getNextChampionshipData();
+        City at = careerManager.getHumanPlayerCareer().getCurrentLocation();
+        City holding = next.data.getLocation().city();
+        
+        if (Util.dateEquals(date, next.toCalendar())) {
+            // 不管在不在，都可以开赛
+            if (!at.equals(holding)) {
+                // 如果不在，就肯定来不及了（游戏内不允许当天前往），不允许报名参赛
+                joinChampBox.setSelected(false);
+                joinChampBox.setDisable(true);
+            }
+            setButtonsBeginAvailable();
+        } else {
+            if (at.equals(holding)) {
+                setButtonsForward();
+            } else {
+                RouteResult.Ticket scheduled = careerManager.getOrUpdateScheduleTravel(next);
+                if (Util.dateEquals(date, scheduled.date())) {
+                    if (joinChampBox.isSelected()) {
+                        // 前往或不前往
+                        setButtonsGoto();
+                    } else {
+                        // 没勾选参赛，肯定不前往
+                        setButtonsForward();
+                    }
+                } else if (date.after(scheduled.date())) {
+                    // 来不及了
+                    joinChampBox.setSelected(false);
+                    joinChampBox.setDisable(true);
+                    setButtonsForward();
+                } else {
+                    // 继续推进时间
+                    setButtonsForward();
+                }
+            }
+        }
+    }
+    
+    private void setButtonsForward() {
+        forwardBtn.setVisible(true);
+        forwardBtn.setManaged(true);
+        if (forwardTimeline == null) {
+            forwardBtn.setText(strings.getString("calendarForward"));
+        } else {
+            forwardBtn.setText(strings.getString("calendarPause"));
+        }
+
+        gotoBtn.setVisible(false);
+        gotoBtn.setManaged(false);
+        notGotoBtn.setVisible(false);
+        notGotoBtn.setManaged(false);
+
+        startChampBtn.setVisible(false);
+        startChampBtn.setManaged(false);
+
+        skipChampBtn.setVisible(false);
+        skipChampBtn.setManaged(false);
+    }
+    
+    private void setButtonsBeginAvailable() {
+        startChampBtn.setVisible(true);
+        startChampBtn.setManaged(true);
+
+        skipChampBtn.setVisible(true);
+        skipChampBtn.setManaged(true);
+        
+        refreshFeesTexts(joinChampBox.isSelected());
+
+        forwardBtn.setVisible(false);
+        forwardBtn.setManaged(false);
+
+        gotoBtn.setVisible(false);
+        gotoBtn.setManaged(false);
+        notGotoBtn.setVisible(false);
+        notGotoBtn.setManaged(false);
+    }
+    
+    private void setButtonsGoto() {
+        forwardBtn.setVisible(false);
+        forwardBtn.setManaged(false);
+
+        gotoBtn.setVisible(true);
+        gotoBtn.setManaged(true);
+        notGotoBtn.setVisible(true);
+        notGotoBtn.setManaged(true);
+
+        startChampBtn.setVisible(false);
+        startChampBtn.setManaged(false);
+
+        skipChampBtn.setVisible(false);
+        skipChampBtn.setManaged(false);
     }
 
     @FXML
@@ -1074,7 +1176,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     public void nextChamp() {
         HumanCareer humanCareer = careerManager.getHumanPlayerCareer();
-        ChampionshipData.WithYear nextData = careerManager.nextChampionshipData();
+//        ChampionshipData.WithYear nextData = careerManager.getNextChampionshipData();
 
 //        humanCareer.updateMoneyChampStart(nextData);  // 扣生活费
 
@@ -1102,13 +1204,12 @@ public class CareerView extends ChildInitializable {
         if (!joinChampBox.isSelected()) {
 //            careerManager.getHumanPlayerCareer().updateMoneyChampStart(careerManager.nextChampionshipData());  // 扣生活费
             // todo
-
             Championship championship = careerManager.startNextChampionship();
 
             championship.startChampionship(false, !joinChampBox.isDisabled());
 
             while (!championship.isFinished()) {
-                championship.startNextRound();
+                championship.startNextRound(careerManager, false);
             }
 
             CareerManager.getInstance().saveToDisk();
@@ -1159,7 +1260,7 @@ public class CareerView extends ChildInitializable {
             if (careerManager.getChampionshipInProgress() == null) {
                 view.setNextChampionship(careerManager.getTimestamp(),
                         careerManager.getHumanPlayerCareer().getCurrentLocation(),
-                        careerManager.nextChampionshipData());
+                        careerManager.getNextChampionshipData());
             } else {
                 view.setNextChampionship(careerManager.getTimestamp(),
                         careerManager.getHumanPlayerCareer().getCurrentLocation(),

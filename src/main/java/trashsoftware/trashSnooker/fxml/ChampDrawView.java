@@ -70,6 +70,7 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     ScrollPane scrollPane;
 
+    CareerManager careerManager;
     Championship championship;
     MatchTreeNode.PvAiSnapshot nextMatchSnapshot;
 
@@ -99,7 +100,8 @@ public class ChampDrawView extends ChildInitializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.strings = resourceBundle;
 
-        championship = CareerManager.getInstance().getChampionshipInProgress();
+        careerManager = CareerManager.getInstance();
+        championship = careerManager.getChampionshipInProgress();
         assert championship != null;
 
 //        cueSelection = new FastGameView.CueSelection(cueButton);
@@ -347,7 +349,7 @@ public class ChampDrawView extends ChildInitializable {
             quitCurrentMatch(match);
         } else {
             PlayerVsAiMatch match;
-            while ((match = championship.startNextRound()) == null) {
+            while ((match = championship.startNextRound(careerManager)) == null) {
                 // do nothing
             }
             startGameInNewRound(match);
@@ -452,7 +454,7 @@ public class ChampDrawView extends ChildInitializable {
             if (championship.hasSavedRound()) {
                 match = championship.continueSavedRound();
             } else {
-                match = championship.startNextRound();
+                match = championship.startNextRound(careerManager);
                 if (championship.isHumanAlive()) {
                     if (match == null) {
                         // human的比赛还未开始

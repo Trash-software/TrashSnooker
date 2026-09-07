@@ -2447,7 +2447,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             double vy = firstBallInTouch.vy;
 
             propagateImpulse(new ArrayList<>(affectedBalls), firstBallInTouch, vx, vy,
-                    gameValues.ball.ballBounceRatio);
+                    1.0);
 
             // 这里可以用线性代数取代，但是这样直观且简单
             double curDt = Math.hypot(movingBall.x - firstBallInTouch.x, movingBall.y - firstBallInTouch.y);

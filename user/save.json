@@ -3,22 +3,22 @@
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.95,
-    "person": "Wang ming",
-    "playerType": "COMPUTER",
+    "psyStatus": 1,
+    "person": "custom_player_5",
+    "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
   "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
-    "handFeelEffort": 1,
-    "psyStatus": 1,
-    "person": "Li chengzhen",
+    "handFeelEffort": 0.5,
+    "psyStatus": 0.95,
+    "person": "Wang Sinuo",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "codeGameCounter": 3,
+  "codeGameCounter": 1,
   "p2BreakLoseChance": 0,
   "gameValues": {
     "ball": "SNOOKER_BALL",
@@ -31,15 +31,11 @@
       "holeSizeOrdinal": 2
     }
   },
-  "winRecords": {
-    "1": 1,
-    "2": 2,
-    "3": 2
-  },
-  "p2Wins": 2,
-  "startTime": 1788628430463,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
+  "startTime": 1788634979225,
   "p1BreakLoseChance": 0,
-  "totalFrames": 3,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"

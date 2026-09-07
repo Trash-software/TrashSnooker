@@ -885,10 +885,10 @@ public class HumanCareer extends Career {
     private int computeAllAwards() {
         int awards = 0;
         // 只是利用这个类来算钱，没有实际作用
-        awards += new CareerRanker.ByAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerRanker.ByAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerRanker.ByAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerRanker.ByAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.SNOOKER, this, Util.getCalendarInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.CHINESE_EIGHT, this, Util.getCalendarInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.LIS_EIGHT, this, Util.getCalendarInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.AMERICAN_NINE, this, Util.getCalendarInstance()).getTotalAwards();
         return awards;
     }
 
@@ -1015,7 +1015,7 @@ public class HumanCareer extends Career {
             }
             out.put("invoices", invoiceArr);
             
-            out.put("temporalRecord", temporalRecord.toJson());
+            out.put("temporalRecord", temporalRecord == null ? JSONObject.NULL : temporalRecord.toJson());
 
             json.put("financial", out);
 

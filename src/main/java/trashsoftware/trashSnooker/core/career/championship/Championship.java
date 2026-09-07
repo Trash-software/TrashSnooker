@@ -10,7 +10,7 @@ import java.util.*;
 
 public abstract class Championship {
 
-    protected final Calendar timestamp;
+    protected final Calendar championshipBeginDate;
     protected final ChampionshipData data;
 
     protected final Map<String, Integer> careerSeedMap = new HashMap<>();
@@ -19,9 +19,9 @@ public abstract class Championship {
     protected boolean finished = false;
     protected PlayerVsAiMatch activeMatch;
 
-    public Championship(ChampionshipData data, Calendar timestamp) {
+    public Championship(ChampionshipData data, Calendar championshipBeginDate) {
         this.data = data;
-        this.timestamp = timestamp;
+        this.championshipBeginDate = (Calendar) championshipBeginDate.clone();
     }
 
     private static Championship loadProgressFromJson(JSONObject jsonObject) {
@@ -101,14 +101,14 @@ public abstract class Championship {
     
     private void saveAsHistory() {
         File file = new File(CareerManager.getChampionshipHistoryDir(), 
-                timestamp.get(Calendar.YEAR) + "_" + data.getId());
+                championshipBeginDate.get(Calendar.YEAR) + "_" + data.getId());
         saveProgressToJson(file);
     }
     
     protected JSONObject toJson() {
         // 必须在started之后才能保存
         JSONObject saved = new JSONObject();
-        saved.put("timestamp", CareerManager.calendarToString(timestamp));
+        saved.put("timestamp", CareerManager.calendarToString(championshipBeginDate));
         saved.put("championshipId", data.getId());
         saved.put("stageIndex", currentStageIndex);
         saved.put("matchTree", matchTree.saveProgressToJson());
@@ -144,7 +144,7 @@ public abstract class Championship {
     }
     
     public int getYear() {
-        return timestamp.get(Calendar.YEAR);
+        return championshipBeginDate.get(Calendar.YEAR);
     }
 
     public String fullName() {
@@ -266,8 +266,8 @@ public abstract class Championship {
         return activeMatch;
     }
 
-    public PlayerVsAiMatch startNextRound() {
-        return startNextRound(true);
+    public PlayerVsAiMatch startNextRound(CareerManager careerManager) {
+        return startNextRound(careerManager, true);
     }
 
     /**
@@ -283,10 +283,16 @@ public abstract class Championship {
         }
     }
 
-    public PlayerVsAiMatch startNextRound(boolean save) {
-        CareerManager.getInstance().updateHandFeels();
+    public PlayerVsAiMatch startNextRound(CareerManager careerManager, boolean save) {
+        careerManager.updateHandFeels();
         ChampionshipStage stage = data.getStages()[currentStageIndex];
         System.out.println(data.getId() + stage);
+        Calendar stageDate = (Calendar) championshipBeginDate.clone();
+        int dayIndex = data.getDayIndexWhenStageStart(stage);
+        stageDate.add(Calendar.DAY_OF_MONTH, dayIndex);
+//        System.out.println("Champ begin: " + CareerManager.calendarToString(championshipBeginDate));
+//        System.out.println("Stage and date: " + stage + ": " + dayIndex + ": " + CareerManager.calendarToString(stageDate));
+        careerManager.pushDateTo(stageDate);
 //        saveProgressToJson();
 
         PlayerVsAiMatch playerVsAiMatch = matchTree.holdOneRoundMatches(this, stage);
@@ -343,10 +349,10 @@ public abstract class Championship {
         System.out.println("Award distributed!");
         Map<ChampionshipScore.Rank, List<String>> extra = extraAwardsMap();
         
-        matchTree.distributeAwards(data, timestamp, extra);
+        matchTree.distributeAwards(data, championshipBeginDate, extra);
         CareerManager cm = CareerManager.getInstance();
         cm.updateRanking();
-        cm.oneChampionshipEnds(data.getWithYear(timestamp.get(Calendar.YEAR)));
+        cm.oneChampionshipEnds(data.getWithYear(championshipBeginDate.get(Calendar.YEAR)));
         cm.checkRankingAchievements();
         cm.saveToDisk();
     }

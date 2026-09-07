@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
 <?import trashsoftware.trashSnooker.fxml.widgets.PerkAdder?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="trashsoftware.trashSnooker.fxml.CareerView"
@@ -78,31 +80,36 @@
     <PerkAdder fx:id="abilityShower" GridPane.rowIndex="2"/>
 
     <HBox GridPane.rowIndex="3" spacing="10.0" alignment="CENTER_LEFT">
-        <Label fx:id="currentDateLabel"/>
+        <Label fx:id="currentDateLabel">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
         <Label fx:id="currentLocationLabel"/>
         <Button text="%seeToursList" onAction="#seeToursListAction"/>
     </HBox>
 
     <HBox GridPane.rowIndex="4" spacing="10.0">
         <VBox spacing="5.0" alignment="CENTER_LEFT">
-            <HBox fx:id="travelBox" spacing="10.0" alignment="CENTER_LEFT">
-                <Label text="%plannedJourney"/>
-                <Label fx:id="plannedJourneyLabel"/>
-                <HBox spacing="5.0" alignment="CENTER_LEFT">
-                    <Label text="%price"/>
-                    <Label fx:id="ticketPriceLabel"/>
-                    <Hyperlink text="%change" onAction="#showWorldMapAction"/>
-                </HBox>
-            </HBox>
             <HBox spacing="10.0" alignment="CENTER_LEFT">
                 <Label text="%everydayCost"/>
                 <Label fx:id="dailyAccommodationCostLabel"/>
                 <Label fx:id="dailyLivingCostLabel"/>
                 <Label fx:id="otherCostLabel"/>
             </HBox>
+            <HBox fx:id="travelBox" spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="%plannedJourney"/>
+                <Text fx:id="plannedJourneyLabel"/>
+                <HBox spacing="5.0" alignment="CENTER_LEFT">
+                    <Label text="%price"/>
+                    <Label fx:id="ticketPriceLabel"/>
+                    <Hyperlink text="%change" onAction="#showWorldMapAction"/>
+                </HBox>
+            </HBox>
         </VBox>
         <Button fx:id="forwardBtn" text="%calendarForward" onAction="#forwardAction"/>
-        <Button fx:id="forwardOppositeBtn" text="%notGoto" onAction="#forwardAction"/>
+        <Button fx:id="gotoBtn" text="%goto" onAction="#gotoAction"/>
+        <Button fx:id="notGotoBtn" text="%notGoto" onAction="#notGotoAction"/>
     </HBox>
 
 
@@ -121,17 +128,9 @@
             <Label fx:id="nextChampionshipLabel"/>
             <CheckBox fx:id="joinChampBox" text="%enrol"/>
             <Label fx:id="registryFeeLabel"/>
-<!--            <HBox fx:id="feesBoxChecked" spacing="5.0">-->
-<!--                <Label text="%registryFee"/>-->
-<!--                <Label fx:id="registryFeeLabel"/>-->
-<!--            </HBox>-->
-            <!--            <Button text="%start" onAction="#nextChamp"/>-->
-            <!--            <Button fx:id="skipChampBtn" text="%skip" onAction="#skipNextChamp"/>-->
+            <Button fx:id="startChampBtn" text="%start" onAction="#nextChamp"/>
+            <Button fx:id="skipChampBtn" text="%skip" onAction="#skipNextChamp"/>
         </HBox>
-
-<!--        <HBox fx:id="feesBoxUnchecked" spacing="5.0" visible="false" managed="false">-->
-
-<!--        </HBox>-->
     </VBox>
 
     <LabelTable fx:id="champAwardsTable" GridPane.rowIndex="6"/>

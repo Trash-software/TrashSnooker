@@ -1,22 +1,20 @@
 {
   "financial": {
-    "money": 63270,
+    "temporalRecord": {
+      "currentTemporalFeesStart": "2025/2/3",
+      "moneyBefore": 57896,
+      "items": {
+        "living": 460,
+        "hotel": 1350
+      }
+    },
+    "remFreePerks": 0,
+    "money": 56086,
     "invoices": [
-      {
-        "year": 2024,
-        "match": "challenger_open",
-        "moneyBefore": -65720,
-        "moneyAfter": -65720,
-        "type": "championshipEarn",
-        "items": {"PRE_GAMES_2": {
-          "actual": 0,
-          "raw": 0
-        }},
-        "timestamp": "2023-11-27 02:59:27"
-      },
       {
         "inGameDate": "2024/9/25",
         "perkUsed": 3,
+        "freePerkUsed": 0,
         "moneyBefore": 65720,
         "moneyCost": 1900,
         "moneyAfter": 63820,
@@ -92,6 +90,7 @@
       {
         "inGameDate": "2024/9/25",
         "perkUsed": 1,
+        "freePerkUsed": 0,
         "moneyBefore": 63820,
         "moneyCost": 550,
         "moneyAfter": 63270,
@@ -163,13 +162,106 @@
         },
         "type": "upgrade",
         "timestamp": "2025-05-23 05:06:04"
+      },
+      {
+        "dateOnTicket": "2024/10/17",
+        "inGameDate": "2024/10/29",
+        "moneyBefore": 62641,
+        "moneyAfter": 62476,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "PEK-CKG",
+            "departureCityId": "Chongqing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 145
+          },
+          {
+            "routeId": "PEK-SJW+T",
+            "departureCityId": "Beijing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 20
+          }
+        ],
+        "timestamp": "2026-09-07 21:54:38"
+      },
+      {
+        "item": 16,
+        "inGameDate": "2024/10/21",
+        "moneyBefore": 61779,
+        "match": "custom_player_181+2024+eight_master_tour_hebei",
+        "moneyAfter": 61979,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-07 22:01:22"
+      },
+      {
+        "inGameDate": "2024/10/21",
+        "moneyBefore": 61979,
+        "match": "custom_player_181+2024+eight_master_tour_hebei",
+        "moneyAfter": 61779,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-07 22:01:22"
+      },
+      {
+        "inGameDate": "2024/10/21",
+        "year": 2024,
+        "moneyBefore": 61656,
+        "match": "eight_master_tour_hebei",
+        "moneyAfter": 65531,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 3875,
+          "raw": 5000
+        }},
+        "timestamp": "2026-09-07 22:01:33"
+      },
+      {
+        "dateOnTicket": "2025/1/21",
+        "inGameDate": "2025/1/26",
+        "moneyBefore": 61759,
+        "moneyAfter": 61019,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "PEK-SJW+T",
+            "departureCityId": "Shijiazhuang",
+            "seatClass": "ECONOMY",
+            "payedPrice": 20
+          },
+          {
+            "routeId": "LHR-PEK",
+            "departureCityId": "Beijing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 720
+          }
+        ],
+        "timestamp": "2026-09-08 00:01:37"
+      },
+      {
+        "dateOnTicket": "2025/1/26",
+        "inGameDate": "2025/1/31",
+        "moneyBefore": 59883,
+        "moneyAfter": 59163,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "LHR-PEK",
+          "departureCityId": "London",
+          "seatClass": "ECONOMY",
+          "payedPrice": 720
+        }],
+        "timestamp": "2026-09-08 00:04:33"
       }
     ],
     "level": 5,
-    "expInThisLevel": 4,
+    "expInThisLevel": 54,
     "availPerks": 8,
     "totalPerks": 10,
-    "totalExp": 455
+    "totalExp": 505
   },
-  "checksum": "2994AF02F9F6E0B0507F42FD1BCDAC77"
+  "checksum": "87EBD456A12CDFA704F3F77438B85FBF"
 }
