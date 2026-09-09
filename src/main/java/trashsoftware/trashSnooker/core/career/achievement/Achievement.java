@@ -196,7 +196,14 @@ public enum Achievement {
     OWE_MONEY(AchCat.FINANCIAL, true),  // 已完成
     EXPENDITURE(AchCat.FINANCIAL, Type.CUMULATIVE, 10000, 50000, 200000),  // 已完成
     BUY_ITEMS(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 5, 20),  // 已完成
-    ;
+    BUY_HOUSES(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 3, 10),
+    SELL_HOUSE(AchCat.FINANCIAL, Type.ONE_TIME),
+    RENT_HOUSE(AchCat.FINANCIAL, Type.ONE_TIME),
+    AIR_TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 10, 50, 200),
+    TRAIN_TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 10, 50, 200),
+    TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 50, 500),
+    BUSINESS_TRAVEL(AchCat.FINANCIAL, Type.ONE_TIME),
+    FIRST_CLASS_TRAVEL(AchCat.FINANCIAL, Type.ONE_TIME);
 
     public final AchCat category;
     public final Type type;

@@ -4,9 +4,12 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.util.PermanentCounters;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class Residence {
     public static final double DEFAULT_AREA = 50;
@@ -48,6 +51,19 @@ public class Residence {
                 purchaseTime
         );
     }
+
+    public static Residence createForCareer(City city, double area, CareerManager careerManager, Ownership ownership) {
+        String instanceId = "residence-" + city.getId() + ":" +
+                careerManager.getCareerSave().getPlayerId() + "-" + PermanentCounters.getInstance().nextResidence();
+        return new Residence(
+                instanceId,
+                city,
+                area,
+                city.getHousePriceM2(),
+                ownership,
+                (Calendar) careerManager.getTimestamp().clone()
+        );
+    }
     
     public static Residence fromJson(JSONObject json, Map<String, City> cityMap) {
         String cityId = json.getString("city");
@@ -74,6 +90,10 @@ public class Residence {
         return object;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public Ownership getOwnership() {
         return ownership;
     }
@@ -94,13 +114,30 @@ public class Residence {
         return unitPrice;
     }
     
-    public double getTotalPrice() {
-        return area * unitPrice;
+    public int getTotalPrice() {
+        return (int) Math.round(area * unitPrice);
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Residence res && id.equals(res.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
     public enum Ownership {
         OWN,
         RENT,
-        INITIAL
+        INITIAL;
+        
+        public String getShown(ResourceBundle strings) {
+            String key = "OWNERSHIP_" + name();
+            key = Util.toLowerCamelCase(key);
+            if (strings.containsKey(key)) return strings.getString(key);
+            return name();
+        }
     }
 }

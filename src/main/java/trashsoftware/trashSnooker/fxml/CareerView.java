@@ -714,7 +714,7 @@ public class CareerView extends ChildInitializable {
         humanCareer.payTravelFees(ticket);
         humanCareer.setCurrentLocation(ticket.route().getEndCity());
         careerManager.pushDateTo(ticket.dateArrival());
-        humanCareer.endTravelling();
+        humanCareer.endTravelling(ticket);
         careerManager.saveToDisk();
         
         refreshGui();
@@ -810,6 +810,7 @@ public class CareerView extends ChildInitializable {
             setButtonsBeginAvailable();
         } else {
             if (at.equals(holding)) {
+                // 在当地，但时间还没到
                 setButtonsForward();
             } else {
                 RouteResult.Ticket scheduled = careerManager.getOrUpdateScheduleTravel(next);
@@ -997,26 +998,32 @@ public class CareerView extends ChildInitializable {
 
         notifyPerksChanged();
     }
-
-    @FXML
+    
     public void applyPerksAction() {
         int curMoney = careerManager.getHumanPlayerCareer().getMoney();
         int price = perkManager.getCost();
         int moneyAfterBuy = curMoney - price;
         int perksUse = perkManager.getPerksSelected();
         if (perksUse > 0) {
-            AlertShower.askConfirmation(
-                    selfStage,
-                    String.format(strings.getString("balanceAfterApplyPerk"),
-                            Util.moneyToReadable(curMoney),
-                            Util.moneyToReadable(price),
-                            Util.moneyToReadable(moneyAfterBuy)
-                    ),
-                    String.format(strings.getString("confirmApplyPerk"),
-                            perksUse),
-                    this::applyPerks,
-                    null
-            );
+            if (careerManager.getInventory().hasResidenceIn(careerManager.getHumanPlayerCareer().getCurrentLocation())) {
+                AlertShower.askConfirmation(
+                        selfStage,
+                        String.format(strings.getString("balanceAfterApplyPerk"),
+                                Util.moneyToReadable(curMoney),
+                                Util.moneyToReadable(price),
+                                Util.moneyToReadable(moneyAfterBuy)
+                        ),
+                        String.format(strings.getString("confirmApplyPerk"),
+                                perksUse),
+                        this::applyPerks,
+                        null
+                );
+            } else {
+                AlertShower.showInfo(
+                        selfStage,
+                        strings.getString("applyPerkMustAtHome"),
+                        strings.getString("cannotApplyPerk"));
+            }
         }
     }
 

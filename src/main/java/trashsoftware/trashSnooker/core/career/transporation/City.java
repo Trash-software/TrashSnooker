@@ -79,12 +79,12 @@ public class City {
         return housePriceM2;
     }
     
-    public int hotelPricePerDay() {
-        return (int) Math.round(housePriceM2 * 0.015);
+    public int getHouseMonthlyRentalPrice(double area) {
+        return (int) (Math.round(area * housePriceM2 / 250 / 10) * 10);
     }
     
-    public int rentalPricePerDay(double m2) {
-        return (int) Math.round(housePriceM2 * m2 / 200.0 / 30);
+    public int hotelPricePerDay() {
+        return (int) Math.round(housePriceM2 * 0.015);
     }
     
     public int livingCostPerDay() {

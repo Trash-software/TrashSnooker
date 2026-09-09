@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
-import trashsoftware.trashSnooker.core.career.transporation.City;
-import trashsoftware.trashSnooker.core.career.transporation.Route;
-import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
-import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
+import trashsoftware.trashSnooker.core.career.HumanCareer;
+import trashsoftware.trashSnooker.core.career.transporation.*;
+import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
 import java.util.*;
@@ -132,7 +132,7 @@ public class GeographicView extends ChildInitializable {
         super.backAction();
     }
 
-    public void setup(Stage stage, 
+    public void setup(Stage stage,
                       @Nullable CareerView careerView,
                       @Nullable CareerManager careerManager) {
         this.stage = stage;
@@ -182,7 +182,7 @@ public class GeographicView extends ChildInitializable {
             resolveLabelOverlaps();
         });
     }
-    
+
     void searchRouteAction() {
         City a = departureBox.getValue();
         City b = destinationBox.getValue();
@@ -237,7 +237,7 @@ public class GeographicView extends ChildInitializable {
             if (marker != null) {
                 marker.showLocationBubble(true);
             }
-            
+
             currentLocationLabel.setText(String.format(strings.getString("currentLocationFmt"),
                     from.getName(strings.getLocale())));
         });
@@ -339,7 +339,7 @@ public class GeographicView extends ChildInitializable {
                 }
             }
         });
-        
+
         comboBox.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> {
             searchRouteAction();
         });
@@ -516,7 +516,7 @@ public class GeographicView extends ChildInitializable {
 
     private void travelTo(RouteResult.Ticket ticket) {
         careerManager.getHumanPlayerCareer().payTravelFees(ticket);
-        
+
         startTravelling(ticket);
     }
 
@@ -531,7 +531,8 @@ public class GeographicView extends ChildInitializable {
             marker.showLocationBubble(false);
         }
 
-        travelAnimationPlayer = new TravelAnimationPlayer(ticket.route(), 
+        travelAnimationPlayer = new TravelAnimationPlayer(ticket,
+                ticket.route(),
                 ticket.date(),
                 1.0);
         routeLayer.getChildren().add(travelAnimationPlayer.movingGraphics);
@@ -544,7 +545,7 @@ public class GeographicView extends ChildInitializable {
                     endTravelling();
                     return;
                 }
-                
+
                 Calendar lastDate = careerManager.getTimestamp();
                 Calendar newDate = travelAnimationPlayer.getDate();
                 if (!lastDate.equals(newDate)) {
@@ -562,19 +563,20 @@ public class GeographicView extends ChildInitializable {
     }
 
     private void endTravelling() {
+        RouteResult.Ticket ticket = travelAnimationPlayer.ticket;
         RouteResult routeResult = travelAnimationPlayer.routeResult;
         Calendar dateArrival = routeResult.computeArrivalDate(travelAnimationPlayer.departureDate);
         travelAnimation.stop();
         travelAnimation = null;
         routeLayer.getChildren().remove(travelAnimationPlayer.movingGraphics);
         travelAnimationPlayer = null;
-        
+
         // 移动
         careerManager.pushDateTo(dateArrival);  // 只是为了预防bug，本身应该没问题
-        careerManager.getHumanPlayerCareer().endTravelling();
+        careerManager.getHumanPlayerCareer().endTravelling(ticket);
         careerManager.getHumanPlayerCareer().setCurrentLocation(routeResult.getEndCity());
         careerManager.saveToDisk();
-        
+
         setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), null);
         // 确保日期没有意外bug
         currentDateLabel.setText(CareerManager.calendarToString(careerManager.getTimestamp()));
@@ -612,7 +614,7 @@ public class GeographicView extends ChildInitializable {
 
                     dragStartPanX = panX;
                     dragStartPanY = panY;
-                    
+
                     dragging = false;
                 }
         );
@@ -1263,15 +1265,165 @@ public class GeographicView extends ChildInitializable {
         Separator separator =
                 new Separator();
 
+        GridPane housesPane = new GridPane();
+        housesPane.setVgap(5.0);
+        housesPane.setHgap(10.0);
+        housesPane.getColumnConstraints().add(new ColumnConstraints());
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setHalignment(HPos.RIGHT);
+
         Label housePriceLabel = new Label(
                 String.format(
-                        "House price: £%,d / m²",
-                        city.getHousePriceM2()
+                        strings.getString("housePriceFmt"),
+                        Util.moneyToReadable((int) (city.getHousePriceM2() * Residence.DEFAULT_AREA))
+                )
+        );
+        Label houseRentalPriceLabel = new Label(
+                String.format(
+                        strings.getString("houseMonthlyRentalPriceFmt"),
+                        Util.moneyToReadable(city.getHouseMonthlyRentalPrice(Residence.DEFAULT_AREA))
                 )
         );
 
+        Button buyHouseBtn = new Button(strings.getString("buyHouse"));
+        Button rentHouseBtn = new Button(strings.getString("rentHouse"));
+
+        int rowIndex = 0;
+
+        HumanCareer humanCareer = careerManager.getHumanPlayerCareer();
+
+        List<Residence> residences = careerManager.getHumanPlayerCareer().getInventory().getResidencesAt(city);
+        if (!residences.isEmpty()) {
+            housesPane.add(new Label(strings.getString("houseProperties")), 0, rowIndex++);
+            for (Residence residence : residences) {
+                Residence.Ownership ownership = residence.getOwnership();
+                String formatted = String.format(strings.getString("owningHouseWithAreaFmt"),
+                        ownership.getShown(strings), residence.getArea());
+                Label label = new Label(formatted);
+                housesPane.add(label, 0, rowIndex);
+
+                Button btn = switch (ownership) {
+                    case OWN -> {
+                        Button button = new Button(strings.getString("sellHouse") +
+                                String.format(" %s", Util.moneyToReadable(residence.getTotalPrice())));
+                        button.setOnAction(_ -> {
+                            int curMoney = humanCareer.getMoney();
+                            int price = residence.getTotalPrice();
+                            AlertShower.askConfirmation(stage,
+                                    String.format(strings.getString("balanceAfterSellFmt"),
+                                            Util.moneyToReadable(curMoney),
+                                            Util.moneyToReadable(price),
+                                            Util.moneyToReadable(curMoney + price)
+                                    ),
+                                    strings.getString("confirmSell"),
+                                    () -> {
+                                        humanCareer.sellHouse(residence);
+                                        cityPopOver.hide();
+                                        cityPopOver = null;
+                                        showCityPopOver(city, marker);
+                                    },
+                                    () -> showCityPopOver(city, marker));
+                        });
+                        yield button;
+                    }
+                    case RENT -> {
+                        Button button = new Button(strings.getString("cancelRentHouse"));
+                        button.setOnAction(_ -> {
+                            AlertShower.askConfirmation(stage,
+                                    strings.getString("cancelRentHouseInfo"),
+                                    strings.getString("confirmCancelRent"),
+                                    () -> {
+                                        humanCareer.cancelRentHouse(residence);
+                                        cityPopOver.hide();
+                                        cityPopOver = null;
+                                        showCityPopOver(city, marker);
+                                    },
+                                    () -> showCityPopOver(city, marker));
+                        });
+                        yield button;
+                    }
+                    default -> null;
+                };
+                if (btn != null) {
+                    housesPane.add(btn, 1, rowIndex);
+                }
+                rowIndex++;
+            }
+
+            housesPane.add(new Separator(), 0, rowIndex++, 2, 1);
+        }
+
+        buyHouseBtn.setDisable(!humanCareer.canBuyHouse(city, Residence.DEFAULT_AREA));
+        buyHouseBtn.setOnAction(_ -> {
+            int curMoney = humanCareer.getMoney();
+            int price = (int) (city.getHousePriceM2() * Residence.DEFAULT_AREA);
+            AlertShower.askConfirmation(stage,
+                    String.format(strings.getString("balanceAfterPurchase"),
+                            Util.moneyToReadable(curMoney),
+                            Util.moneyToReadable(price),
+                            Util.moneyToReadable(curMoney - price)
+                    ),
+                    strings.getString("confirmPurchase"),
+                    () -> {
+                        humanCareer.buyHouse(Residence.createForCareer(
+                                city,
+                                Residence.DEFAULT_AREA,
+                                careerManager,
+                                Residence.Ownership.OWN
+                        ));
+                        cityPopOver.hide();
+                        cityPopOver = null;
+                        showCityPopOver(city, marker);
+                    },
+                    () -> showCityPopOver(city, marker));
+        });
+        
+        // 租房也可以租到负的钱
+        rentHouseBtn.setOnAction(_ -> {
+//            int curMoney = humanCareer.getMoney();
+            int price = city.getHouseMonthlyRentalPrice(Residence.DEFAULT_AREA);
+            AlertShower.askConfirmation(stage,
+                    String.format(strings.getString("rentHouseDesFmt"),
+                            Util.moneyToReadable(price)
+                    ),
+                    strings.getString("confirmRentHouse"),
+                    () -> {
+                        humanCareer.startRentHouse(Residence.createForCareer(
+                                city,
+                                Residence.DEFAULT_AREA,
+                                careerManager,
+                                Residence.Ownership.RENT
+                        ));
+                        cityPopOver.hide();
+                        cityPopOver = null;
+                        showCityPopOver(city, marker);
+                    },
+                    () -> showCityPopOver(city, marker));
+        });
+
+        housesPane.add(housePriceLabel, 0, rowIndex);
+        housesPane.add(buyHouseBtn, 1, rowIndex);
+        rowIndex++;
+        housesPane.add(houseRentalPriceLabel, 0, rowIndex);
+        housesPane.add(rentHouseBtn, 1, rowIndex);
+
+        rowIndex++;
+        housesPane.add(new Label(
+                String.format(
+                        strings.getString("hotelDailyPriceFmt"),
+                        Util.moneyToReadable(city.hotelPricePerDay())
+                )
+        ), 0, rowIndex++);
+
+        housesPane.add(new Label(
+                String.format(
+                        strings.getString("dailyLifeFeeFmt"),
+                        Util.moneyToReadable(city.livingCostPerDay())
+                )
+        ), 0, rowIndex++);
+
         Button travelButton =
-                new Button("前往");
+                new Button(strings.getString("goto"));
 
         HBox buttonBox =
                 new HBox(travelButton);
@@ -1291,7 +1443,7 @@ public class GeographicView extends ChildInitializable {
                 cityName,
                 countryLabel,
                 separator,
-                housePriceLabel,
+                housesPane,
                 buttonBox
         );
 
@@ -2690,15 +2842,15 @@ public class GeographicView extends ChildInitializable {
                     new Button(strings.getString("travelNow"));
             Button scheduleTravelButton =
                     new Button(strings.getString("scheduleTravelBeforeChamp"));
-            
-            if (careerManager != null 
+
+            if (careerManager != null
                     && careerManager.getHumanPlayerCareer().getCurrentLocation().equals(departureBox.getValue())) {
                 travelButton.setDisable(false);
                 travelButton.setOnAction(_ -> {
                     travelTo(new RouteResult.Ticket(
-                            routeResult, 
-                            classType, 
-                            careerManager.getTimestamp(), 
+                            routeResult,
+                            classType,
+                            careerManager.getTimestamp(),
                             routeResult.computeArrivalDate(careerManager.getTimestamp())
                     ));
                     ticketPopOver.hide();
@@ -2707,9 +2859,9 @@ public class GeographicView extends ChildInitializable {
                 travelButton.setDisable(true);
             }
 
-            if (nextChampionship == null 
-                    || !nextChampionship.data.getLocation().city().equals(destinationBox.getValue()) 
-                    || careerManager == null 
+            if (nextChampionship == null
+                    || !nextChampionship.data.getLocation().city().equals(destinationBox.getValue())
+                    || careerManager == null
                     || !careerManager.getHumanPlayerCareer().getCurrentLocation().equals(departureBox.getValue())) {
                 scheduleTravelButton.setDisable(true);
             } else {
@@ -2717,9 +2869,9 @@ public class GeographicView extends ChildInitializable {
                 Calendar latestDeparture = nextChampionship.latestDeparture(routeResult);
                 scheduleTravelButton.setOnAction(_ -> {
                     careerManager.setNextScheduleTravel(new RouteResult.Ticket(
-                            routeResult, 
-                            classType, 
-                            latestDeparture, 
+                            routeResult,
+                            classType,
+                            latestDeparture,
                             routeResult.computeArrivalDate(latestDeparture)
                     ));
                     ticketPopOver.hide();
@@ -2829,9 +2981,10 @@ public class GeographicView extends ChildInitializable {
     }
 
     private class TravelAnimationPlayer {
-        
+
         static final double SPEED_MUL = 11520;
 
+        private final RouteResult.Ticket ticket;
         private final RouteResult routeResult;
         private final Calendar departureDate;
         private double curSegmentTravelledDt;
@@ -2840,12 +2993,14 @@ public class GeographicView extends ChildInitializable {
 
         private long lastFrameTime;
         private double minutesSpent;
-        
+
         private final NavigableMap<Double, Calendar> dates = new TreeMap<>();  // 时间和date
         private final NavigableMap<Double, Segment> routeSegments = new TreeMap<>();
 
-        TravelAnimationPlayer(RouteResult routeResult, Calendar departureDate, double speed) {
+        TravelAnimationPlayer(RouteResult.Ticket ticket,
+                              RouteResult routeResult, Calendar departureDate, double speed) {
             this.routeResult = routeResult;
+            this.ticket = ticket;
             this.departureDate = departureDate;
             this.speed = speed;
 
@@ -2853,10 +3008,10 @@ public class GeographicView extends ChildInitializable {
             Shape dot = new Circle(5);
             dot.setFill(Color.RED);
             movingGraphics.getChildren().add(dot);
-            
+
             computeDates();
         }
-        
+
         private void computeDates() {
             double totalMinutes = routeResult.getTotalTimeMinutes();
             double remMinutes = (1440 - totalMinutes % 1440) % 1440;
@@ -2870,7 +3025,7 @@ public class GeographicView extends ChildInitializable {
                 dates.put(mins - departureMinutes, cal);
                 daysCount++;
             }
-            
+
             double minutes = 0;
             List<RouteResult.RouteStep> steps = routeResult.getSteps();
             for (int i = 0; i < steps.size(); i++) {
@@ -2879,7 +3034,7 @@ public class GeographicView extends ChildInitializable {
                     routeSegments.put(minutes, new Segment(Status.TRANSITING, step));
                     minutes += step.getFromCityTransitTime();
                 }
-                
+
                 routeSegments.put(minutes, new Segment(Status.MOVING, step));
                 minutes += step.route().getTimeMinutes();
             }
@@ -2903,7 +3058,7 @@ public class GeographicView extends ChildInitializable {
             Segment currentSegment = entry.getValue();
             double frameMinutes = frameTime * speed * SPEED_MUL / 60000;
             minutesSpent += frameMinutes;
-            
+
             if (currentSegment.status() == Status.MOVING) {
                 double frameKm = currentSegment.step().route().averageSpeedKmh() * frameMinutes / 60;
                 curSegmentTravelledDt += frameKm;
@@ -2915,11 +3070,11 @@ public class GeographicView extends ChildInitializable {
             } else {
                 curSegmentTravelledDt = 0;
             }
-            
+
             lastFrameTime = curTime;
             return true;
         }
-        
+
         Calendar getDate() {
             return dates.floorEntry(minutesSpent).getValue();
         }
@@ -2936,12 +3091,12 @@ public class GeographicView extends ChildInitializable {
                     progress
             );
         }
-        
+
         private enum Status {
             MOVING,
             TRANSITING
         }
-        
+
         private record Segment(Status status, RouteResult.RouteStep step) {
             @Override
             public @NotNull String toString() {

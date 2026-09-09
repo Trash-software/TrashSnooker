@@ -91,6 +91,23 @@ public abstract class Invoice {
                     json.getString("item"),
                     json.getInt("moneyCost")
             );
+            case "houseRent" -> new HouseRent(
+                    realTimestamp,
+                    inGameDate,
+                    moneyBefore,
+                    moneyAfter,
+                    json.getString("item"), 
+                    json.getInt("moneyCost")
+            );
+            case "sell" -> new Sell(
+                    realTimestamp,
+                    inGameDate,
+                    moneyBefore,
+                    moneyAfter,
+                    json.getString("itemType"),
+                    json.getString("item"),
+                    json.getInt("moneyEarn")
+            );
             case "upgrade" -> new Upgrade(
                     realTimestamp,
                     inGameDate,
@@ -317,16 +334,26 @@ public abstract class Invoice {
             return cs.getName();
         }
     }
+    
+    public static class Sell extends Earn {
 
-//    public static class EarnSubItem {
-//        protected final int raw;
-//        protected final int actual;
-//
-//        EarnSubItem(int raw, int actual) {
-//            this.raw = raw;
-//            this.actual = actual;
-//        }
-//    }
+        protected final String item;
+        protected final String itemType;
+
+        protected Sell(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter, 
+                       String itemType, String item, int moneyEarn) {
+            super("sell", realTimestamp, inGameDate, moneyBefore, moneyAfter, moneyEarn);
+            
+            this.itemType = itemType;
+            this.item = item;
+        }
+
+        @Override
+        protected void fillJson2(JSONObject json) {
+            json.put("item", item);
+            json.put("itemType", itemType);
+        }
+    }
 
     public static class Purchase extends Cost {
 
@@ -370,6 +397,23 @@ public abstract class Invoice {
                     return  "";
                 }
             }
+        }
+    }
+    
+    public static class HouseRent extends Cost {
+        
+        final String item;
+
+        protected HouseRent(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter, String item, 
+                            int moneyCost) {
+            super("houseRent", realTimestamp, inGameDate, moneyBefore, moneyAfter, moneyCost);
+            
+            this.item = item;
+        }
+
+        @Override
+        protected void fillJson2(JSONObject json) {
+            json.put("item", item);
         }
     }
 

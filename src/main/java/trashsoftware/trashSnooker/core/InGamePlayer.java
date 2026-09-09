@@ -161,12 +161,12 @@ public class InGamePlayer {
 
     public double getPsyMul(GamePlayStage gamePlayStage, double frameImportance) {
         double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
-        double frameBasePsy = 1.0 - frameImportance * psyWeakness * 0.5;
+        double frameBasePsy = 1.0 - frameImportance * psyWeakness * 0.4;
         double psyMul = switch (gamePlayStage) {
-            case THIS_BALL_WIN -> frameBasePsy - psyWeakness;
-            case NEXT_BALL_WIN -> frameBasePsy - psyWeakness * 0.75;
-            case OTHER_KEY_BALL -> frameBasePsy - psyWeakness * 0.6;
-            case ENHANCE_WIN -> frameBasePsy - psyWeakness * 0.5;
+            case THIS_BALL_WIN -> frameBasePsy - psyWeakness * 0.95;
+            case NEXT_BALL_WIN -> frameBasePsy - psyWeakness * 0.7;
+            case OTHER_KEY_BALL -> frameBasePsy - psyWeakness * 0.55;
+            case ENHANCE_WIN -> frameBasePsy - psyWeakness * 0.4;
             case BREAK -> frameBasePsy * 5.0;
             case null, default -> frameBasePsy;
         };
@@ -189,10 +189,10 @@ public class InGamePlayer {
         return switch (playStage) {
             case BREAK -> 0.5;
             case NORMAL -> 1.0;
-            case ENHANCE_WIN -> 1.8;
-            case OTHER_KEY_BALL -> 2.0;
-            case NEXT_BALL_WIN -> 2.5;
-            case THIS_BALL_WIN -> 3.5;
+            case ENHANCE_WIN -> 1.6;
+            case OTHER_KEY_BALL -> 1.8;
+            case NEXT_BALL_WIN -> 2.2;
+            case THIS_BALL_WIN -> 3.0;
             case WON_BUT_HAS_TARGET -> 0.25;
             case NO_PRESSURE -> 0.1;
         };

@@ -195,20 +195,29 @@ public class InventoryManager {
     public void addResidence(Residence residence) {
         residences.add(residence);
     }
+    
+    public void removeResidence(Residence residence) {
+        boolean success = residences.remove(residence);
+        if (!success) {
+            EventLogger.error("Cannot remove residence " + residence.getId());
+        }
+    }
 
     public List<Residence> getResidences() {
         return residences;
     }
     
-    public Residence getResidenceAt(City city) {
+    public List<Residence> getResidencesAt(City city) {
+        List<Residence> cityResidences = new ArrayList<>();
         for (Residence residence : residences) {
-            if (residence.getCity().equals(city)) return residence;
+            if (residence.getCity().equals(city)) cityResidences.add(residence);
         }
-        return null;
+        return cityResidences;
     }
     
     public boolean hasResidenceIn(City city) {
-        return getResidenceAt(city) != null;
+        List<Residence> res = getResidencesAt(city);
+        return res != null && !res.isEmpty();
     }
 
     public void installTip(CueTip cueTip, Cue cue) {

@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.career;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,10 +14,7 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeReward;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.challenge.RewardCondition;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
-import trashsoftware.trashSnooker.core.career.transporation.City;
-import trashsoftware.trashSnooker.core.career.transporation.Country;
-import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
-import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
+import trashsoftware.trashSnooker.core.career.transporation.*;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
@@ -44,7 +42,7 @@ public class HumanCareer extends Career {
     private City currentLocation;
     private City spawnLocation;
 
-    HumanCareer(PlayerPerson playerPerson, 
+    HumanCareer(PlayerPerson playerPerson,
                 CareerManager careerManager) {
         super(playerPerson, true, careerManager);
 
@@ -142,9 +140,9 @@ public class HumanCareer extends Career {
             spawnLocation = ChampionshipLocation.getDefaultSpawn();
         }
         travelling = jsonObject.optBoolean("travelling", false);
-        
+
         if (!travelling && finance.temporalRecord == null) {
-            endTravelling();
+            endTravelling(null);
         }
     }
 
@@ -173,7 +171,7 @@ public class HumanCareer extends Career {
             }
         }
         out.put("levelAwards", levelAwdObj);
-        
+
         out.put("currentLocation", currentLocation == null ? JSONObject.NULL : currentLocation.getId());
         out.put("spawnLocation", spawnLocation.getId());
         out.put("travelling", travelling);
@@ -221,7 +219,7 @@ public class HumanCareer extends Career {
     public City getCurrentLocation() {
         return currentLocation;
     }
-    
+
     public void validateLocation() {
         if (currentLocation == null) {
             Championship inProgress = careerManager.getChampionshipInProgress();
@@ -241,7 +239,7 @@ public class HumanCareer extends Career {
         );
 
         int moneyBefore = finance.money;
-        
+
         Map<String, Invoice.TaxedIncome> challengeEarnItems = new TreeMap<>();
 
         Map<RewardCondition, ChallengeReward> newFulfills = history.newComplete(challengeSet, clearance, score);
@@ -282,11 +280,11 @@ public class HumanCareer extends Career {
     public ChallengeHistory getChallengeHistory(String challengeId) {
         return completedChallenges == null ? null : completedChallenges.get(challengeId);
     }
-    
+
     public void beginTemporalFeeRecord(Calendar startDate) {
         finance.temporalRecord = new TemporalRecord((Calendar) startDate.clone(), finance.money);
     }
-    
+
     public void addTemporalFee(Map<String, Integer> items) {
         for (var entry : items.entrySet()) {
             Integer cur = finance.temporalRecord.temporalFees.computeIfAbsent(entry.getKey(), _ -> 0);
@@ -295,7 +293,7 @@ public class HumanCareer extends Career {
             finance.money -= entry.getValue();
         }
     }
-    
+
     public void recordTemporalFees() {
         Invoice invoice = new Invoice.CumulativeFees(
                 new Date(),
@@ -309,22 +307,41 @@ public class HumanCareer extends Career {
 
         checkScoreAchievements();
         saveFinance();
-        
+
         finance.temporalRecord = null;
     }
 
     public void startTravelling() {
         this.travelling = true;
-        
+
         // 说明离开了当前的位置
         recordTemporalFees();
     }
 
-    public void endTravelling() {
+    public void endTravelling(@Nullable RouteResult.Ticket ticket) {
         this.travelling = false;
-        
+
         // 到达一个地方，开始住宾馆/付生活费
         beginTemporalFeeRecord(careerManager.getTimestamp());
+        
+        if (ticket != null) {
+            AchManager achManager = AchManager.getInstance();
+            achManager.addAchievement(Achievement.TRAVEL, null);
+            
+            if (ticket.seatClass() == RouteResult.SeatClass.BUSINESS) {
+                achManager.addAchievement(Achievement.BUSINESS_TRAVEL, null);
+            } else if (ticket.seatClass() == RouteResult.SeatClass.FIRST) {
+                achManager.addAchievement(Achievement.FIRST_CLASS_TRAVEL, null);
+            }
+            
+            if (ticket.route().hasFlight()) {
+                achManager.addAchievement(Achievement.AIR_TRAVEL, null);
+            }
+
+            if (ticket.route().hasTrain()) {
+                achManager.addAchievement(Achievement.TRAIN_TRAVEL, null);
+            }
+        }
     }
 
     public boolean isTravelling() {
@@ -336,17 +353,17 @@ public class HumanCareer extends Career {
         finance.money -= ticket.route().getTotalPriceByClass(ticket.seatClass());
 
         List<Invoice.TicketSegment> ticketSegments = new ArrayList<>();
-        
+
         for (RouteResult.RouteStep step : ticket.route().getSteps()) {
             Invoice.TicketSegment ts = new Invoice.TicketSegment(
                     step.route().getId(),
-                    step.fromCity().getId(), 
+                    step.fromCity().getId(),
                     ticket.seatClass(),
                     step.route().getPriceByClass(ticket.seatClass())
             );
             ticketSegments.add(ts);
         }
-        
+
         Invoice invoice = new Invoice.TravelTicket(
                 new Date(),
                 getCareerManager().getTimestamp(),
@@ -392,6 +409,7 @@ public class HumanCareer extends Career {
 
         finance.invoices.add(invoice);
         saveFinance();
+        getInventory().saveToDisk();
     }
 
     public void buyCue(String cueInstanceId, int price) {
@@ -409,6 +427,102 @@ public class HumanCareer extends Career {
         );
 
         finance.invoices.add(invoice);
+        saveFinance();
+        getInventory().saveToDisk();
+    }
+
+    public boolean canBuyHouse(City city, double area) {
+        return finance.money >= city.getHousePriceM2() * area;
+    }
+
+    public void buyHouse(Residence residence) {
+        int moneyBefore = finance.money;
+        int price = residence.getTotalPrice();
+        finance.money -= price;
+
+        getInventory().addResidence(residence);
+
+        Invoice.Purchase invoice = new Invoice.Purchase(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                "residence",
+                residence.getId(),
+                price
+        );
+
+        finance.invoices.add(invoice);
+        saveFinance();
+        getInventory().saveToDisk();
+    }
+
+    public void startRentHouse(Residence residence) {
+        int moneyBefore = finance.money;
+        int price = residence.getCity().getHouseMonthlyRentalPrice(residence.getArea());
+        finance.money -= price;
+
+        getInventory().addResidence(residence);
+
+        Invoice.HouseRent invoice = new Invoice.HouseRent(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                residence.getId(),
+                price
+        );
+
+        finance.invoices.add(invoice);
+        saveFinance();
+        getInventory().saveToDisk();
+    }
+
+    public void sellHouse(Residence residence) {
+        int moneyBefore = finance.money;
+        int price = residence.getTotalPrice();
+        // 没有税
+        finance.money += price;
+
+        getInventory().removeResidence(residence);
+
+        Invoice.Sell invoice = new Invoice.Sell(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                "residence",
+                residence.getId(),
+                price
+        );
+
+        finance.invoices.add(invoice);
+        saveFinance();
+        getInventory().saveToDisk();
+    }
+
+    public void cancelRentHouse(Residence residence) {
+        getInventory().removeResidence(residence);
+        getInventory().saveToDisk();
+    }
+    
+    public void payHouseRents() {
+        for (Residence residence : getInventory().getResidences()) {
+            if (residence.getOwnership() == Residence.Ownership.RENT) {
+                int moneyBefore = finance.money;
+                int price = residence.getCity().getHouseMonthlyRentalPrice(residence.getArea());
+                finance.money -= price;
+                Invoice.HouseRent invoice = new Invoice.HouseRent(
+                        new Date(),
+                        getCareerManager().getTimestamp(),
+                        moneyBefore,
+                        finance.money,
+                        residence.getId(),
+                        price
+                );
+                finance.invoices.add(invoice);
+            }
+        }
         saveFinance();
     }
 
@@ -432,21 +546,11 @@ public class HumanCareer extends Career {
             int raw = score.data.getAwardByRank(rank);
             earnMoney(raw, score.data.location.city().getCountry());
             int real = finance.money - before;
-
-//            JSONObject subItem = new JSONObject();
-//            subItem.put("raw", raw);
-//            subItem.put("actual", real);
-//            items.put(rank.name(), subItem);
-
-//            Invoice.EarnSubItem subItem = new Invoice.EarnSubItem(raw, real);
+            
             items.put(rank.name(), new Invoice.TaxedIncome(raw, real));
 
             moneyEarned += real;
         }
-
-//        invoice.put("items", items);
-//        invoice.put("moneyBefore", moneyBefore);
-//        invoice.put("moneyAfter", finance.money);
 
         Invoice.ChampionshipEarn invoice = new Invoice.ChampionshipEarn(
                 new Date(),
@@ -572,23 +676,6 @@ public class HumanCareer extends Career {
         finance.availPerks -= upgradeRec.perkUsed();
         finance.remFreePerks -= freePerksUsed;
 
-//        JSONObject record = new JSONObject();
-//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-//        record.put("timestamp", timestamp);
-//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-//        record.put("inGameDate", inGameDate);
-//        record.put("type", "upgrade");
-//        record.put("perkUsed", upgradeRec.perkUsed());
-//        record.put("freePerkUsed", freePerksUsed);
-//        record.put("moneyBefore", moneyBefore);
-//        record.put("moneyCost", upgradeRec.moneyCost());
-//        record.put("moneyAfter", finance.money);
-//        JSONObject skillUpgrade = new JSONObject();
-//        for (Map.Entry<String, double[]> entry : upgradeRec.abilityUpdated().entrySet()) {
-//            skillUpgrade.put(entry.getKey(), JsonUtil.arrayToJson(entry.getValue()));
-//        }
-//        record.put("ability", skillUpgrade);
-
         Invoice.Upgrade record = new Invoice.Upgrade(
                 new Date(),
                 getCareerManager().getTimestamp(),
@@ -621,19 +708,6 @@ public class HumanCareer extends Career {
         int moneyBefore = finance.money;
         finance.money += money;
 
-//        JSONObject invoice = new JSONObject();
-//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-//        invoice.put("timestamp", timestamp);
-//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-//        invoice.put("inGameDate", inGameDate);
-//        invoice.put("type", "achievementAward");
-//        invoice.put("item", achievement.name());
-//        invoice.put("level", levelRec);
-//        
-//        invoice.put("moneyBefore", moneyBefore);
-//        invoice.put("moneyEarn", money);
-//        invoice.put("moneyAfter", finance.money);
-
         Invoice.AchievementAward invoice = new Invoice.AchievementAward(
                 new Date(),
                 getCareerManager().getTimestamp(),
@@ -663,76 +737,6 @@ public class HumanCareer extends Career {
         return (int) (Math.round(lifeFee / 10) * 10);  // 整10
     }
 
-//    /**
-//     * 返回开始下一个赛事时，应缴的强制费用
-//     */
-//    public Map<String, Integer> calculateFixedFees(ChampionshipData.WithYear nextChampData) {
-//        ChampionshipData.WithYear last = careerManager.getChampDataManager().getPreviousChampionship(
-//                nextChampData.year, nextChampData.data.month, nextChampData.data.day
-//        );
-//
-//        Calendar lastTime = last.toCalendar();
-//        if (lastTime.before(careerManager.getBeginTimestamp())) return Map.of();
-//
-//        Calendar nextTime = nextChampData.toCalendar();
-//        int diffDays = (int) Duration.between(lastTime.toInstant(), nextTime.toInstant()).toDays();
-//
-//        Map<String, Integer> res = new HashMap<>();
-//
-//        int lifeFee = diffDays * calculateDailyLifeFee();
-//        System.out.println("Life fee: " + diffDays + " * " + calculateDailyLifeFee());
-//        res.put("lifeFee", lifeFee);
-//        if (finance.money < 0) {
-//            double owe = -finance.money;
-//            int loanInterest = (int) Math.round(diffDays / 365.0 * owe * YEAR_IZE_INTEREST_RATE);
-//            res.put("oweInterest", loanInterest);
-//        }
-//
-//        return res;
-//    }
-//
-//    /**
-//     * 收取一些固定费用，如利息
-//     * 不包含参赛费用
-//     */
-//    public void updateMoneyChampStart(ChampionshipData.WithYear nextChampData) {
-//        Map<String, Integer> feesMap = calculateFixedFees(nextChampData);
-//        int fees = feesMap.values().stream().reduce(0, Integer::sum);
-//
-//        if (fees > 0) {
-//            int moneyBefore = finance.money;
-//            finance.money -= fees;
-//
-////            JSONObject invoice = new JSONObject();
-////            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-////            invoice.put("timestamp", timestamp);
-////            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-////            invoice.put("inGameDate", inGameDate);
-////            invoice.put("type", "fees");
-////            invoice.put("moneyBefore", moneyBefore);
-////            JSONArray subArray = new JSONArray();
-////            for (Map.Entry<String, Integer> feeItem : feesMap.entrySet()) {
-////                JSONObject sub = new JSONObject();
-////                sub.put("item", feeItem.getKey());
-////                sub.put("moneyCost", feeItem.getValue());
-////                subArray.put(sub);
-////            }
-////            invoice.put("items", subArray);
-////            invoice.put("moneyAfter", finance.money);
-//            Invoice.Fees invoice = new Invoice.Fees(
-//                    new Date(),
-//                    getCareerManager().getTimestamp(),
-//                    moneyBefore,
-//                    finance.money,
-//                    feesMap
-//            );
-//
-//            finance.invoices.add(invoice);
-//
-//            saveFinance();
-//        }
-//    }
-
     public int dailyOweInterest() {
         if (finance.money < 0) {
             double owe = -finance.money;
@@ -758,18 +762,7 @@ public class HumanCareer extends Career {
 
             int moneyBefore = finance.money;
             finance.money += award;
-
-//            JSONObject invoice = new JSONObject();
-//            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-//            invoice.put("timestamp", timestamp);
-//            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-//            invoice.put("inGameDate", inGameDate);
-//            invoice.put("type", "invitation");
-//            invoice.put("match", championship.uniqueId());
-//            invoice.put("item", humanSeedNum);
-//            invoice.put("moneyBefore", moneyBefore);
-//            invoice.put("moneyEarn", award);
-//            invoice.put("moneyAfter", finance.money);
+            
             Invoice.Invitation invoice = new Invoice.Invitation(
                     new Date(),
                     getCareerManager().getTimestamp(),
@@ -920,6 +913,7 @@ public class HumanCareer extends Career {
         }
 
         int cumPurchase = 0;
+        int cumHousePurchase = 0;
         int cumExpenditure = 0;
         for (Invoice invoice : finance.invoices) {
             int moneyBefore = invoice.moneyBefore;
@@ -929,11 +923,22 @@ public class HumanCareer extends Career {
                 cumExpenditure -= moneyChange;
             }
 
-            if ("purchase".equals(invoice.type)) {
-                cumPurchase += 1;
+            if (invoice instanceof Invoice.Purchase pur) {
+                if ("residence".equals(pur.itemType)) {
+                    cumHousePurchase += 1;
+                } else {
+                    cumPurchase += 1;
+                }
+            } else if (invoice instanceof Invoice.Sell sell) {
+                if ("residence".equals(sell.itemType)) {
+                    achManager.addAchievement(Achievement.SELL_HOUSE, null);
+                }
+            } else if (invoice instanceof Invoice.HouseRent) {
+                achManager.addAchievement(Achievement.RENT_HOUSE, null);
             }
         }
         achManager.addAchievement(Achievement.BUY_ITEMS, cumPurchase, null);
+        achManager.addAchievement(Achievement.BUY_HOUSES, cumHousePurchase, null);
         achManager.addAchievement(Achievement.EXPENDITURE, cumExpenditure, null);
     }
 
@@ -948,7 +953,7 @@ public class HumanCareer extends Career {
         private int expInThisLevel;
         private int money;
         private int cumulativeAwards;  // 历史上的税前总奖金
-        
+
         private TemporalRecord temporalRecord;
 
         FinancialManager(CareerSave save) {
@@ -1014,7 +1019,7 @@ public class HumanCareer extends Career {
                 invoiceArr.put(inv.toJson());
             }
             out.put("invoices", invoiceArr);
-            
+
             out.put("temporalRecord", temporalRecord == null ? JSONObject.NULL : temporalRecord.toJson());
 
             json.put("financial", out);
@@ -1031,17 +1036,17 @@ public class HumanCareer extends Career {
             DataLoader.saveToDisk(json, jsonFile.getAbsolutePath());
         }
     }
-    
+
     static class TemporalRecord {
         final Map<String, Integer> temporalFees = new TreeMap<>();
         final Calendar currentTemporalFeesStart;
         final int moneyBefore;
-        
+
         TemporalRecord(Calendar currentTemporalFeesStart, int moneyBefore) {
             this.currentTemporalFeesStart = currentTemporalFeesStart;
             this.moneyBefore = moneyBefore;
         }
-        
+
         JSONObject toJson() {
             JSONObject json = new JSONObject();
             json.put("items", JsonUtil.mapToJson(temporalFees));
@@ -1049,7 +1054,7 @@ public class HumanCareer extends Career {
             json.put("moneyBefore", moneyBefore);
             return json;
         }
-        
+
         static TemporalRecord fromJson(JSONObject jsonObject) {
             if (jsonObject == null) return null;
             TemporalRecord tr = new TemporalRecord(

@@ -145,6 +145,20 @@ public class RouteResult {
         return true;
     }
 
+    public boolean hasFlight() {
+        for (RouteStep step : steps) {
+            if (step.route.isFlight()) return true;
+        }
+        return false;
+    }
+
+    public boolean hasTrain() {
+        for (RouteStep step : steps) {
+            if (!step.route.isFlight()) return true;
+        }
+        return false;
+    }
+
     public boolean isEmpty() {
         return steps.isEmpty();
     }

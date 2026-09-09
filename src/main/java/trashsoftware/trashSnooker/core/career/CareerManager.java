@@ -1060,7 +1060,7 @@ public class CareerManager {
     }
     
     private void payMonthlyFees() {
-        
+        humanPlayerCareer.payHouseRents();
     }
 
     public Calendar getBeginTimestamp() {
@@ -1099,11 +1099,10 @@ public class CareerManager {
     }
     
     public int getDailyHotelFee(City city) {
-        Residence residence = inventoryManager.getResidenceAt(city);
-        if (residence == null) {
-            return city.hotelPricePerDay();
-        } else {
+        if (inventoryManager.hasResidenceIn(city)) {
             return 0;
+        } else {
+            return city.hotelPricePerDay();
         }
     }
     

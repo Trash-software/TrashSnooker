@@ -1,15 +1,12 @@
 {
   "financial": {
     "temporalRecord": {
-      "currentTemporalFeesStart": "2025/2/3",
-      "moneyBefore": 57896,
-      "items": {
-        "living": 460,
-        "hotel": 1350
-      }
+      "currentTemporalFeesStart": "2025/2/27",
+      "moneyBefore": 51875,
+      "items": {}
     },
     "remFreePerks": 0,
-    "money": 56086,
+    "money": 51375,
     "invoices": [
       {
         "inGameDate": "2024/9/25",
@@ -255,6 +252,67 @@
           "payedPrice": 720
         }],
         "timestamp": "2026-09-08 00:04:33"
+      },
+      {
+        "item": "residence-Catgivepower:custom_player_181-190",
+        "inGameDate": "2025/2/27",
+        "moneyBefore": 53371,
+        "moneyCost": 440,
+        "moneyAfter": 52931,
+        "type": "houseRent",
+        "timestamp": "2026-09-10 06:54:33"
+      },
+      {
+        "inGameDate": "2025/2/27",
+        "durationBegin": "2025/2/25",
+        "moneyBefore": 53914,
+        "moneyAfter": 52750,
+        "type": "cumulativeFees",
+        "items": {
+          "living": 184,
+          "hotel": 540
+        },
+        "timestamp": "2026-09-10 06:55:16"
+      },
+      {
+        "dateOnTicket": "2025/2/26",
+        "inGameDate": "2025/2/27",
+        "moneyBefore": 52750,
+        "moneyAfter": 51875,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "SVO-PEK",
+            "departureCityId": "Beijing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 430
+          },
+          {
+            "routeId": "SVO-CGP",
+            "departureCityId": "Moscow",
+            "seatClass": "ECONOMY",
+            "payedPrice": 360
+          },
+          {
+            "routeId": "DGP-CGP",
+            "departureCityId": "Catgivepower",
+            "seatClass": "ECONOMY",
+            "payedPrice": 85
+          }
+        ],
+        "timestamp": "2026-09-10 06:55:16"
+      },
+      {
+        "inGameDate": "2025/2/27",
+        "moneyBefore": 51875,
+        "match": "custom_player_181+2025+dog_give_power_open",
+        "moneyAfter": 51375,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 500
+        }],
+        "timestamp": "2026-09-10 06:55:18"
       }
     ],
     "level": 5,
@@ -263,5 +321,5 @@
     "totalPerks": 10,
     "totalExp": 505
   },
-  "checksum": "87EBD456A12CDFA704F3F77438B85FBF"
+  "checksum": "213DEEC71F992A78A18C27FCCCE686B5"
 }

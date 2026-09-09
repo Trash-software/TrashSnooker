@@ -2,19 +2,19 @@
   "p1": {
     "playerNumber": 1,
     "gameRule": "SNOOKER",
-    "handFeelEffort": 1,
-    "psyStatus": 1,
-    "person": "custom_player_5",
-    "playerType": "PLAYER",
+    "handFeelEffort": 1.25,
+    "psyStatus": 0.95,
+    "person": "Awu",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
   "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
-    "handFeelEffort": 0.5,
+    "handFeelEffort": 0.83,
     "psyStatus": 0.95,
-    "person": "Wang Sinuo",
+    "person": "Wang ming",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
@@ -33,7 +33,7 @@
   },
   "winRecords": {"1": 1},
   "p2Wins": 0,
-  "startTime": 1788634979225,
+  "startTime": 1788822347234,
   "p1BreakLoseChance": 0,
   "totalFrames": 1,
   "cloth": {
