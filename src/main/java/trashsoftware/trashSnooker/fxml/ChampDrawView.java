@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class ChampDrawView extends ChildInitializable {
+public class ChampDrawView extends ChildInitializable implements GameViewStarter {
 
     private static final Color WINNER_COLOR = Color.BLACK;
     private static final Color LOSER_COLOR = Color.GRAY;
@@ -127,6 +127,12 @@ public class ChampDrawView extends ChildInitializable {
 //    public Stage getStage() {
 //        return selfStage;
 //    }
+
+
+    @Override
+    public void processGameViewHide() {
+        // do nothing
+    }
 
     private void setupCheckbox() {
         treeShowingBox.getItems().addAll(TreeShowing.values());
@@ -573,7 +579,7 @@ public class ChampDrawView extends ChildInitializable {
             AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getAiGoodness());
 
             GameView gameView = loader.getController();
-            gameView.setupCareerMatch(stage, match);
+            gameView.setupCareerMatch(stage, match, this);
 
             stage.show();
 

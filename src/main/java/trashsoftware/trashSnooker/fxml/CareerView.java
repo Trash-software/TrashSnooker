@@ -87,13 +87,6 @@ public class CareerView extends ChildInitializable {
     Label nextChampionshipLabel, champInProgLabel, champInProgStageLabel;
     @FXML
     Label registryFeeLabel;
-    //            travelFeeLabel,
-//    otherFeeLabel1;
-    //        otherFeeLabel2;
-//            totalFeeLabel, totalFeeLabel2;
-//    @FXML
-//    HBox feesBoxChecked;
-//            feesBoxUnchecked;
     @FXML
     CheckBox joinChampBox;
     @FXML
@@ -112,8 +105,6 @@ public class CareerView extends ChildInitializable {
     VBox selectedPlayerAchBox;
     @FXML
     Label selectedPlayerAchievements, selectedPlayerGameTypesLabel;
-    //    @FXML
-//    Button skipChampBtn;
     @FXML
     Button careerRankHistoryBtn;
     @FXML
@@ -205,6 +196,8 @@ public class CareerView extends ChildInitializable {
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
         rl.setIconImage(rl.getInventoryIcon(), inventoryImage, 1.0, 1.25);
         rl.setIconImage(rl.getStoreIcon(), storeImage, 1.0, 1.25);
+        rl.setIconImage(rl.getMapIcon(), worldMapImage, 1.0, 1.25);
+        rl.setIconImage(rl.getChallengeIcon(), trainingImage, 1.0, 1.25);
         rl.setIconImage(rl.getAwardIcon(), achIconImage, 1.0, 1.25);
         rl.setIconImage(rl.getLineIcon(), lineChartImg, 1.0, 1.25);
     }
@@ -731,10 +724,6 @@ public class CareerView extends ChildInitializable {
     @FXML
     void forwardAction() {
         if (forwardTimeline == null) {
-//            forwardBtn.setText(strings.getString("calendarPause"));
-//            City city = careerManager.getHumanPlayerCareer().getCurrentLocation();
-//            final Calendar forwardBegin = (Calendar) careerManager.getTimestamp().clone();
-
             ChampionshipData.WithYear nextData = careerManager.getNextChampionshipData();
             if (Util.dateEquals(careerManager.getTimestamp(), nextData.toCalendar())) {
                 // 已经到比赛这天了
@@ -751,12 +740,6 @@ public class CareerView extends ChildInitializable {
             } else {
                 scheduledStop = nextData.toCalendar();
             }
-//            forwardEventRecord = new ForwardEventRecord(
-//                    forwardBegin, 
-//                    scheduledStop,
-//                    careerManager.getHumanPlayerCareer().getMoney(),
-//                    careerManager.getDailyHotelFee(city) + careerManager.getDailyLivingAt(city)
-//            );
             
             forwardTimeline = new Timeline(
                     new KeyFrame(Duration.seconds(0.33), _ -> {
@@ -893,6 +876,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     @Override
     public void backAction() {
+        CareerManager.getInstance().saveToDisk();
         CareerManager.closeInstance();
         CareerAchManager.closeCareerInstance();
         parent.refreshGui();
@@ -951,7 +935,7 @@ public class CareerView extends ChildInitializable {
             newStage.initStyle(StageStyle.UTILITY);
             newStage.initModality(Modality.WINDOW_MODAL);
 
-            newStage.setOnHidden(e -> refreshGui());
+            newStage.setOnHidden(_ -> refreshGui());
 
             Scene scene = App.createScene(root);
             newStage.setScene(scene);
@@ -1005,7 +989,7 @@ public class CareerView extends ChildInitializable {
         int moneyAfterBuy = curMoney - price;
         int perksUse = perkManager.getPerksSelected();
         if (perksUse > 0) {
-            if (careerManager.getInventory().hasResidenceIn(careerManager.getHumanPlayerCareer().getCurrentLocation())) {
+            if (careerManager.getInventory().hasAliveResidenceIn(careerManager.getHumanPlayerCareer().getCurrentLocation())) {
                 AlertShower.askConfirmation(
                         selfStage,
                         String.format(strings.getString("balanceAfterApplyPerk"),
@@ -1175,7 +1159,7 @@ public class CareerView extends ChildInitializable {
         double routeFee;
         // todo: 舱
         routeFee = routeResult.getTotalEconomyPrice();
-        int hotelFee = careerManager.getInventory().hasResidenceIn(data.getLocation().city()) ? 0 : data.getHotelFee();
+        int hotelFee = careerManager.getInventory().hasAliveResidenceIn(data.getLocation().city()) ? 0 : data.getHotelFee();
         // todo: 实际上要待到下一次比赛时间
         return new int[]{(int) Math.round(routeFee), hotelFee};
     }

@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class FastGameView extends ChildInitializable {
+public class FastGameView extends ChildInitializable implements GameViewStarter {
 
     @FXML
     Button resumeButton;
@@ -131,6 +131,11 @@ public class FastGameView extends ChildInitializable {
         gameRuleBox.getSelectionModel().select(0);
         tableMetricsBox.getSelectionModel().select(0);
         ballMetricsBox.getSelectionModel().select(0);
+    }
+
+    @Override
+    public void processGameViewHide() {
+        resumeButton.setDisable(!GeneralSaveManager.getInstance().hasSavedGame());
     }
 
     public void reloadPlayerList() {
@@ -642,7 +647,7 @@ public class FastGameView extends ChildInitializable {
             AiCueResult.setAiPrecisionFactor(ConfigLoader.getInstance().getDouble("fastGameAiStrength", 1.0));
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, entireGame);
+            gameView.setup(stage, entireGame, this);
             gameView.setAimingLengthFactor(ConfigLoader.getInstance().getDouble("fastGameAiming", 1.0));
 
             stage.show();

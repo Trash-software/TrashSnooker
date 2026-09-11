@@ -161,9 +161,9 @@ public class InGamePlayer {
 
     public double getPsyMul(GamePlayStage gamePlayStage, double frameImportance) {
         double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
-        double frameBasePsy = 1.0 - frameImportance * psyWeakness * 0.4;
+        double frameBasePsy = 1.0 - frameImportance * psyWeakness * 0.333;
         double psyMul = switch (gamePlayStage) {
-            case THIS_BALL_WIN -> frameBasePsy - psyWeakness * 0.95;
+            case THIS_BALL_WIN -> frameBasePsy - psyWeakness * 0.9;
             case NEXT_BALL_WIN -> frameBasePsy - psyWeakness * 0.7;
             case OTHER_KEY_BALL -> frameBasePsy - psyWeakness * 0.55;
             case ENHANCE_WIN -> frameBasePsy - psyWeakness * 0.4;
@@ -177,7 +177,7 @@ public class InGamePlayer {
     
     private double cuePsyChangeBase() {
         return Algebra.shiftRangeSafe(0, 100, 
-                0.05, 0, playerPerson.getPsyRua());
+                0.03, 0, playerPerson.getPsyRua());
     }
     
     private void regularizePsyStatus() {
@@ -219,11 +219,11 @@ public class InGamePlayer {
         if (potAttempt != null) {
             if (potAttempt.isSuccess()) {
                 double diff = 1.0 - psyStatus;
-                increase += Math.max(0.005, diff * 0.1 * (potAttempt.isDifficultShot() ? 3.0 : 1.0));
+                increase += Math.max(0.005, diff * 0.1 * (potAttempt.isDifficultShot() ? 2.5 : 1.0));
             } else {
                 double importanceFactor = stagePsyEffect(playStage);
                 importanceFactor *= (frameImportance + 1) * 0.5;
-                decrease += importanceFactor * baseChange * (potAttempt.isEasyShot() ? 3.0 : 1.0);
+                decrease += importanceFactor * baseChange * (potAttempt.isEasyShot() ? 2.5 : 1.0);
             }
         }
         psyStatus += increase;
@@ -236,7 +236,7 @@ public class InGamePlayer {
         double decrease = 0;
         if (potAttempt != null) {
             if (potAttempt.isSuccess()) {
-                decrease += (frameImportance + 1) * baseChange * 0.08 * (potAttempt.isDifficultShot() ? 3.0 : 1.0);
+                decrease += (frameImportance + 1) * baseChange * 0.08 * (potAttempt.isDifficultShot() ? 2.5 : 1.0);
             }
         }
         psyStatus -= decrease;
@@ -247,7 +247,7 @@ public class InGamePlayer {
                                           boolean won, 
                                           EntireGame entireGame,
                                           int finishedFramesIncludeThis) {
-        double baseChange = cuePsyChangeBase() * (frameImportance + 1) * 3.5;
+        double baseChange = cuePsyChangeBase() * (frameImportance + 1) * 3.0;
         if (won) {
             psyStatus += baseChange;
         } else {

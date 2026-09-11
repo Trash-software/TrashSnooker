@@ -196,28 +196,37 @@ public class InventoryManager {
         residences.add(residence);
     }
     
-    public void removeResidence(Residence residence) {
-        boolean success = residences.remove(residence);
-        if (!success) {
-            EventLogger.error("Cannot remove residence " + residence.getId());
-        }
+    public void sellResidence(Residence residence) {
+        residence.setOwnership(Residence.Ownership.SOLD);
+    }
+
+    public void cancelRentResidence(Residence residence) {
+        residence.setOwnership(Residence.Ownership.RENT_END);
     }
 
     public List<Residence> getResidences() {
         return residences;
     }
     
-    public List<Residence> getResidencesAt(City city) {
+    public List<Residence> getAliveResidenceAt(City city) {
         List<Residence> cityResidences = new ArrayList<>();
         for (Residence residence : residences) {
-            if (residence.getCity().equals(city)) cityResidences.add(residence);
+            if (residence.getCity().equals(city) && residence.getOwnership().available) 
+                cityResidences.add(residence);
         }
         return cityResidences;
     }
     
-    public boolean hasResidenceIn(City city) {
-        List<Residence> res = getResidencesAt(city);
+    public boolean hasAliveResidenceIn(City city) {
+        List<Residence> res = getAliveResidenceAt(city);
         return res != null && !res.isEmpty();
+    }
+    
+    public Residence getResidenceById(String id) {
+        for (Residence residence : residences) {
+            if (residence.getId().equals(id)) return residence;
+        }
+        return null;
     }
 
     public void installTip(CueTip cueTip, Cue cue) {

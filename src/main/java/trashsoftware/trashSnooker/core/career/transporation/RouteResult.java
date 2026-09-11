@@ -144,6 +144,22 @@ public class RouteResult {
         }
         return true;
     }
+    
+    public int countFlightSegments() {
+        int count = 0;
+        for (RouteStep step : steps) {
+            if (step.route.isFlight()) count++;
+        }
+        return count;
+    }
+
+    public int countTrainSegments() {
+        int count = 0;
+        for (RouteStep step : steps) {
+            if (!step.route.isFlight()) count++;
+        }
+        return count;
+    }
 
     public boolean hasFlight() {
         for (RouteStep step : steps) {

@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 1.0;
+    public static final double DEFAULT_AI_PRECISION = 1.2;
     public static final double AI_PRECISION_MULTIPLIER = 11500.0;
 //    public static final double DEFAULT_AI_PRECISION = 1.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
@@ -149,8 +149,8 @@ public class AiCueResult {
         double maxPrecision = 100.0;
         double mistakeFactor = 0.0;
         if (mistake > igp.getPlayerPerson().getAiPlayStyle().stability) {
-            maxPrecision = 90.0;
-            mistakeFactor = 1.0;
+            maxPrecision = person.getPrecisionPercentage() * 0.9;
+            mistakeFactor = random.nextBoolean() ? -0.6 : 0.6;
             System.out.println("Mistake");
         }
 
@@ -166,42 +166,52 @@ public class AiCueResult {
         solvePrecision *= totalPsyFactor;
 
         System.out.println("Final psy mul: " + totalPsyFactor + ", precision (atk): " + attackPrecision);
-        
-        double[] aimedPos = choice.getAimedPos();
-        double whiteAimDt = Math.hypot(aimedPos[0] - whiteOrigPos[0], aimedPos[1] - whiteOrigPos[1]) - gameValues.ball.ballDiameter;
-        whiteAimDt = Math.max(whiteAimDt, gameValues.ball.ballRadius);  // 安全起见
 
-        // 在预想的点处的线距离标准差
-        double aimPointSdMm = switch (cueType) {
-            case ATTACK -> {
-                if (choice instanceof FinalChoice.IntegratedAttackChoice iac) {
-                    double fixedOffset = (105 - attackPrecision) * 0.125 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
-                    double normalOffset = (105 - attackPrecision) * 0.125;
-                    double personAngle = person.getAnglePrecision();
-                    if (personAngle != 1.0) {
-                        double angle = iac.attackParams.getAttackChoice().getAngleRad();
-                        double angleFactor = Algebra.powerTransferOfAngle(angle);  // 直球是1，极限薄球是0
-                        double div = Algebra.shiftRangeSafe(1.0, 0.0,
-                                1.0, personAngle, angleFactor);
-                        normalOffset /= div;
+        double aimPointSdMm, whiteAimDt;
+        if (choice == null) {
+            // random angry cue 可能进这个分支
+            aimPointSdMm = 25;
+            whiteAimDt = 1000;
+        } else {
+            double[] aimedPos = choice.getAimedPos();
+            whiteAimDt = Math.hypot(aimedPos[0] - whiteOrigPos[0], aimedPos[1] - whiteOrigPos[1]) - gameValues.ball.ballDiameter;
+            whiteAimDt = Math.max(whiteAimDt, gameValues.ball.ballRadius);  // 安全起见
+
+            // 在预想的点处的线距离标准差
+            aimPointSdMm = switch (cueType) {
+                case ATTACK -> {
+                    if (choice instanceof FinalChoice.IntegratedAttackChoice iac) {
+                        double fixedOffset = (105 - attackPrecision) * 0.125 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
+                        double normalOffset = (105 - attackPrecision) * 0.125;
+                        double personAngle = person.getAnglePrecision();
+                        if (personAngle != 1.0) {
+                            double angle = iac.attackParams.getAttackChoice().getAngleRad();
+                            double angleFactor = Algebra.powerTransferOfAngle(angle);  // 直球是1，极限薄球是0
+                            double div = Algebra.shiftRangeSafe(1.0, 0.0,
+                                    1.0, personAngle, angleFactor);
+                            normalOffset /= div;
+                        }
+                        yield normalOffset + fixedOffset;
+                    } else {
+                        System.err.println("Choice is " + choice + " when direct attacking");
+                        yield 25;
                     }
-                    yield normalOffset + fixedOffset;
-                } else {
-                    System.err.println("Choice is " + choice + " when direct attacking");
-                    yield 25;
                 }
-            }
-            case DOUBLE_POT -> {
-                double fixedOffset = (105 - attackPrecision) * 0.125 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
-                yield fixedOffset + (105 - doublePrecision) * 0.125;
-            }
-            case DEFENSE -> (105 - defensePrecision) * 0.25;  // 防守为0的可能会歪一整颗球的半径
-            case SOLVE -> (105 - solvePrecision) * 0.25;
-            case BREAK -> (105 - Math.max(attackPrecision, defensePrecision)) * 0.25;
-            case PASS_POT -> 25;  // 
-        };
+                case DOUBLE_POT -> {
+                    double fixedOffset = (105 - attackPrecision) * 0.125 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
+                    yield fixedOffset + (105 - doublePrecision) * 0.125;
+                }
+                case DEFENSE -> (105 - defensePrecision) * 0.25;  // 防守为0的可能会歪一整颗球的半径
+                case SOLVE -> (105 - solvePrecision) * 0.25;
+                case BREAK -> (105 - Math.max(attackPrecision, defensePrecision)) * 0.25;
+                case PASS_POT -> 25;  // 没做
+            };
+        }
         
-        aimPointSdMm *= 0.9;  // 一个统一修正值
+        // 手对瞄准还是有影响的
+        aimPointSdMm /= person.handBody.getHandAimingSkill(getCuePlayerHand().playerHand);
+        
+//        aimPointSdMm *= 0.8333;  // 一个莫名其妙的统一修正值
         // 距离和瞄准难度不是线性关系，远的没那么难瞄，但距离远了确实也看不那么清，所以这里来个pow折中一下
         // 次数越大，长台越难
         double dtMul = Math.pow(whiteAimDt / Values.MAX_DISTANCE / 2.2, 0.5);

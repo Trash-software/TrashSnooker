@@ -5,20 +5,20 @@
       "playerNumber": 1,
       "gameRule": "SNOOKER",
       "handFeelEffort": 1.0752527693026144,
-      "psyStatus": 0.9915000000000002,
+      "psyStatus": 1,
       "person": "Neil Robertson",
       "playerType": "COMPUTER"
     },
-    "p1Wins": 1,
+    "p1Wins": 2,
     "p2": {
       "playerNumber": 2,
       "gameRule": "SNOOKER",
       "handFeelEffort": 1,
-      "psyStatus": 0.98005,
+      "psyStatus": 0.9282500000000015,
       "person": "custom_DA1B9E98710BC5F5",
       "playerType": "PLAYER"
     },
-    "codeGameCounter": 1,
+    "codeGameCounter": 2,
     "p2BreakLoseChance": 0,
     "gameValues": {
       "ball": "SNOOKER_BALL",
@@ -27,7 +27,10 @@
       "devMode": false,
       "tablePreset": "starSnookerTableGood"
     },
-    "winRecords": {"1": 1},
+    "winRecords": {
+      "1": 1,
+      "2": 1
+    },
     "p2Wins": 0,
     "startTime": 1787735420439,
     "p1BreakLoseChance": 0,
@@ -37,7 +40,7 @@
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": true
+    "p1Breaks": false
   },
   "p2": "custom_DA1B9E98710BC5F5",
   "stage": "SEMI_FINAL"

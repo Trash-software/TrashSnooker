@@ -9,6 +9,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -29,6 +30,7 @@ import trashsoftware.trashSnooker.core.career.transporation.*;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
@@ -58,7 +60,7 @@ public class GeographicView extends ChildInitializable {
     @FXML
     Pane routeLayer, cityLayer;
     @FXML
-    CheckBox internationalFlightsBox, domesticFlightsBox, trainsBox;
+    CheckBox internationalFlightsBox, domesticFlightsBox, trainsBox, residencesBox;
     @FXML
     ComboBox<City> departureBox, destinationBox;
     @FXML
@@ -139,6 +141,11 @@ public class GeographicView extends ChildInitializable {
         this.careerView = careerView;
         manager = TransportationManager.getInstance();
         this.careerManager = careerManager;
+        
+        if (careerManager == null) {
+            residencesBox.setVisible(false);
+            residencesBox.setManaged(false);
+        }
 
         setupViewport();
         setupCountryViews();
@@ -201,7 +208,7 @@ public class GeographicView extends ChildInitializable {
                                     @Nullable ChampionshipData.WithYear next) {
         nextChampionship = next;
         City to = next == null ? null : next.data.getLocation().city();
-        setInitCities(location, to);
+        setSearchCities(location, to);
 
         currentDateLabel.setText(CareerManager.calendarToString(current));
 
@@ -220,7 +227,7 @@ public class GeographicView extends ChildInitializable {
         }
     }
 
-    public void setInitCities(City from, @Nullable City to) {
+    public void setSearchCities(City from, @Nullable City to) {
         Platform.runLater(() -> {
             departureBox.getSelectionModel().select(from);
             if (to != null) {
@@ -277,6 +284,9 @@ public class GeographicView extends ChildInitializable {
         });
         domesticFlightsBox.selectedProperty().addListener((_, oldValue, newValue) -> {
             if (oldValue != newValue) scheduleOverlayUpdate();
+        });
+        residencesBox.selectedProperty().addListener((_, oldValue, newValue) -> {
+            if (oldValue != newValue) showResidencesBubbles(newValue); 
         });
 
         setCityBoxFactory(departureBox);
@@ -513,6 +523,25 @@ public class GeographicView extends ChildInitializable {
             );
         }
     }
+    
+    private void showResidencesBubbles(boolean show) {
+        if (!show) {
+            for (CityMarker cm : cityMarkers) {
+                cm.showHousesBubble(false);
+            }
+        } else {
+            if (careerManager != null) {
+                for (Residence residence : careerManager.getInventory().getResidences()) {
+                    if (residence.getOwnership().available) {
+                        CityMarker cm = cityMarkerMap.get(residence.getCity());
+                        if (cm != null) {
+                            cm.showHousesBubble(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private void travelTo(RouteResult.Ticket ticket) {
         careerManager.getHumanPlayerCareer().payTravelFees(ticket);
@@ -577,7 +606,7 @@ public class GeographicView extends ChildInitializable {
         careerManager.getHumanPlayerCareer().setCurrentLocation(routeResult.getEndCity());
         careerManager.saveToDisk();
 
-        setInitCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), null);
+        setSearchCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), null);
         // 确保日期没有意外bug
         currentDateLabel.setText(CareerManager.calendarToString(careerManager.getTimestamp()));
 
@@ -1018,6 +1047,7 @@ public class GeographicView extends ChildInitializable {
         private final Circle inner;
         private final Circle hitCircle;
         private LocationBubble locationBubble;
+        private HouseBubble houseBubble;
 
         CityMarker(
                 City city,
@@ -1191,12 +1221,8 @@ public class GeographicView extends ChildInitializable {
             if (show) {
                 if (locationBubble == null) {
                     locationBubble =
-                            new LocationBubble(
-                                    Color.CRIMSON
-                            );
-
-                    locationBubble.setLayoutX(0);
-                    locationBubble.setLayoutY(-6);
+                            new LocationBubble();
+                    locationBubble.setOnMouseClicked(getOnMouseClicked());
 
                     getChildren().add(
                             locationBubble
@@ -1209,6 +1235,28 @@ public class GeographicView extends ChildInitializable {
                     );
 
                     locationBubble = null;
+                }
+            }
+        }
+
+        void showHousesBubble(boolean show) {
+            if (show) {
+                if (houseBubble == null) {
+                    houseBubble =
+                            new HouseBubble();
+                    houseBubble.setOnMouseClicked(getOnMouseClicked());
+
+                    getChildren().add(
+                            houseBubble
+                    );
+                }
+            } else {
+                if (houseBubble != null) {
+                    getChildren().remove(
+                            houseBubble
+                    );
+
+                    houseBubble = null;
                 }
             }
         }
@@ -1292,7 +1340,7 @@ public class GeographicView extends ChildInitializable {
 
         HumanCareer humanCareer = careerManager.getHumanPlayerCareer();
 
-        List<Residence> residences = careerManager.getHumanPlayerCareer().getInventory().getResidencesAt(city);
+        List<Residence> residences = careerManager.getHumanPlayerCareer().getInventory().getAliveResidenceAt(city);
         if (!residences.isEmpty()) {
             housesPane.add(new Label(strings.getString("houseProperties")), 0, rowIndex++);
             for (Residence residence : residences) {
@@ -1435,9 +1483,15 @@ public class GeographicView extends ChildInitializable {
         /*
          * 暂时不实现功能。
          */
-        travelButton.setOnAction(event -> {
-            // TODO travel to city
+        travelButton.setOnAction(_ -> {
+            setSearchCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), city);
+            cityPopOver.hide();
+            cityPopOver = null;
         });
+        
+        if (careerManager == null) {
+            travelButton.setDisable(true);
+        }
 
         content.getChildren().addAll(
                 cityName,
@@ -2952,31 +3006,29 @@ public class GeographicView extends ChildInitializable {
 
     private static class LocationBubble extends Group {
 
-        LocationBubble(Color color) {
-            Circle circle = new Circle(
-                    0,
-                    -10,
-                    8
-            );
+        LocationBubble() {
+            ResourcesLoader rl = ResourcesLoader.getInstance();
+            ImageView iv = new ImageView();
+            rl.setIconImage1x1(rl.getLocationIcon(), iv, 1.773);
+            iv.setTranslateX(-iv.getFitWidth() / 2);
+            iv.setTranslateY(-iv.getFitHeight());
+            getChildren().add(iv);
 
-            circle.setFill(color);
-            circle.setStroke(Color.WHITE);
-            circle.setStrokeWidth(2);
+//            setMouseTransparent(true);
+        }
+    }
 
-            Polygon tip = new Polygon(
-                    -5.0, -5.0,
-                    5.0, -5.0,
-                    0.0, 5.0
-            );
+    private static class HouseBubble extends Group {
 
-            tip.setFill(color);
+        HouseBubble() {
+            ResourcesLoader rl = ResourcesLoader.getInstance();
+            ImageView iv = new ImageView();
+            rl.setIconImage1x1(rl.getHouseIcon(), iv, 1.333);
+//            iv.setTranslateX(-iv.getFitWidth() / 2);
+            iv.setTranslateY(-iv.getFitHeight());
+            getChildren().add(iv);
 
-            getChildren().addAll(
-                    tip,
-                    circle
-            );
-
-            setMouseTransparent(true);
+//            setMouseTransparent(true);
         }
     }
 

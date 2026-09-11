@@ -1,7 +1,12 @@
 {
   "financial": {
+    "temporalRecord": {
+      "currentTemporalFeesStart": "2029/4/17",
+      "moneyBefore": 3709467,
+      "items": {}
+    },
     "remFreePerks": 0,
-    "money": 3709467,
+    "money": 2984467,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -13102,7 +13107,7 @@
         "type": "participation",
         "items": [
           {
-            "item": "travel",
+            "item": "hotel",
             "moneyCost": 2000
           },
           {
@@ -13110,11 +13115,21 @@
             "moneyCost": 200
           },
           {
-            "item": "hotel",
+            "item": "travel",
             "moneyCost": 2000
           }
         ],
         "timestamp": "2026-08-24 09:55:19"
+      },
+      {
+        "item": "residence-London:custom_DA1B9E98710BC5F5-192",
+        "itemType": "residence",
+        "inGameDate": "2029/4/17",
+        "moneyBefore": 3709467,
+        "moneyCost": 725000,
+        "moneyAfter": 2984467,
+        "type": "purchase",
+        "timestamp": "2026-09-10 08:29:21"
       }
     ],
     "level": 49,
@@ -13123,5 +13138,5 @@
     "totalPerks": 245,
     "totalExp": 50490
   },
-  "checksum": "35C72099869097A282EB89B939958425"
+  "checksum": "0E01A226CD9A8CF12D8C3AB3A1992CEE"
 }

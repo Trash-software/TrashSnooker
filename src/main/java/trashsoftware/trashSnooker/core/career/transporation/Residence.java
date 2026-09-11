@@ -18,7 +18,7 @@ public class Residence {
     private final City city;
     private final double area;
     private final double unitPrice;
-    private final Ownership ownership;
+    private Ownership ownership;
 
     /**
      * 也能是起租的时间
@@ -118,6 +118,10 @@ public class Residence {
         return (int) Math.round(area * unitPrice);
     }
 
+    public void setOwnership(Ownership ownership) {
+        this.ownership = ownership;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Residence res && id.equals(res.id);
@@ -129,9 +133,17 @@ public class Residence {
     }
 
     public enum Ownership {
-        OWN,
-        RENT,
-        INITIAL;
+        OWN(true),
+        RENT(true),
+        INITIAL(true),
+        SOLD(false),
+        RENT_END(false);
+        
+        public final boolean available;
+        
+        Ownership(boolean available) {
+            this.available = available;
+        }
         
         public String getShown(ResourceBundle strings) {
             String key = "OWNERSHIP_" + name();

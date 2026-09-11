@@ -7,7 +7,10 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.Route;
 import trashsoftware.trashSnooker.core.career.transporation.RouteResult;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueTip;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -148,6 +151,7 @@ public abstract class Invoice {
                     moneyBefore,
                     moneyAfter,
                     CumulativeFees.loadItems(json.getJSONObject("items")),
+                    json.optString("cityId", null),
                     CareerManager.stringToCalendar(json.getString("durationBegin"))
             );
             case "invitation" -> new Invitation(
@@ -358,7 +362,7 @@ public abstract class Invoice {
     public static class Purchase extends Cost {
 
         protected final String item;
-        protected final String itemType;
+        public final String itemType;
 
         protected Purchase(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
                            String itemType, String item, int moneyCost) {
@@ -409,6 +413,10 @@ public abstract class Invoice {
             super("houseRent", realTimestamp, inGameDate, moneyBefore, moneyAfter, moneyCost);
             
             this.item = item;
+        }
+
+        public String getItem() {
+            return item;
         }
 
         @Override
@@ -540,7 +548,15 @@ public abstract class Invoice {
             json.put("items", array);
             json.put("dateOnTicket", CareerManager.calendarToString(dateOnTicket));
         }
-        
+
+        public Calendar getDateOnTicket() {
+            return dateOnTicket;
+        }
+
+        public List<TicketSegment> getTicketSegments() {
+            return ticketSegments;
+        }
+
         static List<TicketSegment> loadTicketSegments(JSONArray jsonArray) {
             List<TicketSegment> segments = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -554,22 +570,43 @@ public abstract class Invoice {
                                 String departureCityId,
                                 RouteResult.SeatClass seatClass,
                                 int payedPrice) {
+        
+        public Route getRoute() {
+            return TransportationManager.getInstance().getRoutById(routeId);
+        }
+        
+        public City[] getDepartureAndDestination(Route route) {
+            City dep = departureCityId.equals(route.getCity1().getId()) ? route.getCity1() : route.getCity2();
+            City des = dep.equals(route.getCity1()) ? route.getCity2() : route.getCity1();
+            return new City[]{dep, des};
+        }
     }
     
     public static class CumulativeFees extends CostItemsHolder {
         
         protected final Calendar durationBegin;
+        protected final String cityId;
         
         protected CumulativeFees(Date realTimestamp, Calendar inGameDate, int moneyBefore, int moneyAfter,
-                       Map<String, Integer> items, Calendar durationBegin) {
+                       Map<String, Integer> items, String cityId, Calendar durationBegin) {
             super("cumulativeFees", realTimestamp, inGameDate, moneyBefore, moneyAfter, items);
             
+            this.cityId = cityId;
             this.durationBegin = durationBegin;
+        }
+
+        public String getCityId() {
+            return cityId;
+        }
+
+        public Calendar getDurationBegin() {
+            return durationBegin;
         }
 
         @Override
         protected void fillJson(JSONObject json) {
             json.put("durationBegin", CareerManager.calendarToString(durationBegin));
+            json.put("cityId", cityId);
             json.put("items", JsonUtil.mapToJson(items));
         }
 

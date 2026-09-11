@@ -294,13 +294,14 @@ public class HumanCareer extends Career {
         }
     }
 
-    public void recordTemporalFees() {
+    public void recordTemporalFees(City currentLocation) {
         Invoice invoice = new Invoice.CumulativeFees(
                 new Date(),
                 getCareerManager().getTimestamp(),
                 finance.temporalRecord.moneyBefore,
                 finance.money,
                 finance.temporalRecord.temporalFees,
+                currentLocation.getId(), 
                 finance.temporalRecord.currentTemporalFeesStart
         );
         finance.invoices.add(invoice);
@@ -315,7 +316,7 @@ public class HumanCareer extends Career {
         this.travelling = true;
 
         // 说明离开了当前的位置
-        recordTemporalFees();
+        recordTemporalFees(getCurrentLocation());
     }
 
     public void endTravelling(@Nullable RouteResult.Ticket ticket) {
@@ -334,12 +335,14 @@ public class HumanCareer extends Career {
                 achManager.addAchievement(Achievement.FIRST_CLASS_TRAVEL, null);
             }
             
-            if (ticket.route().hasFlight()) {
-                achManager.addAchievement(Achievement.AIR_TRAVEL, null);
+            int flightSeg = ticket.route().countFlightSegments();
+            int countTrainSeg = ticket.route().countTrainSegments();
+            
+            if (flightSeg > 0) {
+                achManager.cumulateAchievement(Achievement.AIR_TRAVEL, flightSeg, null);
             }
-
-            if (ticket.route().hasTrain()) {
-                achManager.addAchievement(Achievement.TRAIN_TRAVEL, null);
+            if (countTrainSeg > 0) {
+                achManager.cumulateAchievement(Achievement.TRAIN_TRAVEL, countTrainSeg, null);
             }
         }
     }
@@ -484,7 +487,7 @@ public class HumanCareer extends Career {
         // 没有税
         finance.money += price;
 
-        getInventory().removeResidence(residence);
+        getInventory().sellResidence(residence);
 
         Invoice.Sell invoice = new Invoice.Sell(
                 new Date(),
@@ -502,7 +505,7 @@ public class HumanCareer extends Career {
     }
 
     public void cancelRentHouse(Residence residence) {
-        getInventory().removeResidence(residence);
+        getInventory().cancelRentResidence(residence);
         getInventory().saveToDisk();
     }
     
@@ -923,18 +926,23 @@ public class HumanCareer extends Career {
                 cumExpenditure -= moneyChange;
             }
 
-            if (invoice instanceof Invoice.Purchase pur) {
-                if ("residence".equals(pur.itemType)) {
-                    cumHousePurchase += 1;
-                } else {
-                    cumPurchase += 1;
+            switch (invoice) {
+                case Invoice.Purchase pur -> {
+                    if ("residence".equals(pur.itemType)) {
+                        cumHousePurchase += 1;
+                    } else {
+                        cumPurchase += 1;
+                    }
                 }
-            } else if (invoice instanceof Invoice.Sell sell) {
-                if ("residence".equals(sell.itemType)) {
-                    achManager.addAchievement(Achievement.SELL_HOUSE, null);
+                case Invoice.Sell sell -> {
+                    if ("residence".equals(sell.itemType)) {
+                        achManager.addAchievement(Achievement.SELL_HOUSE, null);
+                    }
                 }
-            } else if (invoice instanceof Invoice.HouseRent) {
-                achManager.addAchievement(Achievement.RENT_HOUSE, null);
+                case Invoice.HouseRent houseRent ->
+                        achManager.addAchievement(Achievement.RENT_HOUSE, null);
+                default -> {
+                }
             }
         }
         achManager.addAchievement(Achievement.BUY_ITEMS, cumPurchase, null);

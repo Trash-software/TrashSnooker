@@ -241,7 +241,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         double tfPrice = Algebra.shiftRange(
                 0, 1,
-                0.3, 1,
+                0.2, 1,
                 Math.min(1, totalFrames / divisor)
         );
         int half = totalFrames / 2;
@@ -2374,14 +2374,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 // 因为球会在袋内滞留约1秒，滞留期间当然是不会碰撞的
                 if (ball != otherBall && !otherBall.isPotted()) {
                     // 检查是否是撞上贴球堆
-                    if (!phy.isPrediction && ball.willCollide(otherBall)) {
-                        if (processHittingTouchingBalls(ball, otherBall)) {
-                            hit = true;
-                            if (ball.isWhite()) whiteCollide(ball, otherBall);  // 记录白球撞到的球
-                            else if (otherBall.isWhite()) whiteCollide(otherBall, ball);
-                            break;
-                        }
-                    }
+//                    if (!phy.isPrediction && ball.willCollide(otherBall)) {
+//                        if (processHittingTouchingBalls(ball, otherBall)) {
+//                            hit = true;
+//                            if (ball.isWhite()) whiteCollide(ball, otherBall);  // 记录白球撞到的球
+//                            else if (otherBall.isWhite()) whiteCollide(otherBall, ball);
+//                            break;
+//                        }
+//                    }
 
                     if (ball.tryHitBall(Game.this, otherBall, true, phy)) {
                         // hit ball

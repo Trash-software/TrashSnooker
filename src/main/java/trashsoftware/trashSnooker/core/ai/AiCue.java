@@ -650,7 +650,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         AiCueResult acr = new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(choice.ball, true),
                 cueType,
-                choice.wp == null ? null : choice.wp.whiteOrigPos(),
+                choice.wp == null ? choice.whiteOrigPos : choice.wp.whiteOrigPos(),
                 choice.wp == null ? null : choice.wp.targetOrigPos(),
                 null,
                 choice.ball,

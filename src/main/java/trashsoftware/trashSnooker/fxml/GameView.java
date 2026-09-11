@@ -644,10 +644,12 @@ public class GameView implements Initializable {
 
         setupBalls();
 
-        setOnHidden();
+        setOnHidden(null);
     }
 
-    public void setup(Stage stage, EntireGame entireGame) {
+    public void setup(Stage stage, 
+                      EntireGame entireGame,
+                      GameViewStarter starter) {
         this.game = entireGame;
         this.gameValues = entireGame.gameValues;
         this.player1 = entireGame.getPlayer1();
@@ -714,7 +716,7 @@ public class GameView implements Initializable {
             }
         });
 
-        setOnHidden();
+        setOnHidden(starter);
 
         startAnimation();
     }
@@ -812,13 +814,13 @@ public class GameView implements Initializable {
         handSelectionToggleGroup.selectToggle(toggle);
         updateHandButtonText(toggle, cueHand);
     }
-    
+
     private void resetHandNames() {
         handSelectionLeft.setText(PlayerHand.Hand.LEFT.shownName(strings));
         handSelectionRight.setText(PlayerHand.Hand.RIGHT.shownName(strings));
         handSelectionRest.setText(PlayerHand.Hand.REST.shownName(strings));
     }
-    
+
     private void updateHandButtonText(RadioButton radioButton,
                                       PlayerHand.CueHand cueHand) {
         String text;
@@ -916,10 +918,11 @@ public class GameView implements Initializable {
     }
 
     public void setupCareerMatch(Stage stage,
-                                 CareerMatch careerMatch) {
+                                 CareerMatch careerMatch,
+                                 GameViewStarter starter) {
         this.careerMatch = careerMatch;
 
-        setup(stage, careerMatch.getGame());
+        setup(stage, careerMatch.getGame(), starter);
 
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
         setAimingLengthFactor(playerGoodness);
@@ -1094,12 +1097,16 @@ public class GameView implements Initializable {
         recalculateUiRestrictions();
     }
 
-    private void setOnHidden() {
+    private void setOnHidden(GameViewStarter starter) {
         this.stage.setOnHidden(e -> {
             System.out.println("Hide");
 //            DataLoader.getInstance().invalidate();
 //            basePane.getChildren().clear();
             stopCueTimer();
+            
+            if (starter != null) {
+                starter.processGameViewHide();
+            }
 
             if (replay != null) {
                 try {
@@ -2570,7 +2577,7 @@ public class GameView implements Initializable {
         frontBackSpinFactor *= hitPointBaseScale;
         sideSpinFactor *= hitPointBaseScale;
 
-        PlayerPerson playerPerson = player.getPlayerPerson();
+//        PlayerPerson playerPerson = player.getPlayerPerson();
 
         // 用架杆影响打点精确度
 //        double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
@@ -2617,14 +2624,13 @@ public class GameView implements Initializable {
         if (selPower > maxSelPower) {
             selPower = maxSelPower;  // 控不了力也不可能打出怪力吧
         }
-        if (mutate)
-            System.out.println("Want power: " + origSelPower + ", actual power: " + selPower);
 
-//        if (mutate) {
         intentCuePointX = cuePointX;
         intentCuePointY = cuePointY;
-        // 因为出杆质量而导致的打点偏移
-//        }
+        if (mutate) {
+            System.out.println("Want power: " + origSelPower + ", actual power: " + selPower);
+            // 因为出杆质量而导致的打点偏移
+        }
 
         // todo: 高低杆偏差稍微小点，斯登大点
 

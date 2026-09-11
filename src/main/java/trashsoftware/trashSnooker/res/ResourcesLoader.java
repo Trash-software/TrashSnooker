@@ -20,10 +20,14 @@ public class ResourcesLoader {
     private final Image expIcon;
     private final Image inventoryIcon;
     private final Image storeIcon;
+    private final Image mapIcon;
+    private final Image challengeIcon;
     private final Image filterIcon;
     private final Image radarIcon;
     private final Image barIcon;
     private final Image lineIcon;
+    private final Image locationIcon;
+    private final Image houseIcon;
     
     private final SoundFile cueSoundSmallMidPower;
     private final SoundFile cueSoundCarbonMidPower;
@@ -49,6 +53,10 @@ public class ResourcesLoader {
                 0, 0, true, true);
         storeIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("store.png")),
                 0, 0, true, true);
+        mapIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("map.png")),
+                0, 0, true, true);
+        challengeIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("target.png")),
+                0, 0, true, true);
         filterIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("filter.png")),
                 0, 0, true, true);
         radarIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("radar.png")),
@@ -56,6 +64,10 @@ public class ResourcesLoader {
         barIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bar-chart.png")),
                 0, 0, true, true);
         lineIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("line-chart.png")),
+                0, 0, true, true);
+        houseIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("house.png")),
+                0, 0, true, true);
+        locationIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("placeholder.png")),
                 0, 0, true, true);
 
         awardIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_gold.png")),
@@ -154,6 +166,22 @@ public class ResourcesLoader {
 
     public Image getLineIcon() {
         return lineIcon;
+    }
+
+    public Image getChallengeIcon() {
+        return challengeIcon;
+    }
+
+    public Image getMapIcon() {
+        return mapIcon;
+    }
+
+    public Image getHouseIcon() {
+        return houseIcon;
+    }
+
+    public Image getLocationIcon() {
+        return locationIcon;
     }
 
     public void setIconImage1x1(Image image, ImageView imageView) {

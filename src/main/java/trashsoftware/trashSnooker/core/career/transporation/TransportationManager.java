@@ -14,7 +14,7 @@ public class TransportationManager {
 
     private final Map<String, City> cities = new HashMap<>();
 
-    private final List<Route> routes = new ArrayList<>();
+    private final Map<String, Route> routes = new HashMap<>();
     private final Map<City, List<Route>> graph = new HashMap<>();
 
     TransportationManager() {
@@ -46,7 +46,11 @@ public class TransportationManager {
     }
 
     public List<Route> getRoutes() {
-        return Collections.unmodifiableList(routes);
+        return new ArrayList<>(routes.values());
+    }
+    
+    public Route getRoutById(String routeId) {
+        return routes.get(routeId);
     }
 
     public Map<String, City> getCities() {
@@ -88,7 +92,7 @@ public class TransportationManager {
                     group.getJSONObject(id)
             );
 
-            routes.add(route);
+            routes.put(id, route);
 
             graph.computeIfAbsent(
                     route.getCity1(),
@@ -362,8 +366,7 @@ public class TransportationManager {
     private Set<City> findAdjacentCities(City city) {
         // 用Set以避免既有飞机又有火车的城市线路被加两遍
         Set<City> result = new HashSet<>();
-        for (Route route : routes) {
-
+        for (Route route : routes.values()) {
             if (route.getCity1().equals(city)) {
                 result.add(route.getCity2());
             } else if (route.getCity2().equals(city)) {

@@ -86,7 +86,7 @@ public class HandBody implements Cloneable {
         );
         PlayerHand rest = primary.derive(PlayerHand.Hand.REST,
                 restSkill,
-                restSkill * 0.8);
+                restSkill * PlayerHand.REST_NATIVE_POWER_MUL);
         return new HandBody(height, bodyWidth,
                 leftHandPrimary ? primary : secondary,
                 leftHandPrimary ? secondary : primary,
@@ -304,6 +304,16 @@ public class HandBody implements Cloneable {
         else if (cuePlayerHand.playerHand == getAntiHand())
             return nonDominantGeneral * cuePlayerHand.extension.factor;
         else return restGeneral * cuePlayerHand.extension.factor;
+    }
+
+    /**
+     * @return 不擅长的手造成的瞄准影响。范围0-1
+     */
+    public double getHandAimingSkill(PlayerHand playerHand) {
+        if (getPrimary() == playerHand || getPrimary().hand == playerHand.hand) return 1.0;  // 预防clone的bug，虽然可能没有
+        double primaryCp = getPrimary().computeCuePrecision(1.0);
+        double thisCp = playerHand.computeCuePrecision(1.0);
+        return thisCp / primaryCp;
     }
 
     public PlayerHand getRight() {

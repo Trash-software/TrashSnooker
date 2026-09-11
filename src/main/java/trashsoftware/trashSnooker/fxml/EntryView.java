@@ -149,9 +149,12 @@ public class EntryView implements Initializable {
                 EventLogger.error(err);
             }
         });
-        this.selfStage.setOnHidden(e -> {
+        this.selfStage.setOnHidden(_ -> {
 //                Recorder.save();
 //                ConfigLoader.stopLoader();
+            if (CareerManager.hasInstance()) {
+                CareerManager.getInstance().saveToDisk();
+            }
             App.setMainWindowShowing(false);
             DBAccess.closeDB();
         });

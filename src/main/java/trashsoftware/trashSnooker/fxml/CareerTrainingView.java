@@ -39,7 +39,7 @@ import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import java.net.URL;
 import java.util.*;
 
-public class CareerTrainingView extends ChildInitializable {
+public class CareerTrainingView extends ChildInitializable implements GameViewStarter {
     @FXML
     TableView<ChallengeItem> challengeTable;
     @FXML
@@ -94,6 +94,11 @@ public class CareerTrainingView extends ChildInitializable {
         initTable();
         initRewardsTable();
         initHistoryTable();
+    }
+
+    @Override
+    public void processGameViewHide() {
+        // do nothing
     }
 
     private void initHistoryTable() {
@@ -323,7 +328,7 @@ public class CareerTrainingView extends ChildInitializable {
             AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getAiGoodness());
 
             GameView gameView = loader.getController();
-            gameView.setupCareerMatch(stage, match);
+            gameView.setupCareerMatch(stage, match, this);
 
             stage.show();
 

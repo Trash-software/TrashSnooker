@@ -21,11 +21,6 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "winAMatch": {
-      "levelDates": {"0": "2023-06-24 01:45:18"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "NOT_COMPLETED"}
-    },
     "passPot": {
       "levelDates": {"0": "2026-09-10 06:59:50"},
       "completions": 1,
@@ -34,6 +29,11 @@
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
+    },
+    "winAMatch": {
+      "levelDates": {"0": "2023-06-24 01:45:18"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
     },
     "playOneYear": {
       "levelDates": {"0": "2023-11-27 02:59:20"},
@@ -251,20 +251,20 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "winMatches": {
-      "levelDates": {},
-      "completions": 1,
-      "levelAwardReceived": {
-        "0": "NOT_COMPLETED",
-        "1": "NOT_COMPLETED",
-        "2": "NOT_COMPLETED"
-      }
-    },
     "saveMoney": {
       "levelDates": {"0": "2025-05-23 04:50:35"},
       "completions": 65720,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "winMatches": {
+      "levelDates": {},
+      "completions": 1,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
@@ -287,15 +287,15 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "rentHouse": {
-      "levelDates": {},
-      "completions": 1,
-      "levelAwardReceived": {}
-    },
     "earnedMoney": {
       "levelDates": {"0": "2023-06-30 05:45:27"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "rentHouse": {
+      "levelDates": {},
+      "completions": 1,
+      "levelAwardReceived": {}
     },
     "defeatUniqueOpponentsCeb": {
       "levelDates": {},

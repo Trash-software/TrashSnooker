@@ -74,6 +74,7 @@ public class CareerManager {
     private int lastSavedVersion;
     private final List<SettingsHistory> settingsHistories = new ArrayList<>();
     private JSONObject cache;
+    private String lastSavedChecksum;  // 避免过度写入硬盘
 //    private transient ChampionshipData.WithYear ongoingNextChampionship;
 
     private double playerGoodness;
@@ -179,6 +180,10 @@ public class CareerManager {
             }
         }
         return instance;
+    }
+    
+    public static boolean hasInstance() {
+        return instance != null;
     }
 
     public static void setCurrentSave(CareerSave currentSave) {
@@ -479,18 +484,18 @@ public class CareerManager {
     public void simulateMatchesInPastTwoYears() {
         updateRanking();  // 按照能力初始化排名
 
-        Calendar pastTime = Util.getCalendarInstance();
-        pastTime.setTimeInMillis(timestamp.getTimeInMillis());
-        pastTime.set(Calendar.YEAR, pastTime.get(Calendar.YEAR) - 2);
+        Calendar targetTime = Util.getCalendarInstance();
+        targetTime.setTimeInMillis(timestamp.getTimeInMillis());
+        timestamp.set(Calendar.YEAR, targetTime.get(Calendar.YEAR) - 2);
 
-        while (pastTime.before(timestamp)) {
+        while (timestamp.before(targetTime)) {
             try {
                 ChampionshipData.WithYear data = getNextChampionshipData();
-                Championship nextChamp = nextChampionship(data);
+                Championship nextChamp = nextChampionship(data, false);
                 System.out.println("Simulating " + nextChamp.fullName());
                 nextChamp.startChampionship(false, false, false);
                 while (nextChamp.hasNextRound()) {
-                    nextChamp.startNextRound(this, false);
+                    nextChamp.startNextRound(this, false, false);
                 }
                 timestamp.setTimeInMillis(data.toCalendar().getTimeInMillis());
                 timestamp.add(Calendar.DAY_OF_MONTH, 1);
@@ -500,6 +505,7 @@ public class CareerManager {
             }
         }
         updateRanking();  // 比赛完了最后排下名
+        humanPlayerCareer.beginTemporalFeeRecord(timestamp);
         saveToDisk();
     }
 
@@ -1099,7 +1105,7 @@ public class CareerManager {
     }
     
     public int getDailyHotelFee(City city) {
-        if (inventoryManager.hasResidenceIn(city)) {
+        if (inventoryManager.hasAliveResidenceIn(city)) {
             return 0;
         } else {
             return city.hotelPricePerDay();
@@ -1126,11 +1132,13 @@ public class CareerManager {
     }
 
     public Championship startNextChampionship() {
-        return nextChampionship(getNextChampionshipData());
+        return nextChampionship(getNextChampionshipData(), true);
     }
 
-    public Championship nextChampionship(ChampionshipData.WithYear dataWithYear) {
-        pushDateTo(dataWithYear.toCalendar());
+    public Championship nextChampionship(ChampionshipData.WithYear dataWithYear, boolean pushDate) {
+        if (pushDate) {
+            pushDateTo(dataWithYear.toCalendar());
+        }
 
         updateRanking();
         updateEfforts();  // 在update ranking之后
@@ -1538,6 +1546,12 @@ public class CareerManager {
 
         String checksum = JsonChecksum.checksum(root);
         root.put("checksum", checksum);
+        
+        if (checksum.equals(lastSavedChecksum)) {
+            System.out.println("Did not change, no need to save");
+            return;
+        }
+        lastSavedChecksum = checksum;
 
         String str = root.toString(2);
 

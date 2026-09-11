@@ -24,6 +24,10 @@ import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipScore;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
 import trashsoftware.trashSnooker.core.career.Invoice;
+import trashsoftware.trashSnooker.core.career.transporation.City;
+import trashsoftware.trashSnooker.core.career.transporation.Residence;
+import trashsoftware.trashSnooker.core.career.transporation.Route;
+import trashsoftware.trashSnooker.core.career.transporation.TransportationManager;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
@@ -40,6 +44,7 @@ public class CashFlowView extends ChildInitializable {
             "all",
             "championshipEarn", "challengeEarn", "achievementAward", "invitation",
             "participation", "purchase", "upgrade", "fees",
+            "travelTicket", "cumulativeFees", "houseRent", "sell"
 //            "lifeFee", "oweInterest"
     };
     public static final DateFormat MONTH_FMT = new SimpleDateFormat("yyyy-MM");
@@ -50,16 +55,23 @@ public class CashFlowView extends ChildInitializable {
                     "championshipEarn", 0,
                     "challengeEarn", 0,
                     "invitation", 0,
-                    "achievementAward", 0)
+                    "achievementAward", 0,
+                    "sell", 0)
     );
-    private final Map<String, Integer> expenditures = new HashMap<>(
-            Map.of("registry", 0,
-                    "travel", 0,
-                    "hotel", 0,
-                    "purchase", 0,
-                    "upgrade", 0,
-                    "lifeFee", 0,
-                    "oweInterest", 0)
+    private final Map<String, Integer> expenditures = Util.mergeMaps(new HashMap<>(
+                    Map.of("registry", 0,
+                            "travel", 0,
+                            "hotel", 0,
+                            "purchase", 0,
+                            "upgrade", 0,
+                            "lifeFee", 0,
+                            "oweInterest", 0
+                    )
+            ),
+            Map.of("travelTicket", 0,
+                    "living", 0,
+                    "houseRent", 0,
+                    "purchaseResidence", 0)
     );
     @FXML
     ListView<Invoice> listView;
@@ -233,16 +245,17 @@ public class CashFlowView extends ChildInitializable {
                     // 初始资金
                     dateMoneyMap.put(last, io.getMoneyBefore());
                 }
-                if ("fees".equals(io.type)) {
-                    // 因为一些早期失误，fees的时间是上一场比赛的时间
-                    if (idx < invoiceObjects.size() - 1) {
-                        dateMoneyMap.put(invoiceObjects.get(idx + 1).inGameDate, io.getMoneyAfter());
-                    } else {
-                        dateMoneyMap.put(io.inGameDate, io.getMoneyAfter());
-                    }
-                } else {
-                    dateMoneyMap.put(io.inGameDate, io.getMoneyAfter());
-                }
+//                if ("fees".equals(io.type)) {
+//                    // 因为一些早期失误，fees的时间是上一场比赛的时间
+//                    if (idx < invoiceObjects.size() - 1) {
+//                        dateMoneyMap.put(invoiceObjects.get(idx + 1).inGameDate, io.getMoneyAfter());
+//                    } else {
+//                        dateMoneyMap.put(io.inGameDate, io.getMoneyAfter());
+//                    }
+//                } else {
+//                    dateMoneyMap.put(io.inGameDate, io.getMoneyAfter());
+//                }
+                dateMoneyMap.put(io.inGameDate, io.getMoneyAfter());
 
                 if (!isTypeSelected(io.type)) {
                     last = io.inGameDate;
@@ -257,7 +270,19 @@ public class CashFlowView extends ChildInitializable {
                             expenditures.put(entry.getKey(), typeExpend + entry.getValue());
                         }
                     }
-                } else if (io instanceof Invoice.Participation par) {
+                } else if (io instanceof Invoice.Purchase pur) {
+                    if ("residence".equals(pur.itemType)) {
+                        Integer typeExpend = expenditures.get("purchaseResidence");
+                        if (typeExpend != null) {
+                            expenditures.put("purchaseResidence", typeExpend - io.getMoneyChange());
+                        }
+                    } else {
+                        Integer typeExpend = expenditures.get("purchase");
+                        if (typeExpend != null) {
+                            expenditures.put("purchase", typeExpend - io.getMoneyChange());
+                        }
+                    }
+                } else if (io instanceof Invoice.CostItemsHolder par) {
                     for (Map.Entry<String, Integer> entry : par.getItems().entrySet()) {
                         Integer typeExpend = expenditures.get(entry.getKey());
                         if (typeExpend != null) {
@@ -436,6 +461,8 @@ public class CashFlowView extends ChildInitializable {
                     String month = String.format("%s.%s",
                             item.inGameDate.get(Calendar.YEAR),
                             item.inGameDate.get(Calendar.MONTH) + 1);
+                    monthLabel.setVisible(true);
+                    monthLabel.setManaged(true);
                     monthLabel.setText(month);
                 } else {
                     monthLabel.setVisible(false);
@@ -484,12 +511,12 @@ public class CashFlowView extends ChildInitializable {
                             expandableColumn2.getChildren().add(taxLabel);
                         }
                     }
-                    case Invoice.CostItemsHolder iih -> {
+                    case Invoice.CostItemsHolder cih -> {
                         expandableColumn1.setVisible(true);
                         expandableColumn1.setManaged(true);
                         expandableColumn2.setVisible(true);
                         expandableColumn2.setManaged(true);
-                        for (Map.Entry<String, Integer> entry : iih.getItems().entrySet()) {
+                        for (Map.Entry<String, Integer> entry : cih.getItems().entrySet()) {
                             String itemKey = entry.getKey();
                             String shownItem = formatType(itemKey);
                             int subChange = -entry.getValue();
@@ -502,6 +529,13 @@ public class CashFlowView extends ChildInitializable {
                                 subChangeLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
 
                             expandableColumn2.getChildren().add(subChangeLabel);
+                        }
+
+                        if (cih instanceof Invoice.CumulativeFees cf) {
+                            City city = TransportationManager.getInstance().getCityById(cf.getCityId());
+                            desLabel.setText(String.format("%s, %s",
+                                    city == null ? "" : city.getName(strings.getLocale()),
+                                    CareerManager.calendarDurationToString(cf.getDurationBegin(), cf.inGameDate)));
                         }
                     }
                     case Invoice.Upgrade upgrade -> {
@@ -519,6 +553,63 @@ public class CashFlowView extends ChildInitializable {
                             builder.deleteCharAt(builder.length() - 1);
                             desLabel.setText(builder.toString());
                         }
+                    }
+                    case Invoice.TravelTicket ticket -> {
+                        expandableColumn1.setVisible(true);
+                        expandableColumn1.setManaged(true);
+                        expandableColumn2.setVisible(true);
+                        expandableColumn2.setManaged(true);
+
+                        List<Invoice.TicketSegment> segments = ticket.getTicketSegments();
+                        TransportationManager tm = TransportationManager.getInstance();
+                        City dep = null;
+                        City des = null;
+                        for (Invoice.TicketSegment segment : segments) {
+                            Route route = segment.getRoute();
+                            City[] depDes = segment.getDepartureAndDestination(route);
+                            if (dep == null) dep = depDes[0];
+                            des = depDes[1];
+
+                            String transMethod = route.isFlight() ? "✈" : "🚆";
+
+                            if (depDes[0] == null || depDes[1] == null) {
+                                EventLogger.error("Invalid city id of route: " + segment.getRoute());
+                                continue;
+                            }
+                            expandableColumn1.getChildren().add(new Label(String.format("%s %s %s",
+                                    depDes[0].getName(strings.getLocale()),
+                                    transMethod,
+                                    depDes[1].getName(strings.getLocale()))));
+                            Label segmentPriceLabel = new Label("-" + Util.moneyToReadable(
+                                    route.getPriceByClass(segment.seatClass())
+                            ));
+                            segmentPriceLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+                            expandableColumn2.getChildren().add(segmentPriceLabel);
+                        }
+                        if (dep == null || des == null) {
+                            EventLogger.error("Cannot form departure and destination");
+                            break;
+                        }
+                        desLabel.setText(String.format("%s -> %s, %s",
+                                dep.getName(strings.getLocale()),
+                                des.getName(strings.getLocale()),
+                                CareerManager.calendarToString(ticket.getDateOnTicket())));
+                    }
+                    case Invoice.HouseRent houseRent -> {
+                        Calendar periodStart = houseRent.inGameDate;
+                        Calendar periodEnd = (Calendar) periodStart.clone();
+                        periodEnd.add(Calendar.MONTH, 1);
+                        periodEnd.set(Calendar.DAY_OF_MONTH, 1);
+                        periodEnd.add(Calendar.DAY_OF_MONTH, -1);
+                        Residence residence = humanCareer.getInventory().getResidenceById(houseRent.getItem());
+                        String des = "";
+                        if (residence != null) {
+                            des = String.format("%s: %.0fm²", residence.getCity().getName(strings.getLocale()), residence.getArea());
+                        }
+                        desLabel.setText(String.format(
+                                "%s, %s",
+                                des,
+                                CareerManager.calendarDurationToString(periodStart, periodEnd)));
                     }
                     default -> {
                     }

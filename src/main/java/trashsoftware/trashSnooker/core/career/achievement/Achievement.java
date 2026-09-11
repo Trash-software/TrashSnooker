@@ -196,14 +196,14 @@ public enum Achievement {
     OWE_MONEY(AchCat.FINANCIAL, true),  // 已完成
     EXPENDITURE(AchCat.FINANCIAL, Type.CUMULATIVE, 10000, 50000, 200000),  // 已完成
     BUY_ITEMS(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 5, 20),  // 已完成
-    BUY_HOUSES(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 3, 10),
-    SELL_HOUSE(AchCat.FINANCIAL, Type.ONE_TIME),
-    RENT_HOUSE(AchCat.FINANCIAL, Type.ONE_TIME),
-    AIR_TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 10, 50, 200),
-    TRAIN_TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 10, 50, 200),
-    TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 50, 500),
-    BUSINESS_TRAVEL(AchCat.FINANCIAL, Type.ONE_TIME),
-    FIRST_CLASS_TRAVEL(AchCat.FINANCIAL, Type.ONE_TIME);
+    BUY_HOUSES(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 3, 10),  // 已完成
+    SELL_HOUSE(AchCat.FINANCIAL),  // 已完成
+    RENT_HOUSE(AchCat.FINANCIAL),  // 已完成
+    AIR_TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 10, 50, 200),  // 已完成
+    TRAIN_TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 10, 50, 200),  // 已完成
+    TRAVEL(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 50, 500),  // 已完成
+    BUSINESS_TRAVEL(AchCat.FINANCIAL),  // 已完成
+    FIRST_CLASS_TRAVEL(AchCat.FINANCIAL);  // 已完成
 
     public final AchCat category;
     public final Type type;
@@ -213,6 +213,9 @@ public enum Achievement {
     Achievement(AchCat category, Type type, boolean hidden, int... requiredTimes) {
         this.category = category;
         this.type = type;
+        if (requiredTimes.length == 0) {
+            requiredTimes = new int[]{1};
+        }
         this.requiredTimes = requiredTimes;
         this.hidden = hidden;
     }

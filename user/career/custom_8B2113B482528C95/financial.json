@@ -1,0 +1,576 @@
+{
+  "financial": {
+    "temporalRecord": {
+      "currentTemporalFeesStart": "2023/3/22",
+      "moneyBefore": 93972,
+      "items": {}
+    },
+    "remFreePerks": 0,
+    "money": 93972,
+    "invoices": [
+      {
+        "inGameDate": "2023/2/27",
+        "perkUsed": 6,
+        "freePerkUsed": 6,
+        "moneyBefore": 8416,
+        "moneyCost": 0,
+        "moneyAfter": 8416,
+        "ability": {
+          "powerControl-RIGHT": [
+            66.698789671245,
+            70.87760456101938
+          ],
+          "spinControl-REST": [
+            40.87104591424254,
+            40.87104591424254
+          ],
+          "normalPower-RIGHT": [
+            60.56848827764264,
+            62.369748746536935
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            39.662796137883255,
+            39.662796137883255
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            28.813903397969355,
+            28.813903397969355
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            71.18160542875428,
+            73.13434121160411
+          ],
+          "spin-RIGHT": [
+            65.43240786728381,
+            67.61511155259247
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            38.90973534666336,
+            38.90973534666336
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            69.85347897037666,
+            71.8593398115616
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            68.73063829390787,
+            68.73063829390787
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-11 07:24:42"
+      },
+      {
+        "inGameDate": "2023/2/27",
+        "durationBegin": "2023/1/23",
+        "moneyBefore": 10000,
+        "moneyAfter": 8416,
+        "type": "cumulativeFees",
+        "items": {
+          "living": 1584,
+          "hotel": 0
+        },
+        "timestamp": "2026-09-11 07:24:44"
+      },
+      {
+        "dateOnTicket": "2023/2/25",
+        "inGameDate": "2023/2/27",
+        "moneyBefore": 8416,
+        "moneyAfter": 7231,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "DXB-SYD",
+            "departureCityId": "Sydney",
+            "seatClass": "ECONOMY",
+            "payedPrice": 850
+          },
+          {
+            "routeId": "DXB-CGP",
+            "departureCityId": "Dubai",
+            "seatClass": "ECONOMY",
+            "payedPrice": 250
+          },
+          {
+            "routeId": "DGP-CGP",
+            "departureCityId": "Catgivepower",
+            "seatClass": "ECONOMY",
+            "payedPrice": 85
+          }
+        ],
+        "timestamp": "2026-09-11 07:24:44"
+      },
+      {
+        "inGameDate": "2023/2/27",
+        "moneyBefore": 7231,
+        "match": "custom_8B2113B482528C95+2023+dog_give_power_open",
+        "moneyAfter": 6731,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 500
+        }],
+        "timestamp": "2026-09-11 07:24:48"
+      },
+      {
+        "item": "primeTipMedium:custom_8B2113B482528C95-828",
+        "itemType": "tip",
+        "inGameDate": "2023/3/1",
+        "moneyBefore": 6655,
+        "moneyCost": 80,
+        "moneyAfter": 6575,
+        "type": "purchase",
+        "timestamp": "2026-09-11 17:24:44"
+      },
+      {
+        "inGameDate": "2023/2/27",
+        "year": 2023,
+        "moneyBefore": 6499,
+        "match": "dog_give_power_open",
+        "moneyAfter": 32487,
+        "type": "championshipEarn",
+        "items": {"SECOND_PLACE": {
+          "actual": 25988,
+          "raw": 35000
+        }},
+        "timestamp": "2026-09-11 19:04:56"
+      },
+      {
+        "item": "residence-Catgivepower:custom_8B2113B482528C95-201",
+        "inGameDate": "2023/3/18",
+        "moneyBefore": 32487,
+        "moneyCost": 440,
+        "moneyAfter": 32047,
+        "type": "houseRent",
+        "timestamp": "2026-09-11 19:18:38"
+      },
+      {
+        "dateOnTicket": "2023/3/18",
+        "inGameDate": "2023/3/18",
+        "moneyBefore": 32047,
+        "moneyAfter": 31962,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "DGP-CGP",
+          "departureCityId": "Doggivepower",
+          "seatClass": "ECONOMY",
+          "payedPrice": 85
+        }],
+        "timestamp": "2026-09-11 19:18:48"
+      },
+      {
+        "inGameDate": "2023/3/18",
+        "durationBegin": "2023/3/2",
+        "moneyBefore": 32487,
+        "moneyAfter": 31962,
+        "type": "cumulativeFees",
+        "items": {},
+        "timestamp": "2026-09-11 19:18:48"
+      },
+      {
+        "inGameDate": "2023/3/18",
+        "perkUsed": 6,
+        "freePerkUsed": 0,
+        "moneyBefore": 31914,
+        "moneyCost": 2050,
+        "moneyAfter": 29864,
+        "ability": {
+          "powerControl-RIGHT": [
+            70.87760456101938,
+            70.87760456101938
+          ],
+          "spinControl-REST": [
+            40.87104591424254,
+            40.87104591424254
+          ],
+          "normalPower-RIGHT": [
+            62.369748746536935,
+            65.75900044480844
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            39.662796137883255,
+            39.662796137883255
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            28.813903397969355,
+            28.813903397969355
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            73.13434121160411,
+            76.80860886061436
+          ],
+          "spin-RIGHT": [
+            67.61511155259247,
+            71.72208680686921
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            38.90973534666336,
+            38.90973534666336
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            71.8593398115616,
+            71.8593398115616
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            68.73063829390787,
+            68.73063829390787
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-11 19:19:10"
+      },
+      {
+        "inGameDate": "2023/3/18",
+        "durationBegin": "2023/3/3",
+        "moneyBefore": 31962,
+        "moneyAfter": 29688,
+        "cityId": "Catgivepower",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 224,
+          "hotel": 0
+        },
+        "timestamp": "2026-09-11 19:19:32"
+      },
+      {
+        "dateOnTicket": "2023/3/17",
+        "inGameDate": "2023/3/18",
+        "moneyBefore": 29688,
+        "moneyAfter": 28898,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "SVO-CGP",
+            "departureCityId": "Catgivepower",
+            "seatClass": "ECONOMY",
+            "payedPrice": 360
+          },
+          {
+            "routeId": "SVO-PEK",
+            "departureCityId": "Moscow",
+            "seatClass": "ECONOMY",
+            "payedPrice": 430
+          }
+        ],
+        "timestamp": "2026-09-11 19:19:32"
+      },
+      {
+        "item": 16,
+        "inGameDate": "2023/3/18",
+        "moneyBefore": 28898,
+        "match": "custom_8B2113B482528C95+2023+eight_master_tour_beijing",
+        "moneyAfter": 29098,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 19:19:36"
+      },
+      {
+        "inGameDate": "2023/3/18",
+        "moneyBefore": 29098,
+        "match": "custom_8B2113B482528C95+2023+eight_master_tour_beijing",
+        "moneyAfter": 28898,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-11 19:19:36"
+      },
+      {
+        "item": "primeTipMedium:custom_8B2113B482528C95-829",
+        "itemType": "tip",
+        "inGameDate": "2023/3/18",
+        "moneyBefore": 28898,
+        "moneyCost": 80,
+        "moneyAfter": 28818,
+        "type": "purchase",
+        "timestamp": "2026-09-11 19:20:24"
+      },
+      {
+        "inGameDate": "2023/3/20",
+        "year": 2023,
+        "moneyBefore": 28637,
+        "match": "eight_master_tour_beijing",
+        "moneyAfter": 90637,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 62000,
+          "raw": 80000
+        }},
+        "timestamp": "2026-09-11 22:16:37"
+      },
+      {
+        "item": "SOLVE_SNOOKER_SUCCESS_POT",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 90637,
+        "moneyAfter": 90837,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:42"
+      },
+      {
+        "item": "FINAL_STAGE_FINAL_FRAME_WIN",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 90837,
+        "moneyAfter": 91037,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:42"
+      },
+      {
+        "item": "LONG_THINK",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 91037,
+        "moneyAfter": 91237,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:43"
+      },
+      {
+        "item": "MISCUED",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 91237,
+        "moneyAfter": 91437,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:43"
+      },
+      {
+        "item": "CUE_BALL_POT",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 91437,
+        "moneyAfter": 91637,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:44"
+      },
+      {
+        "item": "MISSED_SHOT",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 91637,
+        "moneyAfter": 91837,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:44"
+      },
+      {
+        "item": "LIE_DOWN_WIN",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 91837,
+        "moneyAfter": 92037,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:44"
+      },
+      {
+        "item": "KEY_BALL_FAIL",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 92037,
+        "moneyAfter": 92237,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:45"
+      },
+      {
+        "item": "POT_FAIL_THREE",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 92237,
+        "moneyAfter": 92437,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:45"
+      },
+      {
+        "item": "LOST_ALL_MATCHES",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 92437,
+        "moneyAfter": 92637,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-11 23:47:45"
+      },
+      {
+        "item": "BUY_ITEMS",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 92637,
+        "moneyAfter": 92837,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-12 00:01:01"
+      },
+      {
+        "item": "TRAVEL",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 92837,
+        "moneyAfter": 93037,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-12 00:01:02"
+      },
+      {
+        "item": "EARNED_MONEY",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 93037,
+        "moneyAfter": 93237,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-12 00:03:32"
+      },
+      {
+        "item": "CHAMP_EARN_CUMULATIVE",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 93237,
+        "moneyAfter": 93437,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-12 00:03:32"
+      },
+      {
+        "item": "SAVE_MONEY",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 93437,
+        "moneyAfter": 93637,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-12 00:03:33"
+      },
+      {
+        "item": "RENT_HOUSE",
+        "inGameDate": "2023/3/20",
+        "level": 0,
+        "moneyBefore": 93637,
+        "moneyAfter": 93837,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-12 00:14:38"
+      },
+      {
+        "dateOnTicket": "2023/3/22",
+        "inGameDate": "2023/3/22",
+        "moneyBefore": 93837,
+        "moneyAfter": 93792,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "PEK-SJW+T",
+          "departureCityId": "Beijing",
+          "seatClass": "BUSINESS",
+          "payedPrice": 45
+        }],
+        "timestamp": "2026-09-12 02:28:02"
+      },
+      {
+        "inGameDate": "2023/3/22",
+        "durationBegin": "2023/3/20",
+        "moneyBefore": 93837,
+        "moneyAfter": 93792,
+        "cityId": "Beijing",
+        "type": "cumulativeFees",
+        "items": {},
+        "timestamp": "2026-09-12 02:28:02"
+      },
+      {
+        "dateOnTicket": "2023/3/22",
+        "inGameDate": "2023/3/22",
+        "moneyBefore": 93792,
+        "moneyAfter": 93772,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "PEK-SJW+T",
+          "departureCityId": "Shijiazhuang",
+          "seatClass": "ECONOMY",
+          "payedPrice": 20
+        }],
+        "timestamp": "2026-09-12 02:28:12"
+      },
+      {
+        "inGameDate": "2023/3/22",
+        "durationBegin": "2023/3/21",
+        "moneyBefore": 93792,
+        "moneyAfter": 93772,
+        "cityId": "Shijiazhuang",
+        "type": "cumulativeFees",
+        "items": {},
+        "timestamp": "2026-09-12 02:28:12"
+      },
+      {
+        "item": "BUSINESS_TRAVEL",
+        "inGameDate": "2023/3/22",
+        "level": 0,
+        "moneyBefore": 93772,
+        "moneyAfter": 93972,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-12 02:29:40"
+      }
+    ],
+    "level": 8,
+    "expInThisLevel": 147,
+    "availPerks": 11,
+    "totalPerks": 23,
+    "totalExp": 1040
+  },
+  "checksum": "1FAFB92AA78C32D2BEA8CEDA68CE407C"
+}
