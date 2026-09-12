@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 1.2;
+    public static final double DEFAULT_AI_PRECISION = 1.35;
     public static final double AI_PRECISION_MULTIPLIER = 11500.0;
 //    public static final double DEFAULT_AI_PRECISION = 1.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准

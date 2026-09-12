@@ -2898,7 +2898,8 @@ public class GeographicView extends ChildInitializable {
                     new Button(strings.getString("scheduleTravelBeforeChamp"));
 
             if (careerManager != null
-                    && careerManager.getHumanPlayerCareer().getCurrentLocation().equals(departureBox.getValue())) {
+                    && careerManager.getHumanPlayerCareer().getCurrentLocation().equals(departureBox.getValue()) 
+                    && careerManager.getChampionshipInProgress() == null) {
                 travelButton.setDisable(false);
                 travelButton.setOnAction(_ -> {
                     travelTo(new RouteResult.Ticket(

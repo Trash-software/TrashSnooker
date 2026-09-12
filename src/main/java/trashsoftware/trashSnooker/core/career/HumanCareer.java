@@ -526,6 +526,7 @@ public class HumanCareer extends Career {
                 finance.invoices.add(invoice);
             }
         }
+        System.out.println("Monthly rent paid");
         saveFinance();
     }
 

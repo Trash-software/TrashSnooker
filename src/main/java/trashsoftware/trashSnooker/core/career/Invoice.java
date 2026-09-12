@@ -32,7 +32,7 @@ public abstract class Invoice {
                       int moneyBefore, int moneyAfter) {
         this.type = type;
         this.realTimestamp = realTimestamp;
-        this.inGameDate = inGameDate;
+        this.inGameDate = (Calendar) inGameDate.clone();
         this.moneyBefore = moneyBefore;
         this.moneyAfter = moneyAfter;
     }
@@ -534,7 +534,7 @@ public abstract class Invoice {
                                Calendar dateOnTicket, List<TicketSegment> ticketSegments) {
             super("travelTicket", realTimestamp, inGameDate, moneyBefore, moneyAfter);
             
-            this.dateOnTicket = dateOnTicket;
+            this.dateOnTicket = (Calendar) dateOnTicket.clone();
             this.ticketSegments = ticketSegments;
         }
 
@@ -592,7 +592,7 @@ public abstract class Invoice {
             super("cumulativeFees", realTimestamp, inGameDate, moneyBefore, moneyAfter, items);
             
             this.cityId = cityId;
-            this.durationBegin = durationBegin;
+            this.durationBegin = (Calendar) durationBegin.clone();
         }
 
         public String getCityId() {

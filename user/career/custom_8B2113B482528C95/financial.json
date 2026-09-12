@@ -1,12 +1,12 @@
 {
   "financial": {
     "temporalRecord": {
-      "currentTemporalFeesStart": "2023/3/22",
-      "moneyBefore": 93972,
+      "currentTemporalFeesStart": "2023/4/17",
+      "moneyBefore": 91253,
       "items": {}
     },
     "remFreePerks": 0,
-    "money": 93972,
+    "money": 91053,
     "invoices": [
       {
         "inGameDate": "2023/2/27",
@@ -564,13 +564,440 @@
         "type": "achievementAward",
         "moneyEarn": 200,
         "timestamp": "2026-09-12 02:29:40"
+      },
+      {
+        "dateOnTicket": "2023/3/26",
+        "inGameDate": "2023/3/26",
+        "moneyBefore": 93972,
+        "moneyAfter": 93132,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "PEK-PVG",
+            "departureCityId": "Beijing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 120
+          },
+          {
+            "routeId": "PVG-SYD",
+            "departureCityId": "Shanghai",
+            "seatClass": "ECONOMY",
+            "payedPrice": 720
+          }
+        ],
+        "timestamp": "2026-09-12 05:35:21"
+      },
+      {
+        "inGameDate": "2023/3/26",
+        "durationBegin": "2023/3/22",
+        "moneyBefore": 93972,
+        "moneyAfter": 93132,
+        "cityId": "Beijing",
+        "type": "cumulativeFees",
+        "items": {},
+        "timestamp": "2026-09-12 05:35:21"
+      },
+      {
+        "inGameDate": "2023/3/26",
+        "perkUsed": 6,
+        "freePerkUsed": 0,
+        "moneyBefore": 93132,
+        "moneyCost": 2100,
+        "moneyAfter": 91032,
+        "ability": {
+          "powerControl-RIGHT": [
+            70.87760456101938,
+            72.8425003785786
+          ],
+          "spinControl-REST": [
+            40.87104591424254,
+            40.87104591424254
+          ],
+          "normalPower-RIGHT": [
+            65.75900044480844,
+            67.3526404270161
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            39.662796137883255,
+            39.662796137883255
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            28.813903397969355,
+            28.813903397969355
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            76.80860886061436,
+            78.53626450618978
+          ],
+          "spin-RIGHT": [
+            71.72208680686921,
+            73.65320333459445
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            38.90973534666336,
+            38.90973534666336
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            71.8593398115616,
+            73.78496621909913
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            68.73063829390787,
+            70.78141276215156
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-12 05:35:35"
+      },
+      {
+        "inGameDate": "2023/3/26",
+        "perkUsed": 5,
+        "freePerkUsed": 0,
+        "moneyBefore": 91032,
+        "moneyCost": 2000,
+        "moneyAfter": 89032,
+        "ability": {
+          "powerControl-RIGHT": [
+            72.8425003785786,
+            74.72880036343547
+          ],
+          "spinControl-REST": [
+            40.87104591424254,
+            40.87104591424254
+          ],
+          "normalPower-RIGHT": [
+            67.3526404270161,
+            68.88253480993545
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            39.662796137883255,
+            39.662796137883255
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            28.813903397969355,
+            28.813903397969355
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            78.53626450618978,
+            80.19481392594219
+          ],
+          "spin-RIGHT": [
+            73.65320333459445,
+            75.50707520121067
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            38.90973534666336,
+            38.90973534666336
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            73.78496621909913,
+            75.63356757033517
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            70.78141276215156,
+            70.78141276215156
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-12 05:35:42"
+      },
+      {
+        "inGameDate": "2023/3/26",
+        "durationBegin": "2023/3/23",
+        "moneyBefore": 93132,
+        "moneyAfter": 88984,
+        "cityId": "Sydney",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 48,
+          "hotel": 0
+        },
+        "timestamp": "2026-09-12 05:35:51"
+      },
+      {
+        "dateOnTicket": "2023/3/24",
+        "inGameDate": "2023/3/26",
+        "moneyBefore": 88984,
+        "moneyAfter": 88144,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "PVG-SYD",
+            "departureCityId": "Sydney",
+            "seatClass": "ECONOMY",
+            "payedPrice": 720
+          },
+          {
+            "routeId": "PEK-PVG",
+            "departureCityId": "Shanghai",
+            "seatClass": "ECONOMY",
+            "payedPrice": 120
+          }
+        ],
+        "timestamp": "2026-09-12 05:35:51"
+      },
+      {
+        "inGameDate": "2023/3/26",
+        "moneyBefore": 88144,
+        "match": "custom_8B2113B482528C95+2023+china_open",
+        "moneyAfter": 87944,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-12 05:35:55"
+      },
+      {
+        "item": "primeTipMedium:custom_8B2113B482528C95-830",
+        "itemType": "tip",
+        "inGameDate": "2023/3/26",
+        "moneyBefore": 87763,
+        "moneyCost": 80,
+        "moneyAfter": 87683,
+        "type": "purchase",
+        "timestamp": "2026-09-12 05:46:17"
+      },
+      {
+        "inGameDate": "2023/4/17",
+        "year": 2023,
+        "moneyBefore": 87140,
+        "match": "china_open",
+        "moneyAfter": 94890,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 7750,
+          "raw": 10000
+        }},
+        "timestamp": "2026-09-13 05:43:50"
+      },
+      {
+        "dateOnTicket": "2023/4/17",
+        "inGameDate": "2023/4/17",
+        "moneyBefore": 94528,
+        "moneyAfter": 93738,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "SVO-PEK",
+            "departureCityId": "Beijing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 430
+          },
+          {
+            "routeId": "SVO-CGP",
+            "departureCityId": "Moscow",
+            "seatClass": "ECONOMY",
+            "payedPrice": 360
+          }
+        ],
+        "timestamp": "2026-09-13 05:44:37"
+      },
+      {
+        "inGameDate": "2023/4/17",
+        "durationBegin": "2023/3/28",
+        "moneyBefore": 87321,
+        "moneyAfter": 93738,
+        "cityId": "Beijing",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 138,
+          "hotel": 405
+        },
+        "timestamp": "2026-09-13 05:44:37"
+      },
+      {
+        "item": "residence-Catgivepower:custom_8B2113B482528C95-201",
+        "inGameDate": "2023/4/17",
+        "moneyBefore": 93738,
+        "moneyCost": 440,
+        "moneyAfter": 93298,
+        "type": "houseRent",
+        "timestamp": "2026-09-13 05:44:42"
+      },
+      {
+        "inGameDate": "2023/4/17",
+        "perkUsed": 5,
+        "freePerkUsed": 0,
+        "moneyBefore": 93298,
+        "moneyCost": 1500,
+        "moneyAfter": 91798,
+        "ability": {
+          "powerControl-RIGHT": [
+            74.72880036343547,
+            74.72880036343547
+          ],
+          "spinControl-REST": [
+            40.87104591424254,
+            40.87104591424254
+          ],
+          "normalPower-RIGHT": [
+            68.88253480993545,
+            68.88253480993545
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            39.662796137883255,
+            42.87628429236793
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            28.813903397969355,
+            35.230200356705815
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            80.19481392594219,
+            80.19481392594219
+          ],
+          "spin-RIGHT": [
+            75.50707520121067,
+            75.50707520121067
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            38.90973534666336,
+            42.153345932796825
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            75.63356757033517,
+            75.63356757033517
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            70.78141276215156,
+            70.78141276215156
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-13 05:44:58"
+      },
+      {
+        "inGameDate": "2023/4/17",
+        "durationBegin": "2023/4/1",
+        "moneyBefore": 93298,
+        "moneyAfter": 91558,
+        "cityId": "Catgivepower",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 240,
+          "hotel": 0
+        },
+        "timestamp": "2026-09-13 05:45:19"
+      },
+      {
+        "dateOnTicket": "2023/4/16",
+        "inGameDate": "2023/4/17",
+        "moneyBefore": 91558,
+        "moneyAfter": 91253,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "SPC-CGP",
+            "departureCityId": "Catgivepower",
+            "seatClass": "ECONOMY",
+            "payedPrice": 90
+          },
+          {
+            "routeId": "LHR-SPC",
+            "departureCityId": "Spacecity",
+            "seatClass": "ECONOMY",
+            "payedPrice": 160
+          },
+          {
+            "routeId": "LON-SHF+T",
+            "departureCityId": "London",
+            "seatClass": "ECONOMY",
+            "payedPrice": 55
+          }
+        ],
+        "timestamp": "2026-09-13 05:45:19"
+      },
+      {
+        "inGameDate": "2023/4/17",
+        "moneyBefore": 91253,
+        "match": "custom_8B2113B482528C95+2023+world_champ",
+        "moneyAfter": 91053,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-13 05:50:57"
       }
     ],
-    "level": 8,
-    "expInThisLevel": 147,
-    "availPerks": 11,
-    "totalPerks": 23,
-    "totalExp": 1040
+    "level": 10,
+    "expInThisLevel": 151,
+    "availPerks": 0,
+    "totalPerks": 28,
+    "totalExp": 1400
   },
-  "checksum": "1FAFB92AA78C32D2BEA8CEDA68CE407C"
+  "checksum": "C4FD0E7E7929BFDB875BFDF03CE7B888"
 }

@@ -160,7 +160,7 @@ public class InGamePlayer {
     }
 
     public double getPsyMul(GamePlayStage gamePlayStage, double frameImportance) {
-        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
+        double psyWeakness = 1.0 - playerPerson.psyNerve / 95;  // 心态95以上的，压力越大越牛逼
         double frameBasePsy = 1.0 - frameImportance * psyWeakness * 0.333;
         double psyMul = switch (gamePlayStage) {
             case THIS_BALL_WIN -> frameBasePsy - psyWeakness * 0.9;
@@ -171,7 +171,7 @@ public class InGamePlayer {
             case null, default -> frameBasePsy;
         };
         psyMul *= getPsyStatus();
-        psyMul = Math.clamp(psyMul, 0.01, 1.0);
+        psyMul = Math.clamp(psyMul, 0.01, 1.08);  // 1.08只是随手设的
         return psyMul;
     }
     
