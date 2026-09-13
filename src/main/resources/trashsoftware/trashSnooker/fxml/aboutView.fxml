@@ -12,7 +12,7 @@
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.AboutView"
-      prefHeight="320.0" prefWidth="480.0" spacing="40.0">
+      prefHeight="360.0" prefWidth="480.0" spacing="40.0">
 
     <padding>
         <Insets topRightBottomLeft="30.0"/>
@@ -67,6 +67,12 @@
             <Label fx:id="designConsultantNameLabel" GridPane.rowIndex="3"
                    GridPane.columnIndex="1"/>
             <Label fx:id="designConsultantContactLabel" GridPane.rowIndex="3"
+                   GridPane.columnIndex="2"/>
+
+            <Label text="%sportsConsultant" GridPane.rowIndex="4"/>
+            <Label fx:id="sportConsultantNameLabel" GridPane.rowIndex="4"
+                   GridPane.columnIndex="1"/>
+            <Label fx:id="sportConsultantContactLabel" GridPane.rowIndex="4"
                    GridPane.columnIndex="2"/>
 
             <HBox spacing="10.0" GridPane.rowIndex="6" alignment="CENTER_LEFT" GridPane.columnSpan="3">

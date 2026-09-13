@@ -28,6 +28,9 @@ public class ResourcesLoader {
     private final Image lineIcon;
     private final Image locationIcon;
     private final Image houseIcon;
+
+    private final Image flightIcon;
+    private final Image trainIcon;
     
     private final SoundFile cueSoundSmallMidPower;
     private final SoundFile cueSoundCarbonMidPower;
@@ -68,6 +71,11 @@ public class ResourcesLoader {
         houseIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("house.png")),
                 0, 0, true, true);
         locationIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("placeholder.png")),
+                0, 0, true, true);
+
+        flightIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("airplane.png")),
+                0, 0, true, true);
+        trainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("train.png")),
                 0, 0, true, true);
 
         awardIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_gold.png")),
@@ -182,6 +190,14 @@ public class ResourcesLoader {
 
     public Image getLocationIcon() {
         return locationIcon;
+    }
+
+    public Image getFlightIcon() {
+        return flightIcon;
+    }
+
+    public Image getTrainIcon() {
+        return trainIcon;
     }
 
     public void setIconImage1x1(Image image, ImageView imageView) {

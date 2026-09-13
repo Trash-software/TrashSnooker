@@ -2,11 +2,14 @@
   "financial": {
     "temporalRecord": {
       "currentTemporalFeesStart": "2023/4/17",
-      "moneyBefore": 91253,
-      "items": {}
+      "moneyBefore": 91053,
+      "items": {
+        "living": 23,
+        "hotel": 53
+      }
     },
     "remFreePerks": 0,
-    "money": 91053,
+    "money": 90977,
     "invoices": [
       {
         "inGameDate": "2023/2/27",
@@ -999,5 +1002,5 @@
     "totalPerks": 28,
     "totalExp": 1400
   },
-  "checksum": "C4FD0E7E7929BFDB875BFDF03CE7B888"
+  "checksum": "32E6F693C7C41D90561EF88A749B2DF3"
 }

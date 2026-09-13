@@ -23,6 +23,7 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.WorldMapView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
@@ -581,11 +582,8 @@ public class GeographicView extends ChildInitializable {
                     careerManager.pushDateTo(newDate);
                 }
                 currentDateLabel.setText(CareerManager.calendarToString(careerManager.getTimestamp()));
-
-                Point2D mapPoint = travelAnimationPlayer.getPoint();
-                if (mapPoint == null) return;
-                travelAnimationPlayer.movingGraphics.setTranslateX(mapPoint.getX());
-                travelAnimationPlayer.movingGraphics.setTranslateY(mapPoint.getY());
+                
+                travelAnimationPlayer.moveGraphics();
             }
         };
         travelAnimation.start();
@@ -3041,14 +3039,21 @@ public class GeographicView extends ChildInitializable {
         private final RouteResult routeResult;
         private final Calendar departureDate;
         private double curSegmentTravelledDt;
+        private Segment lastSegment;
         private final double speed;
         private final Group movingGraphics;
+        
+        private final ImageView planeImage = new ImageView();
+        private final ImageView trainImage = new ImageView();
 
         private long lastFrameTime;
         private double minutesSpent;
 
         private final NavigableMap<Double, Calendar> dates = new TreeMap<>();  // 时间和date
         private final NavigableMap<Double, Segment> routeSegments = new TreeMap<>();
+        
+        private Point2D currentPoint;
+        private Point2D lastPoint;
 
         TravelAnimationPlayer(RouteResult.Ticket ticket,
                               RouteResult routeResult, Calendar departureDate, double speed) {
@@ -3058,9 +3063,15 @@ public class GeographicView extends ChildInitializable {
             this.speed = speed;
 
             movingGraphics = new Group();
-            Shape dot = new Circle(5);
-            dot.setFill(Color.RED);
-            movingGraphics.getChildren().add(dot);
+//            movingGraphics.setRotationAxis(new Point3D());
+            
+            ResourcesLoader rl = ResourcesLoader.getInstance();
+            rl.setIconImage1x1(rl.getFlightIcon(), planeImage, 1.2);
+            rl.setIconImage1x1(rl.getTrainIcon(), trainImage);
+            
+//            Shape dot = new Circle(5);
+//            dot.setFill(Color.RED);
+//            movingGraphics.getChildren().add(dot);
 
             computeDates();
         }
@@ -3091,6 +3102,9 @@ public class GeographicView extends ChildInitializable {
                 routeSegments.put(minutes, new Segment(Status.MOVING, step));
                 minutes += step.route().getTimeMinutes();
             }
+
+            lastSegment = routeSegments.firstEntry().getValue();
+            updateSegment(lastSegment);
         }
 
         /**
@@ -3109,6 +3123,11 @@ public class GeographicView extends ChildInitializable {
             }
             var entry = routeSegments.floorEntry(minutesSpent);
             Segment currentSegment = entry.getValue();
+            if (currentSegment != lastSegment) {
+                // 进入下一段了
+                updateSegment(currentSegment);
+            }
+            
             double frameMinutes = frameTime * speed * SPEED_MUL / 60000;
             minutesSpent += frameMinutes;
 
@@ -3123,16 +3142,52 @@ public class GeographicView extends ChildInitializable {
             } else {
                 curSegmentTravelledDt = 0;
             }
+            
+            lastPoint = currentPoint;
+            currentPoint = getPoint();
 
             lastFrameTime = curTime;
+            lastSegment = currentSegment;
             return true;
+        }
+        
+        private void updateSegment(Segment newSegment) {
+            movingGraphics.getChildren().clear();
+            if (newSegment.step().route().isFlight()) {
+                movingGraphics.getChildren().add(planeImage);
+            } else {
+                movingGraphics.getChildren().add(trainImage);
+            }
+        }
+        
+        void moveGraphics() {
+            if (currentPoint == null) return;
+            double x = currentPoint.getX();
+            double y = currentPoint.getY();
+            movingGraphics.setTranslateX(x - movingGraphics.getLayoutBounds().getWidth() / 2);
+            movingGraphics.setTranslateY(y - movingGraphics.getLayoutBounds().getHeight() / 2);
+            
+            boolean rotate = routeSegments.floorEntry(minutesSpent).getValue().step().route().isFlight();
+            if (rotate && lastPoint != null) {
+                if (lastPoint.equals(currentPoint)) {
+                    return;  // 没动，就保持现在的朝向就好
+                }
+                double[] pointing = new double[]{
+                        x - lastPoint.getX(),
+                        y - lastPoint.getY()
+                };
+                double theta = Algebra.thetaOf(pointing);
+                movingGraphics.setRotate(Math.toDegrees(theta));
+            } else {
+                movingGraphics.setRotate(0.0);
+            }
         }
 
         Calendar getDate() {
             return dates.floorEntry(minutesSpent).getValue();
         }
 
-        Point2D getPoint() {
+        private Point2D getPoint() {
             Segment currentSegment = routeSegments.floorEntry(minutesSpent).getValue();
             RouteResult.RouteStep routeStep = currentSegment.step();
             double progress = curSegmentTravelledDt / routeStep.route().getDistance();

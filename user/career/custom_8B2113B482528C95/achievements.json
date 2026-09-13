@@ -19,15 +19,15 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "lieDownWin": {
-      "levelDates": {"0": "2026-09-11 19:19:38"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
     "finalFrameUsualGuest": {
       "levelDates": {},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "lieDownWin": {
+      "levelDates": {"0": "2026-09-11 19:19:38"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "secondPlace": {
       "levelDates": {"0": "2026-09-11 19:04:56"},
@@ -39,22 +39,22 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
+    "blindShot": {
+      "levelDates": {"0": "2026-09-11 21:56:33"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
     "snookerCumulateScore": {
       "levelDates": {
         "0": "2026-09-11 07:59:34",
         "1": "2026-09-13 05:39:05"
       },
-      "completions": 1112,
+      "completions": 1174,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_RECEIVED",
         "2": "NOT_COMPLETED"
       }
-    },
-    "blindShot": {
-      "levelDates": {"0": "2026-09-11 21:56:33"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "trainTravel": {
       "levelDates": {},
@@ -123,6 +123,16 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
+    "winAllMatches": {
+      "levelDates": {"0": "2026-09-11 19:27:58"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "cueBallPot": {
+      "levelDates": {"0": "2026-09-11 08:07:40"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
     "defeatUniqueOpponentsAmerican": {
       "levelDates": {},
       "completions": 0,
@@ -131,16 +141,6 @@
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
-    },
-    "cueBallPot": {
-      "levelDates": {"0": "2026-09-11 08:07:40"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
-    "winAllMatches": {
-      "levelDates": {"0": "2026-09-11 19:27:58"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "snookerBreak50": {
       "levelDates": {"0": "2026-09-12 05:43:34"},
@@ -152,15 +152,15 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
-    "finalStageFinalFrameWin": {
-      "levelDates": {"0": "2026-09-11 22:16:37"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
     "bigHeart": {
       "levelDates": {},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "finalStageFinalFrameWin": {
+      "levelDates": {"0": "2026-09-11 22:16:37"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "keyBallFail": {
       "levelDates": {"0": "2026-09-11 07:46:32"},
@@ -247,11 +247,6 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "rentHouse": {
-      "levelDates": {"0": "2026-09-12 00:14:30"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
     "earnedMoney": {
       "levelDates": {"0": "2026-09-11 19:04:56"},
       "completions": 1,
@@ -261,6 +256,11 @@
       "levelDates": {"0": "2026-09-13 00:36:37"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "rentHouse": {
+      "levelDates": {"0": "2026-09-12 00:14:30"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "champion": {
       "levelDates": {"0": "2026-09-11 22:16:37"},
@@ -310,11 +310,6 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "aroundTablePosition": {
-      "levelDates": {"0": "2026-09-11 07:41:02"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
-    },
     "passPot": {
       "levelDates": {"0": "2026-09-11 17:22:00"},
       "completions": 2,
@@ -324,9 +319,14 @@
         "2": "NOT_COMPLETED"
       }
     },
+    "aroundTablePosition": {
+      "levelDates": {"0": "2026-09-11 07:41:02"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
     "snookerCumulateFoulGain": {
       "levelDates": {"0": "2026-09-11 17:32:01"},
-      "completions": 36,
+      "completions": 40,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_COMPLETED",
@@ -338,11 +338,6 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
-    "potABall": {
-      "levelDates": {"0": "2026-09-11 07:26:13"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
-    },
     "champEarnCumulative": {
       "levelDates": {"0": "2026-09-11 22:16:37"},
       "completions": 125000,
@@ -351,6 +346,11 @@
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
+    },
+    "potABall": {
+      "levelDates": {"0": "2026-09-11 07:26:13"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "missedShot": {
       "levelDates": {"0": "2026-09-11 07:48:07"},
@@ -372,29 +372,29 @@
         "0": "2026-09-11 17:31:22",
         "1": "2026-09-11 22:07:41"
       },
-      "completions": 29,
+      "completions": 30,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_RECEIVED",
         "2": "NOT_COMPLETED"
       }
     },
-    "winFramesNormalDifficulty": {
-      "levelDates": {"0": "2026-09-11 07:36:29"},
-      "completions": 29,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
-    },
     "miscued": {
       "levelDates": {"0": "2026-09-11 07:46:24"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "winFramesNormalDifficulty": {
+      "levelDates": {"0": "2026-09-11 07:36:29"},
+      "completions": 30,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "cumulativeLongPots1": {
       "levelDates": {
         "0": "2026-09-11 07:49:11",
         "1": "2026-09-11 17:57:22"
       },
-      "completions": 84,
+      "completions": 86,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_RECEIVED",
@@ -416,7 +416,7 @@
         "0": "2026-09-11 07:34:15",
         "1": "2026-09-11 07:54:09"
       },
-      "completions": 434,
+      "completions": 452,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_RECEIVED",
@@ -468,7 +468,7 @@
     },
     "potBallsRest": {
       "levelDates": {"0": "2026-09-11 07:51:45"},
-      "completions": 18,
+      "completions": 19,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_COMPLETED",
@@ -528,5 +528,5 @@
       }
     }
   },
-  "checksum": "D408F0FA3B0F820423123F15C3CEE096"
+  "checksum": "F3F297DBE1C68D0FE142B41ABAD8CA21"
 }

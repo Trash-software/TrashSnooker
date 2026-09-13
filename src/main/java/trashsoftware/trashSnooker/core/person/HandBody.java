@@ -313,7 +313,7 @@ public class HandBody implements Cloneable {
         if (getPrimary() == playerHand || getPrimary().hand == playerHand.hand) return 1.0;  // 预防clone的bug，虽然可能没有
         double primaryCp = getPrimary().computeCuePrecision(1.0);
         double thisCp = playerHand.computeCuePrecision(1.0);
-        return thisCp / primaryCp;
+        return Math.sqrt(thisCp / primaryCp);  // Sqrt让它别太离谱
     }
 
     public PlayerHand getRight() {

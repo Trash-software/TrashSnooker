@@ -25,6 +25,8 @@ public class AboutView implements Initializable {
     @FXML
     Label designConsultantNameLabel, designConsultantContactLabel;
     @FXML
+    Label sportConsultantNameLabel, sportConsultantContactLabel;
+    @FXML
     Label closedBetaPlayersLabel;
     
     public static final Map<String, String[]> DEVELOPER_NAME = Map.of(
@@ -42,9 +44,14 @@ public class AboutView implements Initializable {
             "en", new String[]{"No Shell"}
     );
 
+    public static final Map<String, String[]> SPORT_CONSULTANTS_NAME = Map.of(
+            "zh", new String[]{"647"},
+            "en", new String[]{"Flow think seven"}
+    );
+
     public static final Map<String, String[]> CLOSED_BETA_USERS_NAME = Map.of(
-            "zh", new String[]{"Purple Fat", "Atom张", "陈哥"},
-            "en", new String[]{"Purple Fat", "Atom Zhang", "Cheng Brother"}
+            "zh", new String[]{"Purple Fat", "Atom张", "陈哥", "铭铭爱吃小布丁"},
+            "en", new String[]{"Purple Fat", "Atom Zhang", "Cheng Brother", "Ming Suck Pudding"}
     );
     
     @Override
@@ -56,6 +63,7 @@ public class AboutView implements Initializable {
         setLabelForMultipleNames(DEVELOPER_NAME, developerNameLabel);
         setLabelForMultipleNames(ART_DESIGNER_NAMES, artDesignerNameLabel);
         setLabelForMultipleNames(CONSULTANTS_NAME, designConsultantNameLabel);
+        setLabelForMultipleNames(SPORT_CONSULTANTS_NAME, sportConsultantNameLabel);
         setLabelForMultipleNames(CLOSED_BETA_USERS_NAME, closedBetaPlayersLabel);
         
 //        developerContactLabel.setText("2676147693@qq.com");
