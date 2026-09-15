@@ -7,14 +7,12 @@ import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
-import trashsoftware.trashSnooker.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +81,7 @@ public class Analyzer {
                 double[][] dirHole = pd.dirHole();
                 double collisionPointX = dirHole[2][0];
                 double collisionPointY = dirHole[2][1];
-                
+
                 // 修正中袋瞄点
                 if (pd.pocket().isMid) {
                     double[] openCenter = getMidNewOpenCenter(pd, dirHole, gameValues);
@@ -202,7 +200,7 @@ public class Analyzer {
                         null,
                         direct.attackTarget,
                         direct.isPositioning,
-                        direct.pocket, 
+                        direct.pocket,
                         direct.dirHole,
                         null
                 );
@@ -364,7 +362,7 @@ public class Analyzer {
             int opponentTarget = copy.getTargetAfterPotFailed();
             List<Ball> opponentBalls = copy.getAllLegalBalls(opponentTarget, false,
                     copy.isInLineHandBall());
-            
+
             if (copy instanceof AbstractSnookerGame asg && asg.isDoingSnookerFreeBll()) {
                 Game.SeeAble fullSeeAbleCheck = copy.countSeeAbleTargetBalls(
                         whiteStopPos[0],
@@ -387,7 +385,7 @@ public class Analyzer {
                     opponentBalls,
                     1
             );
-            
+
             double penalty = 0.0;
             penalty += (cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE);
 
@@ -509,19 +507,37 @@ public class Analyzer {
             Player aiPlayer,
             boolean isAttack
     ) {
-
-        CuePlayerHand playerHand = cueParams.getCuePlayerHand();
         PlayerPerson playerPerson = aiPlayer.getPlayerPerson();
         AiPlayStyle aps = playerPerson.getAiPlayStyle();
-//            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);
-        double handSdMul = 1.0;
+        return aiStandardDeviation(
+                cueParams,
+                playerPerson.getPrecisionPercentage(),
+                aps.defense,
+                aiPlayer.getInGamePlayer()
+                        .getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier(),
+                aps.likeSide,
+                isAttack
+        );
+    }
 
-//            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
-//            double sideSpinSd = muSigXy[1];  // 左右打点的标准差，mm
+    /**
+     * @return {sideDevRad, sideCurveDevRad, aimingSd, powerSd}
+     */
+    static double[] aiStandardDeviation(
+            CueParams cueParams,
+            double precisionPercentage,
+            double defense,
+            double cuePowerMultiplier,
+            double likeSide,
+            boolean isAttack
+    ) {
+
+        CuePlayerHand playerHand = cueParams.getCuePlayerHand();
+        double handSdMul = 1.0;
+        
         double powerErrorFactor = playerHand.getErrorMultiplierOfPower(cueParams.selectedPower());
         double powerSd = (100.0 - playerHand.getPowerControl()) / 100.0;
-        powerSd *= aiPlayer.getInGamePlayer()
-                .getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier();
+        powerSd *= cuePowerMultiplier;
         powerSd *= handSdMul;
         powerSd *= powerErrorFactor;  // 力量的标准差
 
@@ -562,17 +578,17 @@ public class Analyzer {
         double curveDevRad = Math.abs(mbummeHigh - mbummeLow) * 1;
 
         // 若球手不喜欢加塞，加大sideDevRad
-        double likeSideMul = 110 / (aps.likeSide + 10);
+        double likeSideMul = 110 / (likeSide + 10);
         sideDevRad *= likeSideMul;
         curveDevRad *= likeSideMul;
 
         // 瞄准的1倍标准差偏差角
         double aimingSd;
         if (isAttack) {
-            aimingSd = (105 - playerPerson.getPrecisionPercentage()) * handSdMul /
+            aimingSd = (105 - precisionPercentage) * handSdMul /
                     AiCueResult.AI_PRECISION_MULTIPLIER;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
         } else {
-            aimingSd = (105 - aps.defense) * handSdMul /
+            aimingSd = (105 - defense) * handSdMul /
                     AiCueResult.AI_PRECISION_MULTIPLIER;
         }
 

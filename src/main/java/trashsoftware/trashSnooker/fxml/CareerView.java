@@ -508,6 +508,8 @@ public class CareerView extends ChildInitializable {
 //        System.out.println(inProgress);
         ChampionshipData data;
         if (inProgress == null) {
+            forwardBtn.setDisable(false);
+            
             champInProgBox.setVisible(false);
             champInProgBox.setManaged(false);
 
@@ -554,6 +556,8 @@ public class CareerView extends ChildInitializable {
 
             refreshFeesTexts(joinChampBox.isSelected());
         } else {
+            forwardBtn.setDisable(true);
+            
             champInProgBox.setVisible(true);
             champInProgBox.setManaged(true);
 
@@ -723,6 +727,10 @@ public class CareerView extends ChildInitializable {
 
     @FXML
     void forwardAction() {
+        if (careerManager.getChampionshipInProgress() != null) {
+            EventLogger.warning("Cannot forward during championship");
+            return;
+        }
         if (forwardTimeline == null) {
             ChampionshipData.WithYear nextData = careerManager.getNextChampionshipData();
             if (Util.dateEquals(careerManager.getTimestamp(), nextData.toCalendar())) {

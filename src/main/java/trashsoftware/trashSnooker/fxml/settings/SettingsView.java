@@ -279,7 +279,8 @@ public class SettingsView extends ChildInitializable {
 
     public enum MouseDragMethod {
         POSITION("mouseDragAbsolute"),
-        MOVEMENT("mouseDragRelative");
+        MOVEMENT("mouseDragRelative"),
+        FOLLOW("mouseDragFollow");
 
         private final String stringKey;
 

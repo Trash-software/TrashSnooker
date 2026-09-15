@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.fxml;
 import trashsoftware.trashSnooker.enums.TrajectoryHide;
 import trashsoftware.trashSnooker.enums.TrajectoryMode;
 import trashsoftware.trashSnooker.fxml.drawing.PredictionQuality;
+import trashsoftware.trashSnooker.fxml.settings.SettingsView;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.config.InputManager;
 
@@ -10,7 +11,7 @@ public class InGamePreferences {
     TrajectoryMode trajectoryMode;
     TrajectoryHide trajectoryHide;
     PredictionQuality predictionQuality;
-    boolean absoluteDragAngle;
+    private SettingsView.MouseDragMethod mouseDragMethod;
     
     InGamePreferences() {
         ConfigLoader configLoader = ConfigLoader.getInstance();
@@ -22,11 +23,14 @@ public class InGamePreferences {
         trajectoryHide = TrajectoryHide.fromKey(
                 configLoader.getString("trajectoryHide", "nextCue")
         );
-
-        String mouseDragMethod = configLoader.getString("mouseDragMethod");
-        absoluteDragAngle = "position".equals(mouseDragMethod);
+        
+        mouseDragMethod = SettingsView.MouseDragMethod.fromKey(configLoader.getString("mouseDragMethod"));
     }
-    
+
+    public SettingsView.MouseDragMethod getMouseDragMethod() {
+        return mouseDragMethod;
+    }
+
     public InputManager getInputManager() {
         return ConfigLoader.getInstance().getInputManager();
     }

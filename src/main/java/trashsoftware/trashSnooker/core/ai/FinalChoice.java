@@ -259,7 +259,7 @@ public abstract class FinalChoice {
                         1.0
                 );
 
-                double acceptablePotProb = firstChoice.defaultRef.potProb - 0.2;
+                double acceptablePotProb = firstChoice.defaultRef.thoughtPotProb - 0.2;
                 double tolerancePenalty = 1.0;
                 for (WhitePrediction tor : tolerances) {
                     if (wp.getSecondCollide() != tor.getSecondCollide()) {
@@ -267,14 +267,6 @@ public abstract class FinalChoice {
                     }
 
                     double[] sp = tor.stopPoint();
-//                    boolean canHit = game.pointToPointCanPassBall(sp[0], sp[1],
-//                            firstChoice.collisionPos[0], firstChoice.collisionPos[1],
-//                            game.getCueBall(), firstChoice.ball, 
-//                            true, 
-//                            true);
-//                    if (!canHit) {
-//                        tolerancePenalty *= 3.0;
-//                    }
                     AttackChoice torChoice = Analyzer.choiceFromDifferentWhitePos(
                             game,
                             sp,
@@ -283,8 +275,8 @@ public abstract class FinalChoice {
                     if (torChoice == null) {
                         tolerancePenalty *= 3.0;
                     } else {
-                        if (torChoice.defaultRef.potProb < acceptablePotProb) {
-                            tolerancePenalty += (acceptablePotProb - torChoice.defaultRef.potProb) * 10.0;
+                        if (torChoice.defaultRef.thoughtPotProb < acceptablePotProb) {
+                            tolerancePenalty += (acceptablePotProb - torChoice.defaultRef.thoughtPotProb) * 10.0;
                         }
                     }
                 }

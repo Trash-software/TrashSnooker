@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 1.35;
+    public static final double DEFAULT_AI_PRECISION = 1.42;
     public static final double AI_PRECISION_MULTIPLIER = 11500.0;
 //    public static final double DEFAULT_AI_PRECISION = 1.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
@@ -181,8 +181,8 @@ public class AiCueResult {
             aimPointSdMm = switch (cueType) {
                 case ATTACK -> {
                     if (choice instanceof FinalChoice.IntegratedAttackChoice iac) {
-                        double fixedOffset = (105 - attackPrecision) * 0.125 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
-                        double normalOffset = (105 - attackPrecision) * 0.125;
+                        double fixedOffset = (105 - attackPrecision) * 0.1 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
+                        double normalOffset = (105 - attackPrecision) * 0.1;
                         double personAngle = person.getAnglePrecision();
                         if (personAngle != 1.0) {
                             double angle = iac.attackParams.getAttackChoice().getAngleRad();
@@ -198,8 +198,8 @@ public class AiCueResult {
                     }
                 }
                 case DOUBLE_POT -> {
-                    double fixedOffset = (105 - attackPrecision) * 0.125 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
-                    yield fixedOffset + (105 - doublePrecision) * 0.125;
+                    double fixedOffset = (105 - attackPrecision) * 0.1 / Math.pow(person.getLongPrecision(), 2);  // 类似视线误差这种
+                    yield fixedOffset + (105 - doublePrecision) * 0.1;
                 }
                 case DEFENSE -> (105 - defensePrecision) * 0.25;  // 防守为0的可能会歪一整颗球的半径
                 case SOLVE -> (105 - solvePrecision) * 0.25;

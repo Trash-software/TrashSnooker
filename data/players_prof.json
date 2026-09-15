@@ -1635,7 +1635,8 @@
       },
       "games": {
         "chineseEight": 1.0,
-        "lisEight": 1.0
+        "lisEight": 1.0,
+        "snooker": 0.95
       }
     },
     "Wang Sinuo": {
@@ -1689,7 +1690,8 @@
       },
       "games": {
         "chineseEight": 1.0,
-        "lisEight": 1.0
+        "lisEight": 1.0,
+        "snooker": 0.95
       }
     },
     "Chu Bingjie": {
@@ -1743,6 +1745,176 @@
         "chineseEight": 1.0,
         "lisEight": 1.0,
         "americanNine": 0.98
+      }
+    },
+    "Bai Yulu": {
+      "rest": {
+        "useHand": "RIGHT",
+        "cuePoints": [
+          -0,
+          0
+        ],
+        "powerControl": 75,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 75,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 55,
+        "cueSwingMag": 10,
+        "maxPower": 67,
+        "cuePrecisions": [
+          78,
+          82
+        ],
+        "hand": "rest"
+      },
+      "solving": 85,
+      "aimingOffset": 0,
+      "psyRua": 80,
+      "psyNerve": 77,
+      "dominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 85,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 87,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 70,
+        "cueSwingMag": 3,
+        "maxPower": 81,
+        "cuePrecisions": [
+          90,
+          87
+        ],
+        "hand": "right"
+      },
+      "saveVersion": 64,
+      "precision": 88,
+      "sex": "F",
+      "longPrecision": 1.1,
+      "ai": {
+        "doubleAbility": 65,
+        "likeSide": 65,
+        "defense": 80,
+        "stable": 90,
+        "position": 85,
+        "attackPri": 75,
+        "snookerBreak": "RIGHT",
+        "likePowerRange": [
+          15,
+          60
+        ],
+        "withdrawAfter": 3,
+        "likeShow": 55,
+        "cebSideBreak": true
+      },
+      "nonDominant": {
+        "cuePoints": [
+          -0,
+          0
+        ],
+        "powerControl": 60,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 60,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 50,
+        "cueSwingMag": 85.45,
+        "maxPower": 60,
+        "cuePrecisions": [
+          70,
+          60
+        ],
+        "hand": "left"
+      },
+      "name": "白玉路",
+      "width": 0.95,
+      "games": {
+        "lisEight": 0.9,
+        "americanNine": 0.9,
+        "miniSnooker": 1,
+        "snooker": 1,
+        "chineseEight": 0.9
+      },
+      "clubs": [],
+      "anglePrecision": 1.0,
+      "category": "Professional",
+      "privateCues": [
+        "GirlCue",
+        "GirlPoolCue"
+      ],
+      "height": 160
+    },
+    "Li Yongxi": {
+      "precision": 78.0,
+      "anglePrecision": 1,
+      "longPrecision": 1,
+      "name": "李YX",
+      "sex": "F",
+      "solving": 65,
+      "dominant": {
+        "hand": "right",
+        "pullDt": [
+          130.0,
+          210.0
+        ],
+        "cuePlayType": "p1.0,h200,e500;s",
+        "cuePoints": [
+          0, 
+          0
+        ],
+        "cuePrecisions": [
+          82,
+          84
+        ],
+        "cueSwingMag": 8,
+        "powerControl": 86,
+        "spin": 79.0,
+        "maxPower": 78,
+        "controllablePower": 67
+      },
+      "nonDominantSkill": 65,
+      "restSkill": 77,
+      "aimingOffset": 0,
+      "privateCues": [
+        "GirlPoolCue"
+      ],
+      "category": "Professional",
+      "psy": 85,
+      "height": 174,
+      "width": 1.0,
+      "ai": {
+        "precision": 79,
+        "stable": 82,
+        "position": 83,
+        "defense": 77,
+        "attackPri": 70,
+        "likeShow": 50,
+        "likeSide": 70,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": {
+        "chineseEight": 1.0,
+        "lisEight": 1.0,
+        "snooker": 1.0,
+        "miniSnooker": 1.0
       }
     }
   }

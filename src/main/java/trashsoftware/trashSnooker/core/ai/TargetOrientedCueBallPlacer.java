@@ -117,7 +117,7 @@ public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extend
             }
             if (!choicePlace.isEmpty()) {
                 FinalChoice.IntegratedAttackChoice best = choicePlace.firstKey();
-                if (best.attackParams.potProb > attackProbThreshold) {
+                if (best.attackParams.thoughtPotProb > attackProbThreshold) {
                     specifiedBall = best.attackParams.attackChoice.ball;
                     return choicePlace.get(best);
                 }

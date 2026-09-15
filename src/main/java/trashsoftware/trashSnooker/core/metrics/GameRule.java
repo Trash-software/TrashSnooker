@@ -198,6 +198,7 @@ public enum GameRule {
     
     private int[] divideSubsessionDefault(int sessionFrames, int desiredSubsessionLength) {
         int nRests = sessionFrames / desiredSubsessionLength;
+        if (nRests == 0) return new int[]{sessionFrames};
         int nFinal = sessionFrames - nRests * desiredSubsessionLength;
         int[] sub;
         if (nFinal < desiredSubsessionLength / 2) {

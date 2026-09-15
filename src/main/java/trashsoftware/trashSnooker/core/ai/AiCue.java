@@ -316,7 +316,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             for (FinalChoice.IntegratedAttackChoice iac : choiceList) {
                 if (!iac.nextStepAttackChoices.isEmpty()) {
                     AttackChoice bestNextStep = iac.nextStepAttackChoices.getFirst();
-                    if (bestNextStep.defaultRef.potProb >= pureAttackThresh) {
+                    if (bestNextStep.defaultRef.thoughtPotProb >= pureAttackThresh) {
                         System.out.println("Penalty, tor = " + iac.penalty + ", " + iac.positionErrorTolerance);
                         return iac;  // 我纯进攻下一杆也得走个纯进攻的位撒
                     }
@@ -460,10 +460,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                             AttackParam acp = new AttackParam(
                                     attempted, game, phy, cueParams
                             );
-                            if (acp.potProb > easiest) easiest = acp.potProb;
-                            if (mustAttack || acp.potProb > pureAttackThreshold) {
+                            if (acp.thoughtPotProb > easiest) easiest = acp.thoughtPotProb;
+                            if (mustAttack || acp.thoughtPotProb > pureAttackThreshold) {
                                 pureAttacks.add(acp);
-                            } else if (acp.potProb > defensiveAttackThreshold) {
+                            } else if (acp.thoughtPotProb > defensiveAttackThreshold) {
                                 defensiveAttacks.add(acp);
                             }
                         }
@@ -471,10 +471,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         AttackParam acp = new AttackParam(
                                 choice, game, phy, cueParams
                         );
-                        if (acp.potProb > easiest) easiest = acp.potProb;
-                        if (mustAttack || acp.potProb > pureAttackThreshold) {
+                        if (acp.thoughtPotProb > easiest) easiest = acp.thoughtPotProb;
+                        if (mustAttack || acp.thoughtPotProb > pureAttackThreshold) {
                             pureAttacks.add(acp);
-                        } else if (acp.potProb > defensiveAttackThreshold) {
+                        } else if (acp.thoughtPotProb > defensiveAttackThreshold) {
                             defensiveAttacks.add(acp);
                         }
                     }
@@ -496,8 +496,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             return null;
         }
 
-        pureAttacks.sort((a, b) -> -Double.compare(a.potProb, b.potProb));
-        defensiveAttacks.sort((a, b) -> -Double.compare(a.potProb, b.potProb));
+        pureAttacks.sort((a, b) -> -Double.compare(a.thoughtPotProb, b.thoughtPotProb));
+        defensiveAttacks.sort((a, b) -> -Double.compare(a.thoughtPotProb, b.thoughtPotProb));
 
         List<AttackParam> sortedPureAttacks = new ArrayList<>(pureAttacks);
         // 只留简单的
@@ -808,7 +808,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 }
             }
             if (best != null) {
-                System.out.printf("Best int attack choice: %s, %s, dir %f, %f, power %f, spins %f, %f, pot prob, %f \n",
+                System.out.printf("Best int attack choice: %s, %s, dir %f, %f, power %f, spins %f, %f, pot prob, %f, imagined pot prob: %f\n",
                         best.isPureAttack ? "pure" : "defensive",
                         best.attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice dou ?
                                 ("double " + dou.pocket.pocketName) : "direct",
@@ -817,7 +817,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         best.attackParams.cueParams.selectedPower(),
                         best.attackParams.cueParams.selectedFrontBackSpin(),
                         best.attackParams.cueParams.selectedSideSpin(),
-                        best.attackParams.potProb);
+                        best.attackParams.potProb,
+                        best.attackParams.thoughtPotProb);
                 return best;
             }
         }

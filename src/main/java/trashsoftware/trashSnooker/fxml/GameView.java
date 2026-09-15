@@ -280,6 +280,7 @@ public class GameView implements Initializable {
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
     private boolean isDragging;
+    private boolean clickCountEvenOdd;
     private double lastDragAngle;
     //    private double predictionMultiplier = 2000.0;
     private double maxRealPredictLength = defaultMaxPredictLength;
@@ -1084,6 +1085,9 @@ public class GameView implements Initializable {
     }
 
     private void turnDirectionDeg(double deg) {
+        if (pref.getMouseDragMethod() == SettingsView.MouseDragMethod.FOLLOW && clickCountEvenOdd) {
+            return;  // 在跟随鼠标直接动的模式下，禁用按键调整
+        }
         double rad = Math.toRadians(deg);
         double cur = Algebra.thetaOf(cursorDirectionUnitX, cursorDirectionUnitY);
         cur += rad;
@@ -2022,6 +2026,7 @@ public class GameView implements Initializable {
                     tracedMovement = null;
                     tableGraphicsChanged = true;
                 }
+                clickCountEvenOdd = !clickCountEvenOdd;
                 recalculateUiRestrictions();
                 EventLogger.verbose("New direction: " + cursorDirectionUnitX + ", " + cursorDirectionUnitY);
             }
@@ -2040,6 +2045,16 @@ public class GameView implements Initializable {
 
         if (potInspection != null && potInspection.getSrcBall() != null) {
             tableGraphicsChanged = true;
+        } else if (pref.getMouseDragMethod() == SettingsView.MouseDragMethod.FOLLOW && clickCountEvenOdd) {
+            Ball white = game.getGame().getCueBall();
+            if (white.isPotted()) return;
+
+            double xDiffToWhite = gamePane.realX(mouseEvent.getX()) - white.getX();
+            double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
+            double[] unitDir = Algebra.unitVector(xDiffToWhite, yDiffToWhite);
+            cursorDirectionUnitX = unitDir[0];
+            cursorDirectionUnitY = unitDir[1];
+            recalculateUiRestrictions();
         }
     }
 
@@ -2080,9 +2095,14 @@ public class GameView implements Initializable {
         double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
         double[] unitDir = Algebra.unitVector(xDiffToWhite, yDiffToWhite);
 
-        if (pref.absoluteDragAngle) {
+        if (pref.getMouseDragMethod() == SettingsView.MouseDragMethod.POSITION) {
             cursorDirectionUnitX = unitDir[0];
             cursorDirectionUnitY = unitDir[1];
+
+            lastDragAngle = Algebra.thetaOf(unitDir);  // 没用，只是为了统一
+        } else if (pref.getMouseDragMethod() == SettingsView.MouseDragMethod.FOLLOW) {
+//            cursorDirectionUnitX = unitDir[0];
+//            cursorDirectionUnitY = unitDir[1];
 
             lastDragAngle = Algebra.thetaOf(unitDir);  // 没用，只是为了统一
         } else {
@@ -2389,6 +2409,7 @@ public class GameView implements Initializable {
 
         suggestedPlayerWhitePath = null;
         tableGraphicsChanged = true;
+        clickCountEvenOdd = false;
 
         replaceBallInHandMenu.setDisable(true);
         letOtherPlayMenu.setDisable(true);
@@ -3737,10 +3758,11 @@ public class GameView implements Initializable {
             double x = gamePane.canvasX(lastDrawn.x);
             double y = gamePane.canvasY(lastDrawn.y);
             double calculations = frameTimeMs / (game == null ? Phy.PLAY_MS : game.playPhy.calculateMs);
+            double calculationsPerSec = game == null ? (1000 / Phy.PLAY_MS): game.playPhy.calculationsPerSec;
             double[] vel = frames.get(1).computeVelocityInPhyStyle(lastDrawn, calculations);
 
 //            double slipThresh = gameValues.ball.frictionRatio * gameValues.table.slipResistanceRatio * game.playPhy.slippingFrictionTimed * frameTimeMs * 1.2;
-            double fullSlipThresh = Values.MAX_SPIN_SPEED * 0.1 / game.playPhy.calculationsPerSec;
+            double fullSlipThresh = Values.MAX_SPIN_SPEED * 0.1 / calculationsPerSec;
 
             for (int i = 1; i < end; i++) {
                 MovementFrame frame = frames.get(i);
@@ -5420,7 +5442,7 @@ public class GameView implements Initializable {
                 }
                 double wholeDtPercentage = 1 - (cueDtToWhite - maxExtension) /
                         (maxPullDistance - maxExtension);  // 出杆完成的百分比
-                wholeDtPercentage = Math.max(0, Math.min(wholeDtPercentage, 0.9999));
+                wholeDtPercentage = Math.clamp(wholeDtPercentage, 0, 0.9999);
 //                System.out.println(wholeDtPercentage);
 
                 List<Double> stages = playerHand.playerHand.getCuePlayType().getSequence();
@@ -5429,7 +5451,9 @@ public class GameView implements Initializable {
                         stages.get((int) (wholeDtPercentage * stages.size()));
                 double baseSwingMag = playerHand.playerHand.getCueSwingMag();
                 if (!playedByHuman || enablePsy) {
-                    double psyFactor = igp.getPsyMul(gamePlayStage(), game.getGame().frameImportance(igp.getPlayerNumber()));
+                    // 回放，懒得修了
+                    double fi = game == null ? 0.0 : game.getGame().frameImportance(igp.getPlayerNumber());
+                    double psyFactor = igp.getPsyMul(gamePlayStage(), fi);
                     baseSwingMag *= (1.0 + (1.0 - psyFactor) * 5);
                 }
                 double frameRateRatio = gameLoop.lastAnimationFrameMs() / frameTimeMs;

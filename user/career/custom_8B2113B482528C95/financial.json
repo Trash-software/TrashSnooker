@@ -1,15 +1,12 @@
 {
   "financial": {
     "temporalRecord": {
-      "currentTemporalFeesStart": "2023/4/17",
-      "moneyBefore": 91053,
-      "items": {
-        "living": 23,
-        "hotel": 53
-      }
+      "currentTemporalFeesStart": "2023/6/18",
+      "moneyBefore": 104877,
+      "items": {}
     },
     "remFreePerks": 0,
-    "money": 90977,
+    "money": 104877,
     "invoices": [
       {
         "inGameDate": "2023/2/27",
@@ -994,13 +991,615 @@
           "moneyCost": 200
         }],
         "timestamp": "2026-09-13 05:50:57"
+      },
+      {
+        "item": "primeTipMedium:custom_8B2113B482528C95-831",
+        "itemType": "tip",
+        "inGameDate": "2023/4/20",
+        "moneyBefore": 90825,
+        "moneyCost": 80,
+        "moneyAfter": 90745,
+        "type": "purchase",
+        "timestamp": "2026-09-15 00:12:00"
+      },
+      {
+        "inGameDate": "2023/4/26",
+        "year": 2023,
+        "moneyBefore": 90289,
+        "match": "world_champ",
+        "moneyAfter": 107932,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 17643,
+          "raw": 20000
+        }},
+        "timestamp": "2026-09-15 00:51:46"
+      },
+      {
+        "dateOnTicket": "2023/4/26",
+        "inGameDate": "2023/4/26",
+        "moneyBefore": 107932,
+        "moneyAfter": 107627,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "LON-SHF+T",
+            "departureCityId": "Sheffield",
+            "seatClass": "ECONOMY",
+            "payedPrice": 55
+          },
+          {
+            "routeId": "LHR-SPC",
+            "departureCityId": "London",
+            "seatClass": "ECONOMY",
+            "payedPrice": 160
+          },
+          {
+            "routeId": "SPC-CGP",
+            "departureCityId": "Spacecity",
+            "seatClass": "ECONOMY",
+            "payedPrice": 90
+          }
+        ],
+        "timestamp": "2026-09-15 00:52:36"
+      },
+      {
+        "inGameDate": "2023/4/26",
+        "durationBegin": "2023/4/20",
+        "moneyBefore": 90745,
+        "moneyAfter": 107627,
+        "cityId": "Sheffield",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 138,
+          "hotel": 318
+        },
+        "timestamp": "2026-09-15 00:52:36"
+      },
+      {
+        "inGameDate": "2023/4/27",
+        "perkUsed": 8,
+        "freePerkUsed": 0,
+        "moneyBefore": 107627,
+        "moneyCost": 3000,
+        "moneyAfter": 104627,
+        "ability": {
+          "powerControl-RIGHT": [
+            74.72880036343547,
+            78.27806241494213
+          ],
+          "spinControl-REST": [
+            40.87104591424254,
+            40.87104591424254
+          ],
+          "normalPower-RIGHT": [
+            68.88253480993545,
+            71.7611840808365
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            42.87628429236793,
+            42.87628429236793
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            35.230200356705815,
+            35.230200356705815
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            80.19481392594219,
+            80.19481392594219
+          ],
+          "spin-RIGHT": [
+            75.50707520121067,
+            78.99532050543576
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            42.153345932796825,
+            42.153345932796825
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            75.63356757033517,
+            75.63356757033517
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            70.78141276215156,
+            74.64015000159888
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-15 00:52:52"
+      },
+      {
+        "inGameDate": "2023/4/27",
+        "perkUsed": 5,
+        "freePerkUsed": 0,
+        "moneyBefore": 104627,
+        "moneyCost": 1500,
+        "moneyAfter": 103127,
+        "ability": {
+          "powerControl-RIGHT": [
+            78.27806241494213,
+            78.27806241494213
+          ],
+          "spinControl-REST": [
+            40.87104591424254,
+            44.03620407767284
+          ],
+          "normalPower-RIGHT": [
+            71.7611840808365,
+            71.7611840808365
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            42.87628429236793,
+            45.96123292067321
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            35.230200356705815,
+            39.09138464874008
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            80.19481392594219,
+            80.19481392594219
+          ],
+          "spin-RIGHT": [
+            78.99532050543576,
+            78.99532050543576
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            42.153345932796825,
+            45.26721209548495
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            75.63356757033517,
+            75.63356757033517
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            74.64015000159888,
+            74.64015000159888
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-15 00:53:00"
+      },
+      {
+        "dateOnTicket": "2023/4/27",
+        "inGameDate": "2023/4/27",
+        "moneyBefore": 103127,
+        "moneyAfter": 102362,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "DXB-CGP",
+            "departureCityId": "Catgivepower",
+            "seatClass": "ECONOMY",
+            "payedPrice": 250
+          },
+          {
+            "routeId": "CAN-DXB",
+            "departureCityId": "Dubai",
+            "seatClass": "ECONOMY",
+            "payedPrice": 420
+          },
+          {
+            "routeId": "CAN-WUH",
+            "departureCityId": "Guangzhou",
+            "seatClass": "ECONOMY",
+            "payedPrice": 95
+          }
+        ],
+        "timestamp": "2026-09-15 00:53:11"
+      },
+      {
+        "inGameDate": "2023/4/27",
+        "durationBegin": "2023/4/27",
+        "moneyBefore": 107627,
+        "moneyAfter": 102362,
+        "cityId": "Catgivepower",
+        "type": "cumulativeFees",
+        "items": {},
+        "timestamp": "2026-09-15 00:53:11"
+      },
+      {
+        "item": "residence-Catgivepower:custom_8B2113B482528C95-201",
+        "inGameDate": "2023/5/1",
+        "moneyBefore": 102250,
+        "moneyCost": 440,
+        "moneyAfter": 101810,
+        "type": "houseRent",
+        "timestamp": "2026-09-15 00:53:28"
+      },
+      {
+        "item": 12,
+        "inGameDate": "2023/5/1",
+        "moneyBefore": 101754,
+        "match": "custom_8B2113B482528C95+2023+eight_noob_open",
+        "moneyAfter": 101954,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-15 00:54:37"
+      },
+      {
+        "inGameDate": "2023/5/1",
+        "moneyBefore": 101954,
+        "match": "custom_8B2113B482528C95+2023+eight_noob_open",
+        "moneyAfter": 101754,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-15 00:54:37"
+      },
+      {
+        "inGameDate": "2023/5/4",
+        "year": 2023,
+        "moneyBefore": 101586,
+        "match": "eight_noob_open",
+        "moneyAfter": 102361,
+        "type": "championshipEarn",
+        "items": {"TOP_64": {
+          "actual": 775,
+          "raw": 1000
+        }},
+        "timestamp": "2026-09-15 01:11:28"
+      },
+      {
+        "inGameDate": "2023/5/11",
+        "durationBegin": "2023/5/1",
+        "moneyBefore": 101754,
+        "moneyAfter": 101969,
+        "cityId": "Wuhan",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 180,
+          "hotel": 380
+        },
+        "timestamp": "2026-09-15 01:11:38"
+      },
+      {
+        "dateOnTicket": "2023/5/11",
+        "inGameDate": "2023/5/11",
+        "moneyBefore": 101969,
+        "moneyAfter": 101874,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "CAN-WUH",
+          "departureCityId": "Wuhan",
+          "seatClass": "ECONOMY",
+          "payedPrice": 95
+        }],
+        "timestamp": "2026-09-15 01:11:38"
+      },
+      {
+        "inGameDate": "2023/5/12",
+        "moneyBefore": 101874,
+        "match": "custom_8B2113B482528C95+2023+womens_world_champ",
+        "moneyAfter": 101674,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-15 01:11:55"
+      },
+      {
+        "inGameDate": "2023/5/16",
+        "year": 2023,
+        "moneyBefore": 101254,
+        "match": "womens_world_champ",
+        "moneyAfter": 110554,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 9300,
+          "raw": 12000
+        }},
+        "timestamp": "2026-09-15 07:08:51"
+      },
+      {
+        "item": "residence-Chongqing:custom_8B2113B482528C95-202",
+        "inGameDate": "2023/5/16",
+        "moneyBefore": 110554,
+        "moneyCost": 460,
+        "moneyAfter": 110094,
+        "type": "houseRent",
+        "timestamp": "2026-09-15 07:09:49"
+      },
+      {
+        "dateOnTicket": "2023/5/16",
+        "inGameDate": "2023/5/16",
+        "moneyBefore": 110094,
+        "moneyAfter": 109984,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "CAN-CKG",
+          "departureCityId": "Guangzhou",
+          "seatClass": "ECONOMY",
+          "payedPrice": 110
+        }],
+        "timestamp": "2026-09-15 07:09:55"
+      },
+      {
+        "inGameDate": "2023/5/16",
+        "durationBegin": "2023/5/16",
+        "moneyBefore": 101254,
+        "moneyAfter": 109984,
+        "cityId": "Guangzhou",
+        "type": "cumulativeFees",
+        "items": {},
+        "timestamp": "2026-09-15 07:09:55"
+      },
+      {
+        "inGameDate": "2023/5/17",
+        "perkUsed": 5,
+        "freePerkUsed": 0,
+        "moneyBefore": 109984,
+        "moneyCost": 2100,
+        "moneyAfter": 107884,
+        "ability": {
+          "powerControl-RIGHT": [
+            78.27806241494213,
+            79.94693991834444
+          ],
+          "spinControl-REST": [
+            44.036204077672835,
+            44.036204077672835
+          ],
+          "normalPower-RIGHT": [
+            71.7611840808365,
+            73.11473671760304
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            42.32852678142497
+          ],
+          "powerControl-REST": [
+            45.96123292067321,
+            45.96123292067321
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            39.09138464874008,
+            39.09138464874008
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            80.19481392594219,
+            80.19481392594219
+          ],
+          "spin-RIGHT": [
+            78.99532050543576,
+            80.63550768521833
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            45.26721209548495,
+            45.26721209548495
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            75.63356757033517,
+            77.40822486752177
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            74.64015000159888,
+            76.45454400153493
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-15 07:10:07"
+      },
+      {
+        "inGameDate": "2023/5/17",
+        "perkUsed": 5,
+        "freePerkUsed": 0,
+        "moneyBefore": 107884,
+        "moneyCost": 1500,
+        "moneyAfter": 106384,
+        "ability": {
+          "powerControl-RIGHT": [
+            79.94693991834444,
+            79.94693991834444
+          ],
+          "spinControl-REST": [
+            44.036204077672835,
+            44.036204077672835
+          ],
+          "normalPower-RIGHT": [
+            73.11473671760304,
+            73.11473671760304
+          ],
+          "cuePrecision-REST": [
+            42.32852678142497,
+            45.43538571016797
+          ],
+          "powerControl-REST": [
+            45.96123292067321,
+            48.922783603846284
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            39.09138464874008,
+            42.649852092278856
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            80.19481392594219,
+            80.19481392594219
+          ],
+          "spin-RIGHT": [
+            80.63550768521833,
+            80.63550768521833
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            45.26721209548495,
+            48.25652361166555
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            77.40822486752177,
+            77.40822486752177
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            76.45454400153493,
+            76.45454400153493
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-15 07:10:17"
+      },
+      {
+        "item": "residence-Catgivepower:custom_8B2113B482528C95-201",
+        "inGameDate": "2023/6/1",
+        "moneyBefore": 106146,
+        "moneyCost": 440,
+        "moneyAfter": 105706,
+        "type": "houseRent",
+        "timestamp": "2026-09-15 07:10:24"
+      },
+      {
+        "item": "residence-Chongqing:custom_8B2113B482528C95-202",
+        "inGameDate": "2023/6/1",
+        "moneyBefore": 105706,
+        "moneyCost": 460,
+        "moneyAfter": 105246,
+        "type": "houseRent",
+        "timestamp": "2026-09-15 07:10:24"
+      },
+      {
+        "inGameDate": "2023/6/17",
+        "durationBegin": "2023/5/17",
+        "moneyBefore": 109984,
+        "moneyAfter": 104957,
+        "cityId": "Chongqing",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 527,
+          "hotel": 0
+        },
+        "timestamp": "2026-09-15 07:10:30"
+      },
+      {
+        "dateOnTicket": "2023/6/17",
+        "inGameDate": "2023/6/17",
+        "moneyBefore": 104957,
+        "moneyAfter": 104877,
+        "type": "travelTicket",
+        "items": [{
+          "routeId": "XIY-CKG",
+          "departureCityId": "Chongqing",
+          "seatClass": "ECONOMY",
+          "payedPrice": 80
+        }],
+        "timestamp": "2026-09-15 07:10:30"
+      },
+      {
+        "item": 12,
+        "inGameDate": "2023/6/18",
+        "moneyBefore": 104877,
+        "match": "custom_8B2113B482528C95+2023+eight_master_tour_xian",
+        "moneyAfter": 105077,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2026-09-15 07:10:54"
+      },
+      {
+        "inGameDate": "2023/6/18",
+        "moneyBefore": 105077,
+        "match": "custom_8B2113B482528C95+2023+eight_master_tour_xian",
+        "moneyAfter": 104877,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-15 07:10:54"
       }
     ],
-    "level": 10,
-    "expInThisLevel": 151,
+    "level": 18,
+    "expInThisLevel": 224,
     "availPerks": 0,
-    "totalPerks": 28,
-    "totalExp": 1400
+    "totalPerks": 51,
+    "totalExp": 3600
   },
-  "checksum": "32E6F693C7C41D90561EF88A749B2DF3"
+  "checksum": "4D5D06C51D9BA382BCD62EB04C3D4162"
 }

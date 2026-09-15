@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.CueParams;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -15,6 +16,12 @@ import java.util.Arrays;
 
 public class AttackParam {
     double potProb;  // 正常情况下能打进的概率
+
+    /**
+     * 自我感觉的能打进概率。这对于职业选手来说=potProb，但对于b手来说，这决定他们进不进攻。
+     * 比如某人准度很低，进攻倾向很高，如果没有这个，就会导致他觉得什么球都打不进而放弃进攻
+     */
+    double thoughtPotProb;
     double price;  // 对于球手来说的价值
     AttackChoice attackChoice;
 
@@ -24,6 +31,7 @@ public class AttackParam {
         this.attackChoice = replacement;
         this.price = base.price;
         this.potProb = base.potProb;
+        this.thoughtPotProb = base.thoughtPotProb;
         this.cueParams = base.cueParams;
     }
 
@@ -38,10 +46,60 @@ public class AttackParam {
 
         PlayerPerson playerPerson = attackChoice.attackingPlayer.getPlayerPerson();
         AiPlayStyle aps = playerPerson.getAiPlayStyle();
+        Cue cue = attackChoice.attackingPlayer.getInGamePlayer()
+                .getCueSelection().getSelected().getNonNullInstance();
+        
+        potProb = computePotProb(
+                attackChoice,
+                phy,
+                gameValues,
+                cueParams,
+                playerPerson.getPrecisionPercentage(),
+                playerPerson.getAnglePrecision(),
+                aps.defense,
+                aps.likeSide,
+                cue,
+                aps.doubleAbility
+        );
+        
+        thoughtPotProb = computePotProb(
+                attackChoice,
+                phy,
+                gameValues,
+                cueParams,
+                Math.max(80, playerPerson.getPrecisionPercentage()),
+                Math.max(0.9, playerPerson.getAnglePrecision()),
+                aps.defense,
+                aps.likeSide,
+                cue,
+                aps.doubleAbility
+        );
+        
+        double pricedProb = Math.max(potProb, thoughtPotProb);
+        if (pricedProb == 0.0) {
+            price = 0.0;
+        } else {
+            price = pricedProb * attackChoice.targetPrice;
+        }
+    }
+    
+    protected static double computePotProb(AttackChoice attackChoice, 
+                                           Phy phy, 
+                                           GameValues gameValues,
+                                           CueParams cueParams,
+                                           double precisionPercentage,
+                                           double anglePrecision,
+                                           double defense,
+                                           double likeSide,
+                                           Cue cue,
+                                           double doubleAbility) {
 
         double[] devs = Analyzer.aiStandardDeviation(
                 cueParams,
-                attackChoice.attackingPlayer,
+                precisionPercentage,
+                defense,
+                cue.getPowerMultiplier(),
+                likeSide,
                 true
         );
         double sideDevRad = devs[0];
@@ -86,14 +144,16 @@ public class AttackParam {
 
         // 角度球的瞄准难度：从白球处看目标球和袋，在视线背景上的投影距离
         double targetAimingOffset = targetAimingOffset(attackChoice.angleRad, attackChoice.targetHoleDistance);
+        
+        double potProb;
 
         double allowedDev;
         NormalDistribution nd;
         if (attackChoice instanceof AttackChoice.DirectAttackChoice dac) {
             // 举个例子，瞄准为90的AI，白球在右顶袋打蓝球右底袋时，offset差不多1770，下面这个值在53毫米左右
-            double targetDifficultyMm = targetDifficultyMmByAiming(targetAimingOffset, 
-                    playerPerson.getPrecisionPercentage(), 
-                    playerPerson.getAnglePrecision());
+            double targetDifficultyMm = targetDifficultyMmByAiming(targetAimingOffset,
+                    precisionPercentage,
+                    anglePrecision);
 
             tarDevHoleSdMm += targetDifficultyMm;
 
@@ -108,7 +168,7 @@ public class AttackParam {
         } else if (attackChoice instanceof AttackChoice.DoubleAttackChoice doubleAc) {
             // 稍微给高点
             // 除数越大，AI越倾向打翻袋
-            double targetDifficultyMm = targetDifficultyMmOfDoubleByAiming(targetAimingOffset, aps.doubleAbility);
+            double targetDifficultyMm = targetDifficultyMmOfDoubleByAiming(targetAimingOffset, doubleAbility);
 
             tarDevHoleSdMm += targetDifficultyMm;
 
@@ -123,9 +183,7 @@ public class AttackParam {
             nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.0001));
         } else {
             EventLogger.error("Unknown attack choice: " + attackChoice);
-            potProb = 0.0;
-            price = 0.0;
-            return;
+            return 0.0;
         }
 
         potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
@@ -141,16 +199,7 @@ public class AttackParam {
             );
             potProb = 0.0;
         }
-        potProb = Math.clamp(potProb, 0.0, 1.0);  // 就是不知道哪来的bug，保险一下
-        price = potProb * attackChoice.targetPrice;
-
-//            System.out.println("Est dev: " + tarDevHoleSdMm +
-//                    ", allow dev: " + allowedDev +
-//                    ", prob: " + potProb +
-//                    ", price: " + price +
-//                    ", power: " + selectedPower +
-//                    ", spins: " + selectedFrontBackSpin + ", " + selectedSideSpin +
-//                    ", side dev: " + Math.toDegrees(sideDevRad));
+        return Math.clamp(potProb, 0.0, 1.0);  // 就是不知道哪来的bug，保险一下
     }
 
     protected AttackParam copyWithCorrectedChoice(AttackChoice corrected) {
