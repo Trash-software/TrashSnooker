@@ -7,7 +7,7 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 public abstract class ObjectOnTable implements Cloneable {
-    protected static final double GENERAL_BOUNCE_ACC = 0.4;
+    protected static final double GENERAL_BOUNCE_ACC = 0.35;
     protected final GameValues values;
     protected final TableMetrics table;
     protected final double radius;
@@ -229,44 +229,53 @@ public abstract class ObjectOnTable implements Cloneable {
     protected double getNFramesInCushion(double verticalSpeed, double acc) {
         return verticalSpeed / -acc * 2;
     }
+    
+    protected static double getGravityAreaZ(double fallRadius, double gravityZoneWidth,
+                                            double ballRadius, double dt) {
+        double gravityFullRadius = fallRadius + gravityZoneWidth;
+        if (dt >= gravityFullRadius) return ballRadius;  // 返回球心处的z
+        if (dt <= fallRadius - ballRadius) return -100;  // 随便返回一个最小值 
+        double dtToGravityEdge = gravityFullRadius - dt;
+        double hypotenuse = gravityZoneWidth + ballRadius;  // 斜边
+        double dzToLevel = Math.sqrt(hypotenuse * hypotenuse - dtToGravityEdge * dtToGravityEdge);  // 勾股定理
+        return -gravityZoneWidth + dzToLevel;
+    }
 
-    protected void tryEnterGravityArea(Phy phy, double[] holeXy, boolean isMidHole) {
-        double xDiff = holeXy[0] - nextX;
-        double yDiff = holeXy[1] - nextY;
+    protected void tryEnterGravityArea(Phy phy, Pocket pocket) {
+        double xDiff = pocket.fallCenter[0] - nextX;
+        double yDiff = pocket.fallCenter[1] - nextY;
         double dt = Math.hypot(xDiff, yDiff);
+        
+        double lastDt = Math.hypot(pocket.fallCenter[0] - x, pocket.fallCenter[1] - y);
 
-        double holeRadius = isMidHole ?
-                table.pocketDifficulty.midPocketFallRadius :
-                table.pocketDifficulty.cornerPocketFallRadius;
-        double holeAndSlopeRadius = holeRadius +
-                (isMidHole ?
-                        table.midPocketGravityRadius :
-                        table.cornerPocketGravityRadius);
+        double holeRadius = pocket.fallRadius;
+        double holeAndSlopeRadius = holeRadius + pocket.gravityZoneWidth;
         
         if (dt < holeAndSlopeRadius) {
             double pureHoleRadius = holeRadius - values.ball.ballRadius;
 
             double gravity = 9800;
+//            double vAcc;
             double[] supporter;
             if (dt <= pureHoleRadius) {
                 // 已经完全进袋了，但是我们当袋底也有点角度
                 supporter = new double[]{Algebra.HALF_SQRT2, Algebra.HALF_SQRT2};
+//                vAcc = gravity;
             } else {
                 double enteredDt = holeAndSlopeRadius - dt;
                 double enterRatio = enteredDt / (holeAndSlopeRadius - pureHoleRadius);
                 double angle = Math.acos(enterRatio);  // 球心与弧心连线 与 水平面 的夹角
-                supporter = Algebra.unitVectorOfAngle(angle);
+//                double[] vAccVec = Algebra.unitVectorOfAngle(angle);
+//                vAcc = vAccVec[1] * gravity;
+                supporter = Algebra.unitVectorOfAngle(Math.min(angle, Math.PI / 4));
             }
 
-            double accMag = supporter[0] * gravity;
-            double resist = 0.0;  // 摩擦力
-            accMag *= (1 - resist);
-
-            accMag /= phy.calculationsPerSecSqr;
+            double gravityAcc = supporter[0] * gravity;
+            gravityAcc /= phy.calculationsPerSecSqr;
 
             double[] accVec = Algebra.unitVector(xDiff, yDiff);
-            accVec[0] *= accMag;
-            accVec[1] *= accMag;
+            accVec[0] *= gravityAcc;
+            accVec[1] *= gravityAcc;
 
             vx += accVec[0];
             vy += accVec[1];
@@ -326,13 +335,13 @@ public abstract class ObjectOnTable implements Cloneable {
                         }
                     }
 
-                    tryEnterGravityArea(phy, table.topMid.fallCenter, true);
+                    tryEnterGravityArea(phy, table.topMid);
                     normalMove(phy);
                     prepareMove(phy);
                     return new CushionHitResult(1);
                 } else {
 
-                    tryEnterGravityArea(phy, table.topMid.fallCenter, true);
+                    tryEnterGravityArea(phy, table.topMid);
                     normalMove(phy);
                     prepareMove(phy);
                     return new CushionHitResult(1);
@@ -376,13 +385,13 @@ public abstract class ObjectOnTable implements Cloneable {
                         }
                     }
 
-                    tryEnterGravityArea(phy, table.botMid.fallCenter, true);
+                    tryEnterGravityArea(phy, table.botMid);
                     normalMove(phy);
                     prepareMove(phy);
                     return new CushionHitResult(1);
                 } else {
 
-                    tryEnterGravityArea(phy, table.botMid.fallCenter, true);
+                    tryEnterGravityArea(phy, table.botMid);
                     normalMove(phy);
                     prepareMove(phy);
                     return new CushionHitResult(1);
@@ -392,25 +401,26 @@ public abstract class ObjectOnTable implements Cloneable {
 
         // 底袋
         double[] probHole = null;
-        double[] probPocketFallCenter = null;
+//        double[] probPocketFallCenter = null;
+        Pocket probPocket = null;
         if (nextY < table.topCornerHoleAreaDownY) {
             if (nextX < table.leftCornerHoleAreaRightX) {
                 // 左上底袋
                 probHole = table.topLeft.fallCenter;
-                probPocketFallCenter = table.topLeft.fallCenter;
+                probPocket = table.topLeft;
             } else if (nextX >= table.rightCornerHoleAreaLeftX) {
                 // 右上底袋
                 probHole = table.topRight.fallCenter;
-                probPocketFallCenter = table.topRight.fallCenter;
+                probPocket = table.topRight;
             }
         } else if (nextY >= table.botCornerHoleAreaUpY) {
             if (nextX < table.leftCornerHoleAreaRightX) {
                 // 左下底袋}
                 probHole = table.botLeft.fallCenter;
-                probPocketFallCenter = table.botLeft.fallCenter;
+                probPocket = table.botLeft;
             } else if (nextX >= table.rightCornerHoleAreaLeftX) {
                 probHole = table.botRight.fallCenter;  // 右下底袋
-                probPocketFallCenter = table.botRight.fallCenter;
+                probPocket = table.botRight;
             }
         }
 
@@ -436,7 +446,7 @@ public abstract class ObjectOnTable implements Cloneable {
             }
 //            }
 
-            tryEnterGravityArea(phy, probPocketFallCenter, false);
+            tryEnterGravityArea(phy, probPocket);
             normalMove(phy);
             prepareMove(phy);
             return new CushionHitResult(1);

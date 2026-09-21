@@ -1,0 +1,786 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "custom_8B2113B482528C95": 24,
+    "Brown": 30,
+    "random_player_46": 44,
+    "Yan Bingtao": 6,
+    "Tou zi e": 16,
+    "Liu Mang": 19,
+    "random_player_103": 45,
+    "Tang Chunxiao": 38,
+    "random_player_124": 48,
+    "Wang ming": 21,
+    "Jack Lisowski": 8,
+    "Glass Heart": 17,
+    "Mark Allen": 9,
+    "Noob": 43,
+    "Karen Wilson": 4,
+    "Zhao Xintong": 10,
+    "Mang Dali": 34,
+    "Neil Robertson": 11,
+    "Summer Brave": 33,
+    "Lao Youtiao": 36,
+    "Tu zi": 14,
+    "Stephen Maguire": 20,
+    "Awu": 35,
+    "random_player_92": 46,
+    "John Wizard": 1,
+    "Bai Yulu": 37,
+    "Mou Moumou": 22,
+    "Li Yongxi": 40,
+    "Mang Zi": 41,
+    "Matthew Stevens": 7,
+    "Kid": 28,
+    "random_player_33": 47,
+    "Fat Guy": 25,
+    "Ding Junhui": 5,
+    "Smart": 26,
+    "Numb Spicy Chicken": 27,
+    "Trump": 3,
+    "High Stick": 32,
+    "Mark Williams": 12,
+    "Give Emperor": 29,
+    "Wang Sinuo": 39,
+    "O_Sullivan": 2,
+    "Small Egg High": 23,
+    "Li chengzhen": 13,
+    "Luca Brecel": 18,
+    "Worst Professional": 15,
+    "Wang Xu": 31,
+    "Baggage Brother": 42
+  },
+  "championshipId": "space_grand_prix",
+  "matchTree": {"root": {
+    "p1wins": 2,
+    "p1": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Matthew Stevens"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Smart"},
+              "p2": {"winner": "random_player_33"},
+              "winner": "Smart",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-0",
+              "p2wins": 0
+            },
+            "winner": "Matthew Stevens",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-16",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Mark Allen"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Small Egg High"},
+              "p2": {"winner": "Bai Yulu"},
+              "winner": "Small Egg High",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-1",
+              "p2wins": 0
+            },
+            "winner": "Mark Allen",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-17",
+            "p2wins": 0
+          },
+          "winner": "Matthew Stevens",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-32",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Karen Wilson"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Fat Guy"},
+              "p2": {"winner": "Lao Youtiao"},
+              "winner": "Fat Guy",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-2",
+              "p2wins": 0
+            },
+            "winner": "Karen Wilson",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-18",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Tu zi"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Stephen Maguire"},
+              "p2": {"winner": "Summer Brave"},
+              "winner": "Stephen Maguire",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-3",
+              "p2wins": 0
+            },
+            "winner": "Stephen Maguire",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-19",
+            "p2wins": 1
+          },
+          "winner": "Karen Wilson",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-33",
+          "p2wins": 0
+        },
+        "winner": "Matthew Stevens",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-40",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Yan Bingtao"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Awu"},
+              "p2": {"winner": "Mang Dali"},
+              "winner": "Awu",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-4",
+              "p2wins": 0
+            },
+            "winner": "Yan Bingtao",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-20",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Mark Williams"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Luca Brecel"},
+              "p2": {"winner": "custom_8B2113B482528C95"},
+              "winner": "custom_8B2113B482528C95",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-5",
+              "p2wins": 1
+            },
+            "winner": "Mark Williams",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-21",
+            "p2wins": 0
+          },
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-34",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Ding Junhui"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Kid"},
+              "p2": {"winner": "Numb Spicy Chicken"},
+              "winner": "Numb Spicy Chicken",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-6",
+              "p2wins": 1
+            },
+            "winner": "Ding Junhui",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-22",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Tou zi e"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Mang Zi"},
+              "p2": {"winner": "Mou Moumou"},
+              "winner": "Mou Moumou",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-7",
+              "p2wins": 1
+            },
+            "winner": "Tou zi e",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-23",
+            "p2wins": 0
+          },
+          "winner": "Ding Junhui",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-35",
+          "p2wins": 0
+        },
+        "winner": "Ding Junhui",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-41",
+        "p2wins": 2
+      },
+      "winner": "Matthew Stevens",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-SEMI_FINAL-44",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Trump"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Wang Xu"},
+              "p2": {"winner": "Wang ming"},
+              "winner": "Wang Xu",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-8",
+              "p2wins": 0
+            },
+            "winner": "Trump",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-24",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Neil Robertson"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "random_player_124"},
+              "p2": {"winner": "Noob"},
+              "winner": "random_player_124",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-9",
+              "p2wins": 0
+            },
+            "winner": "random_player_124",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-25",
+            "p2wins": 1
+          },
+          "winner": "Trump",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-36",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Jack Lisowski"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "High Stick"},
+              "p2": {"winner": "Give Emperor"},
+              "winner": "High Stick",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-10",
+              "p2wins": 0
+            },
+            "winner": "Jack Lisowski",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-26",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Li chengzhen"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Tang Chunxiao"},
+              "p2": {"winner": "random_player_46"},
+              "winner": "Tang Chunxiao",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-11",
+              "p2wins": 0
+            },
+            "winner": "Li chengzhen",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-27",
+            "p2wins": 0
+          },
+          "winner": "Jack Lisowski",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-37",
+          "p2wins": 0
+        },
+        "winner": "Jack Lisowski",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-42",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "O_Sullivan"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "random_player_103"},
+              "p2": {"winner": "Brown"},
+              "winner": "random_player_103",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-12",
+              "p2wins": 0
+            },
+            "winner": "O_Sullivan",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-28",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Worst Professional"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "random_player_92"},
+              "p2": {"winner": "Glass Heart"},
+              "winner": "random_player_92",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-13",
+              "p2wins": 0
+            },
+            "winner": "Worst Professional",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-29",
+            "p2wins": 0
+          },
+          "winner": "O_Sullivan",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-38",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "John Wizard"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Wang Sinuo"},
+              "p2": {"winner": "Li Yongxi"},
+              "winner": "Wang Sinuo",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-14",
+              "p2wins": 0
+            },
+            "winner": "John Wizard",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-30",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Zhao Xintong"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Baggage Brother"},
+              "p2": {"winner": "Liu Mang"},
+              "winner": "Liu Mang",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-15",
+              "p2wins": 1
+            },
+            "winner": "Liu Mang",
+            "stage": "ROUND_1",
+            "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-31",
+            "p2wins": 1
+          },
+          "winner": "Liu Mang",
+          "stage": "ROUND_2",
+          "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-39",
+          "p2wins": 2
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-43",
+        "p2wins": 0
+      },
+      "winner": "Jack Lisowski",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-SEMI_FINAL-45",
+      "p2wins": 1
+    },
+    "winner": "Jack Lisowski",
+    "stage": "FINAL",
+    "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-FINAL-46",
+    "p2wins": 3
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 132,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-SEMI_FINAL-44",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 132,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-38",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 129,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-33",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-SEMI_FINAL-45",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-42",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 127,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-43",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-22",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-SEMI_FINAL-45",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-32",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 122,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-FINAL-46",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 121,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-FINAL-46",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 118,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-16",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 112,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-40",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 111,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-FINAL-46",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 111,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-37",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 104,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-10",
+      "playerId": "High Stick"
+    },
+    {
+      "score": 103,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-28",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 100,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-42",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 97,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-32",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 96,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-36",
+      "playerId": "Trump"
+    },
+    {
+      "score": 92,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-33",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 92,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-13",
+      "playerId": "random_player_92"
+    },
+    {
+      "score": 91,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-26",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 89,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-39",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 84,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-29",
+      "playerId": "Worst Professional"
+    },
+    {
+      "score": 82,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-37",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 81,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-2",
+      "playerId": "Fat Guy"
+    },
+    {
+      "score": 77,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-31",
+      "playerId": "Liu Mang"
+    },
+    {
+      "score": 76,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-17",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 72,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-21",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 71,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-23",
+      "playerId": "Tou zi e"
+    },
+    {
+      "score": 67,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-PRE_ROUND_1-12",
+      "playerId": "random_player_103"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-SEMI_FINAL-45",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-43",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-QUARTER_FINAL-40",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 61,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-38",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-FINAL-46",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_2-39",
+      "playerId": "Liu Mang"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+space_grand_prix-ROUND_1-20",
+      "playerId": "Yan Bingtao"
+    }
+  ],
+  "timestamp": "2023/7/28"
+}

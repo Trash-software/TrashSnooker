@@ -192,14 +192,14 @@ public class CuePlayParams {
         double cosMbu = Math.cos(Math.toRadians(cueAngleDeg));
         double cueSpeed = horizontalSpeed / cosMbu;
 
-        if (frontBackSpin > 0) {
-            // 高杆补偿
-            double factor = Algebra.shiftRangeSafe(
-                    0, 1,
-                    1, Values.FRONT_SPIN_FACTOR,
-                    frontBackSpin);
-            frontBackSpin *= factor;
-        }
+//        if (frontBackSpin > 0) {
+//            // 高杆补偿
+//            double factor = Algebra.shiftRangeSafe(
+//                    0, 1,
+//                    1, Values.FRONT_SPIN_FACTOR,
+//                    frontBackSpin);
+//            frontBackSpin *= factor;
+//        }
 
         // 小力高低杆补偿，pow越小，补偿越多
         double spinRatio = Math.pow(horizontalSpeed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);

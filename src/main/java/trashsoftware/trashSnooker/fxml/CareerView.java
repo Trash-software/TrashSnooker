@@ -74,7 +74,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Label myRankLabel;
     @FXML
-    Label currentDateLabel, currentLocationLabel , ticketPriceLabel;
+    Label currentDateLabel, currentLocationLabel, ticketPriceLabel;
     @FXML
     Text plannedJourneyLabel;
     @FXML
@@ -114,10 +114,11 @@ public class CareerView extends ChildInitializable {
     private Stage selfStage;
     private EntryView parent;
     private ResourceBundle strings;
-//    private ForwardEventRecord forwardEventRecord;
+    //    private ForwardEventRecord forwardEventRecord;
     private Timeline forwardTimeline;
 
     private ChampionshipData activeOrNext;
+    private ChampionshipData.WithYear explicitDeselected;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -133,8 +134,15 @@ public class CareerView extends ChildInitializable {
         abilityShower.setup(perkManager, pp.isCustom());
         abilityShower.setExtraField(createPerksBox());
 
-        joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) ->
-                refreshFeesTexts(newValue)));
+        joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
+                explicitDeselected = null;
+            } else {
+                // 玩家不想参加
+                explicitDeselected = careerManager.getNextChampionshipData();
+            }
+            refreshFeesTexts(newValue);
+        }));
 
         initTypeBox();
         rankingTable.getSelectionModel().selectedItemProperty()
@@ -172,7 +180,7 @@ public class CareerView extends ChildInitializable {
         careerManager.checkRankingAchievements();
         DBAccess.getInstance().checkAchievements();
         AchManager.getInstance().showAchievementPopup();
-        
+
         refreshGui();
     }
 
@@ -180,7 +188,7 @@ public class CareerView extends ChildInitializable {
         skipChampBtn.setDisable(join);
         registryFeeLabel.setVisible(join);
         registryFeeLabel.setManaged(join);
-        
+
 //        plannedJourneyLabel.setStyle(join ? "-fx-line-through: false;" : "-fx-line-through: true;");
         plannedJourneyLabel.setStrikethrough(!join);
 //        feesBoxChecked.setVisible(join);
@@ -489,7 +497,7 @@ public class CareerView extends ChildInitializable {
                 String.format(strings.getString("currentLocationFmt"),
                         careerManager.getHumanPlayerCareer().getCurrentLocation().getName(strings.getLocale()))
         );
-        
+
         dailyAccommodationCostLabel.setText(String.format(strings.getString("hotelCostFmt"),
                 careerManager.getDailyHotelFee(careerManager.getHumanPlayerCareer().getCurrentLocation())));
         dailyLivingCostLabel.setText(String.format(strings.getString("livingCostFmt"),
@@ -509,7 +517,7 @@ public class CareerView extends ChildInitializable {
         ChampionshipData data;
         if (inProgress == null) {
             forwardBtn.setDisable(false);
-            
+
             champInProgBox.setVisible(false);
             champInProgBox.setManaged(false);
 
@@ -524,7 +532,7 @@ public class CareerView extends ChildInitializable {
             boolean humanQualified = careerManager.humanPlayerQualifiedToJoin(data, data.getSelection());
             if (humanQualified) {
                 joinChampBox.setDisable(false);
-                joinChampBox.setSelected(true);
+                joinChampBox.setSelected(!nextData.equals(explicitDeselected));
             } else {
                 joinChampBox.setDisable(true);
                 joinChampBox.setSelected(false);
@@ -557,7 +565,7 @@ public class CareerView extends ChildInitializable {
             refreshFeesTexts(joinChampBox.isSelected());
         } else {
             forwardBtn.setDisable(true);
-            
+
             champInProgBox.setVisible(true);
             champInProgBox.setManaged(true);
 
@@ -579,7 +587,7 @@ public class CareerView extends ChildInitializable {
         champAwardsTable.getColumns().getFirst().setTitleText(data.isRanked() ?
                 strings.getString("rankedGame") :
                 strings.getString("nonRankedGame"));
-        
+
         updateForwardButtonGroups();
 
         fillChampionshipAwardTable(champAwardsTable, data);
@@ -697,7 +705,7 @@ public class CareerView extends ChildInitializable {
             }
         }
     }
-    
+
     @FXML
     void gotoAction() {
         RouteResult.Ticket ticket = careerManager.getOrUpdateScheduleTravel(careerManager.getNextChampionshipData());
@@ -713,15 +721,15 @@ public class CareerView extends ChildInitializable {
         careerManager.pushDateTo(ticket.dateArrival());
         humanCareer.endTravelling(ticket);
         careerManager.saveToDisk();
-        
+
         refreshGui();
     }
-    
+
     @FXML
     void notGotoAction() {
         careerManager.toNextDay();
         careerManager.saveToDisk();
-        
+
         refreshGui();
     }
 
@@ -740,7 +748,7 @@ public class CareerView extends ChildInitializable {
                 careerManager.toNextDay();
                 nextData = careerManager.getNextChampionshipData();
             }
-            
+
             Calendar scheduledStop;
             RouteResult.Ticket ticket = careerManager.getOrUpdateScheduleTravel(nextData);
             if (ticket != null && joinChampBox.isSelected()) {
@@ -748,7 +756,7 @@ public class CareerView extends ChildInitializable {
             } else {
                 scheduledStop = nextData.toCalendar();
             }
-            
+
             forwardTimeline = new Timeline(
                     new KeyFrame(Duration.seconds(0.33), _ -> {
                         Calendar now = careerManager.getTimestamp();
@@ -780,17 +788,17 @@ public class CareerView extends ChildInitializable {
         careerManager.saveToDisk();
         updateUiForwardEnd();
     }
-    
+
     private void updateUiForwardEnd() {
         refreshGui();
     }
-    
+
     private void updateForwardButtonGroups() {
         Calendar date = careerManager.getTimestamp();
         ChampionshipData.WithYear next = careerManager.getNextChampionshipData();
         City at = careerManager.getHumanPlayerCareer().getCurrentLocation();
         City holding = next.data.getLocation().city();
-        
+
         if (Util.dateEquals(date, next.toCalendar())) {
             // 不管在不在，都可以开赛
             if (!at.equals(holding)) {
@@ -825,7 +833,7 @@ public class CareerView extends ChildInitializable {
             }
         }
     }
-    
+
     private void setButtonsForward() {
         forwardBtn.setVisible(true);
         forwardBtn.setManaged(true);
@@ -846,14 +854,14 @@ public class CareerView extends ChildInitializable {
         skipChampBtn.setVisible(false);
         skipChampBtn.setManaged(false);
     }
-    
+
     private void setButtonsBeginAvailable() {
         startChampBtn.setVisible(true);
         startChampBtn.setManaged(true);
 
         skipChampBtn.setVisible(true);
         skipChampBtn.setManaged(true);
-        
+
         refreshFeesTexts(joinChampBox.isSelected());
 
         forwardBtn.setVisible(false);
@@ -864,7 +872,7 @@ public class CareerView extends ChildInitializable {
         notGotoBtn.setVisible(false);
         notGotoBtn.setManaged(false);
     }
-    
+
     private void setButtonsGoto() {
         forwardBtn.setVisible(false);
         forwardBtn.setManaged(false);
@@ -990,7 +998,7 @@ public class CareerView extends ChildInitializable {
 
         notifyPerksChanged();
     }
-    
+
     public void applyPerksAction() {
         int curMoney = careerManager.getHumanPlayerCareer().getMoney();
         int price = perkManager.getCost();

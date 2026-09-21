@@ -10,6 +10,7 @@ public enum BallMetrics {
     RUSSIAN_BALL(66.675, 0.94, 1.05, 255.0);
     public final double ballDiameter;
     public final double ballRadius;
+    public final double ballMass;
     public final double ballWeightRatio;
     public final double ballBounceRatio;
     public final double sqrtBounceRatio;
@@ -21,7 +22,7 @@ public enum BallMetrics {
         this.ballWeightRatio = ballWeightGrams / 145.0;
         this.ballBounceRatio = ballBounceRatio;
         this.frictionRatio = frictionRatio;
-        
+        this.ballMass = ballWeightGrams;
         this.sqrtBounceRatio = Math.sqrt(ballBounceRatio);
     }
 

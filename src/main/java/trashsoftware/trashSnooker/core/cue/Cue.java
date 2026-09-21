@@ -239,9 +239,10 @@ public class Cue {
             double y = Math.sin(rad);
             
             double yMul = 1.0;
-            if (deg > 0 && deg < 180) {
-                yMul = 1.0 - y * (1 - BOTTOM_SUE_POINT);  // sin(rad)，如果要改y就要把这里写明
-            }
+            // 取消了，chat老师说高低杆是对称的
+//            if (deg > 0 && deg < 180) {
+//                yMul = 1.0 - y * (1 - BOTTOM_SUE_POINT);  // sin(rad)，如果要改y就要把这里写明
+//            }
 
             result[degI][0] = x * baseRadius;
             result[degI][1] = y * baseRadius * yMul;

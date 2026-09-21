@@ -693,7 +693,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         for (Pocket pocket : gameValues.table.pockets) {
             // 在袋里
-            if (Algebra.distanceToPoint(x, y, pocket.fallCenter[0], pocket.fallCenter[1]) < pocket.fallRadius + pocket.extraSlopeWidth) {
+            if (Algebra.distanceToPoint(x, y, pocket.fallCenter[0], pocket.fallCenter[1]) < pocket.fallRadius + pocket.gravityZoneWidth) {
                 return false;
             }
         }

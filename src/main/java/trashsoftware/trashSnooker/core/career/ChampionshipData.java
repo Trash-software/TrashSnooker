@@ -589,6 +589,11 @@ public class ChampionshipData {
         return new WithYear(this, year);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ChampionshipData cd && id.equals(cd.id);
+    }
+
     public enum Selection {
         REGULAR,
         SINGLE_SEASON,
@@ -607,6 +612,11 @@ public class ChampionshipData {
         WithYear(ChampionshipData data, int year) {
             this.data = data;
             this.year = year;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof WithYear wy && data.equals(wy.data) && year == wy.year;
         }
 
         @Override
