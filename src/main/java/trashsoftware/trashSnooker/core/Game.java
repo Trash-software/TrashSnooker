@@ -2215,7 +2215,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     int stat = ball.tryFrameInPocket(phy);
                     if (stat != 0) {
                         noBallMoving = false;
-                        if (stat == 2) {
+                        if (stat == 3) {
                             replaceMovement(i, MovementFrame.POCKET_BACK, ball.getMaxInPocketSpeed() / Values.MAX_POWER_SPEED);
 //                            System.out.println("Pocket back:" + movementValues[i]);
                         }
@@ -2350,7 +2350,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     movement.addFrame(ball,
                             new MovementFrame(ball.x, ball.y,
                                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
-                                    ball.isPotted(),
+                                    ball.isPotted(), ball.canDraw(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;
                     movementValues[i] = 0.0;

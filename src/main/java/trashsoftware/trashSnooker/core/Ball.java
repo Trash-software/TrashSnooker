@@ -352,22 +352,26 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         }
     }
 
+    public boolean isPlayingPotAnimation() {
+        return isPotted() && msRemainInPocket > 0;
+    }
+
     public boolean canDraw() {
         return !isPotted() || msRemainInPocket > 0;
     }
 
     /**
-     * @return 正常在袋中未碰撞=0，碰撞但不是最大的一次=1，最大碰撞=2
+     * @return 正常在袋中未碰撞=1，碰撞但不是最大的一次=2，最大碰撞=3
      */
     private int oneFrameInPocket(Phy phy) {
         double pocketRange = pottedPocket.graphicalRadius - values.ball.ballRadius;
         double nextDt = predictedDtToPoint(pottedPocket.graphicalCenter);
         double curDt = currentDtToPoint(pottedPocket.graphicalCenter);
-        int rtn = 0;
+        int rtn = 1;
 //        System.out.printf("%f, %f");
         if (nextDt > pocketRange
                 && nextDt > curDt) {
-            rtn = 1;
+            rtn = 2;
             double[] ballDir = new double[]{vx, vy};
             double[] ballAwayFromPocketCenter = new double[]{
                     nextX - pottedPocket.graphicalCenter[0],
@@ -383,16 +387,22 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double hitSpeed = proj * phy.calculationsPerSec;
             if (hitSpeed > maxInPocketSpeed) {
                 maxInPocketSpeed = hitSpeed;
-                rtn = 2;
+                rtn = 3;
             }
 
-            innerBounce(pottedPocket.graphicalCenter, 0.6);
+            innerBounce(pottedPocket.graphicalCenter, 0.75);
         }
 //        tryEnterGravityArea(phy, pottedPocket.graphicalCenter, pottedPocket.isMid);
         x = nextX;
         y = nextY;
         nextX = x + vx;
         nextY = y + vy;
+
+        double spinMul = 1.0 - 1.1 / phy.calculationsPerSec;
+        xSpin *= spinMul;
+        ySpin *= spinMul;
+        sideSpin *= spinMul;
+
         return rtn;
     }
 
@@ -415,11 +425,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public int tryFrameInPocket(Phy phy) {
         if (isPotted()) {
             if (msRemainInPocket > 0) {
-                msRemainInPocket -= phy.calculateMs;
+                msRemainInPocket = (long) (msRemainInPocket - phy.calculateMs);
+                msRemainInPocket = Math.max(msRemainInPocket, 0);
 
                 int stat = oneFrameInPocket(phy);
                 if (getSpeedPerSecond(phy) < 50) {
                     // 球已经停了，别放了
+                    System.out.println("Stop by too slow at " + msRemainInPocket);
                     msRemainInPocket = 0;
                     pot();
                     return 0;
@@ -456,6 +468,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
     public void pot() {
         setPotted(true);
+//        System.out.println(msRemainInPocket + " called pot");
         msRemainInPocket = 0;
         pottedPocket = null;
         x = 0.0;

@@ -19,6 +19,7 @@ public class MovementFrame {
     public final double zAxis;
     public final double frameDegChange;
     public final boolean potted;
+    public final boolean showing;
     public final int movementType;  // 记录这一帧是否有碰库等情况
     public final double movementValue;
 
@@ -28,7 +29,7 @@ public class MovementFrame {
 
     public MovementFrame(double x, double y,
                          double xAxis, double yAxis, double zAxis, double frameDegChange,
-                         boolean potted, int movementType, double movementValue) {
+                         boolean potted, boolean showing, int movementType, double movementValue) {
         this.x = x;
         this.y = y;
         this.xAxis = xAxis;
@@ -36,6 +37,7 @@ public class MovementFrame {
         this.zAxis = zAxis;
         this.frameDegChange = frameDegChange;
         this.potted = potted;
+        this.showing = showing;
         this.movementType = movementType;
         this.movementValue = movementValue;
     }

@@ -3766,7 +3766,7 @@ public class GameView implements Initializable {
 
             for (int i = 1; i < end; i++) {
                 MovementFrame frame = frames.get(i);
-                if (frame.potted) break;
+                if (frame.potted) break;  // 袋里面就不显轨迹了
 
                 double nx = gamePane.canvasX(frame.x);
                 double ny = gamePane.canvasY(frame.y);
@@ -3878,13 +3878,13 @@ public class GameView implements Initializable {
                 List<MovementFrame> list = entry.getValue();
                 MovementFrame frame = list.get(movementPlayingIndex);
 
-                if (!frame.potted) {
+                if (frame.showing) {
                     MovementFrame nextFrame = null;
                     if (movementPlayingIndex + 1 < list.size()) {
                         nextFrame = list.get(movementPlayingIndex + 1);
                     }
                     double x, y;
-                    if (nextFrame == null || nextFrame.potted) {
+                    if (nextFrame == null || !nextFrame.showing) {
                         x = frame.x;
                         y = frame.y;
                     } else {
@@ -3915,7 +3915,7 @@ public class GameView implements Initializable {
                         movement.getMovementMap().entrySet()) {
                     List<MovementFrame> list = entry.getValue();
                     MovementFrame frame = list.get(fi);
-                    if (!frame.potted ||
+                    if (frame.showing ||
                             frame.movementType == MovementFrame.POCKET_BACK) {
                         int old = mediaType;
                         mediaType = MovementFrame.replaceMovementType(mediaType, frame.movementType);
@@ -3991,7 +3991,7 @@ public class GameView implements Initializable {
                 // 已经算出，但还在放运杆动画
                 for (Map.Entry<Ball, MovementFrame> entry : movement.getStartingPositions().entrySet()) {
                     MovementFrame frame = entry.getValue();
-                    if (!frame.potted) {
+                    if (frame.showing) {
                         entry.getKey().model.sphere.setVisible(true);
                         getActiveHolder().getTable().forceDrawBall(
                                 gamePane,

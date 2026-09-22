@@ -110,17 +110,24 @@ public class NaiveActualRecorder extends ActualRecorder {
 
             outputStream.write(ball.getValue());
 
-            byte[] buf = new byte[58];
+            byte[] buf = new byte[64];
             for (MovementFrame frame : frames) {
-                buf[0] = (byte) (frame.potted ? 1 : 0);
+                int potByte = 0;
+                int potted = frame.potted ? 1 : 0;
+                int drawing = frame.showing ? 1 : 0;
+                drawing <<= 1;
+                potByte |= potted;
+                potByte |= drawing;
+                
+                buf[0] = (byte) potByte;
                 buf[1] = (byte) frame.movementType;
-                Util.doubleToBytes(frame.x, buf, 2);
-                Util.doubleToBytes(frame.y, buf, 10);
-                Util.doubleToBytes(frame.movementValue, buf, 18);
-                Util.doubleToBytes(frame.xAxis, buf, 26);
-                Util.doubleToBytes(frame.yAxis, buf, 34);
-                Util.doubleToBytes(frame.zAxis, buf, 42);
-                Util.doubleToBytes(frame.frameDegChange, buf, 50);
+                Util.doubleToBytes(frame.x, buf, 8);
+                Util.doubleToBytes(frame.y, buf, 16);
+                Util.doubleToBytes(frame.movementValue, buf, 24);
+                Util.doubleToBytes(frame.xAxis, buf, 32);
+                Util.doubleToBytes(frame.yAxis, buf, 40);
+                Util.doubleToBytes(frame.zAxis, buf, 48);
+                Util.doubleToBytes(frame.frameDegChange, buf, 56);
                 outputStream.write(buf);
             }
         }

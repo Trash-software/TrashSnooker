@@ -1284,7 +1284,7 @@ public class GeographicView extends ChildInitializable {
         }
 
         VBox content = new VBox(8);
-        content.setPrefWidth(220);
+        content.setPrefWidth(280);
         content.setStyle("""
                 -fx-padding: 12px;
                 """);
@@ -1477,10 +1477,7 @@ public class GeographicView extends ChildInitializable {
         buttonBox.setAlignment(
                 Pos.CENTER_RIGHT
         );
-
-        /*
-         * 暂时不实现功能。
-         */
+        
         travelButton.setOnAction(_ -> {
             setSearchCities(careerManager.getHumanPlayerCareer().getCurrentLocation(), city);
             cityPopOver.hide();

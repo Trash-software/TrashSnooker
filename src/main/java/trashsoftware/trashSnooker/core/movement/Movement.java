@@ -24,7 +24,7 @@ public class Movement {
             List<MovementFrame> positionList = new ArrayList<>();
             MovementFrame frame = new MovementFrame(ball.getX(), ball.getY(),
                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
-                    ball.isPotted(), MovementFrame.NORMAL, 0.0);
+                    ball.isPotted(), ball.canDraw(), MovementFrame.NORMAL, 0.0);
             positionList.add(frame);
 
             movementMap.put(ball, positionList);

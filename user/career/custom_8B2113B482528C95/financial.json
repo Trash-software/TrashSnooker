@@ -1,12 +1,12 @@
 {
   "financial": {
     "temporalRecord": {
-      "currentTemporalFeesStart": "2023/9/25",
-      "moneyBefore": 373972,
+      "currentTemporalFeesStart": "2023/11/13",
+      "moneyBefore": 375019,
       "items": {}
     },
     "remFreePerks": 0,
-    "money": 372972,
+    "money": 375019,
     "invoices": [
       {
         "inGameDate": "2023/2/27",
@@ -2259,13 +2259,294 @@
           "moneyCost": 1000
         }],
         "timestamp": "2026-09-22 08:31:35"
+      },
+      {
+        "inGameDate": "2023/9/28",
+        "year": 2023,
+        "moneyBefore": 372657,
+        "match": "challenger_open",
+        "moneyAfter": 372657,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_2": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2026-09-23 02:55:03"
+      },
+      {
+        "dateOnTicket": "2023/9/28",
+        "inGameDate": "2023/9/28",
+        "moneyBefore": 372657,
+        "moneyAfter": 365657,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "SPC-CGP",
+            "departureCityId": "Spacecity",
+            "seatClass": "FIRST",
+            "payedPrice": 500
+          },
+          {
+            "routeId": "CKG-CGP",
+            "departureCityId": "Catgivepower",
+            "seatClass": "FIRST",
+            "payedPrice": 6500
+          }
+        ],
+        "timestamp": "2026-09-23 02:55:42"
+      },
+      {
+        "inGameDate": "2023/9/28",
+        "durationBegin": "2023/9/25",
+        "moneyBefore": 372972,
+        "moneyAfter": 365657,
+        "cityId": "Spacecity",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 90,
+          "hotel": 225
+        },
+        "timestamp": "2026-09-23 02:55:42"
+      },
+      {
+        "inGameDate": "2023/9/29",
+        "perkUsed": 7,
+        "freePerkUsed": 0,
+        "moneyBefore": 365657,
+        "moneyCost": 2100,
+        "moneyAfter": 363557,
+        "ability": {
+          "powerControl-RIGHT": [
+            81.54906232161066,
+            81.54906232161066
+          ],
+          "spinControl-REST": [
+            47.07475591456592,
+            52.79209505086395
+          ],
+          "normalPower-RIGHT": [
+            74.41414724889891,
+            74.41414724889891
+          ],
+          "cuePrecision-REST": [
+            45.435385710167964,
+            45.435385710167964
+          ],
+          "powerControl-REST": [
+            54.49523736930473,
+            57.11542787453254
+          ],
+          "spin-LEFT": [
+            38.34732354370534,
+            38.34732354370534
+          ],
+          "normalPower-REST": [
+            50.37283945947441,
+            54.30416721201755
+          ],
+          "cuePrecision-LEFT": [
+            41.71669884552155,
+            41.71669884552155
+          ],
+          "cuePrecision-RIGHT": [
+            80.19481392594219,
+            80.19481392594219
+          ],
+          "spin-RIGHT": [
+            82.2100873778096,
+            82.2100873778096
+          ],
+          "normalPower-LEFT": [
+            35.4967743392064,
+            35.4967743392064
+          ],
+          "spin-REST": [
+            53.88121216051097,
+            56.525963674090534
+          ],
+          "spinControl-LEFT": [
+            40.28028479966251,
+            40.28028479966251
+          ],
+          "aiming": [
+            77.40822486752177,
+            77.40822486752177
+          ],
+          "powerControl-LEFT": [
+            39.08949939125874,
+            39.08949939125874
+          ],
+          "spinControl-RIGHT": [
+            78.19636224147354,
+            78.19636224147354
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2026-09-23 02:56:10"
+      },
+      {
+        "item": "residence-Catgivepower:custom_8B2113B482528C95-201",
+        "inGameDate": "2023/10/1",
+        "moneyBefore": 363540,
+        "moneyCost": 440,
+        "moneyAfter": 363100,
+        "type": "houseRent",
+        "timestamp": "2026-09-23 02:56:26"
+      },
+      {
+        "inGameDate": "2023/10/28",
+        "durationBegin": "2023/9/29",
+        "moneyBefore": 365657,
+        "moneyAfter": 362624,
+        "cityId": "Chongqing",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 493,
+          "hotel": 0
+        },
+        "timestamp": "2026-09-23 02:56:42"
+      },
+      {
+        "dateOnTicket": "2023/10/28",
+        "inGameDate": "2023/10/28",
+        "moneyBefore": 362624,
+        "moneyAfter": 361719,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "PEK-CKG",
+            "departureCityId": "Chongqing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 145
+          },
+          {
+            "routeId": "LHR-PEK",
+            "departureCityId": "Beijing",
+            "seatClass": "ECONOMY",
+            "payedPrice": 720
+          },
+          {
+            "routeId": "LON-LEI+T",
+            "departureCityId": "London",
+            "seatClass": "ECONOMY",
+            "payedPrice": 40
+          }
+        ],
+        "timestamp": "2026-09-23 02:56:42"
+      },
+      {
+        "item": 5,
+        "inGameDate": "2023/10/29",
+        "moneyBefore": 361719,
+        "match": "custom_8B2113B482528C95+2023+champ_of_champ",
+        "moneyAfter": 364719,
+        "type": "invitation",
+        "moneyEarn": 3000,
+        "timestamp": "2026-09-23 02:56:46"
+      },
+      {
+        "inGameDate": "2023/10/29",
+        "moneyBefore": 364719,
+        "match": "custom_8B2113B482528C95+2023+champ_of_champ",
+        "moneyAfter": 364719,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 0
+        }],
+        "timestamp": "2026-09-23 02:56:46"
+      },
+      {
+        "item": "residence-Catgivepower:custom_8B2113B482528C95-201",
+        "inGameDate": "2023/11/1",
+        "moneyBefore": 364567,
+        "moneyCost": 440,
+        "moneyAfter": 364127,
+        "type": "houseRent",
+        "timestamp": "2026-09-23 03:12:46"
+      },
+      {
+        "inGameDate": "2023/11/1",
+        "year": 2023,
+        "moneyBefore": 364051,
+        "match": "champ_of_champ",
+        "moneyAfter": 376239,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 12188,
+          "raw": 12500
+        }},
+        "timestamp": "2026-09-23 03:12:46"
+      },
+      {
+        "inGameDate": "2023/11/11",
+        "durationBegin": "2023/11/1",
+        "moneyBefore": 376239,
+        "moneyAfter": 375479,
+        "cityId": "Leicester",
+        "type": "cumulativeFees",
+        "items": {
+          "living": 230,
+          "hotel": 530
+        },
+        "timestamp": "2026-09-23 07:18:56"
+      },
+      {
+        "dateOnTicket": "2023/11/11",
+        "inGameDate": "2023/11/11",
+        "moneyBefore": 375479,
+        "moneyAfter": 375394,
+        "type": "travelTicket",
+        "items": [
+          {
+            "routeId": "LEI-BHM+T",
+            "departureCityId": "Leicester",
+            "seatClass": "ECONOMY",
+            "payedPrice": 25
+          },
+          {
+            "routeId": "BHM-SHF+T",
+            "departureCityId": "Birmingham",
+            "seatClass": "ECONOMY",
+            "payedPrice": 35
+          },
+          {
+            "routeId": "SHF-YRK+T",
+            "departureCityId": "Sheffield",
+            "seatClass": "ECONOMY",
+            "payedPrice": 25
+          }
+        ],
+        "timestamp": "2026-09-23 07:18:56"
+      },
+      {
+        "inGameDate": "2023/11/12",
+        "moneyBefore": 375394,
+        "match": "custom_8B2113B482528C95+2023+united_kingdom_champ",
+        "moneyAfter": 375194,
+        "type": "participation",
+        "items": [{
+          "item": "registry",
+          "moneyCost": 200
+        }],
+        "timestamp": "2026-09-23 07:18:57"
+      },
+      {
+        "item": "primeTipMedium:custom_8B2113B482528C95-833",
+        "itemType": "tip",
+        "inGameDate": "2023/11/13",
+        "moneyBefore": 375099,
+        "moneyCost": 80,
+        "moneyAfter": 375019,
+        "type": "purchase",
+        "timestamp": "2026-09-23 07:32:22"
       }
     ],
-    "level": 21,
-    "expInThisLevel": 412,
+    "level": 22,
+    "expInThisLevel": 176,
     "availPerks": 0,
-    "totalPerks": 65,
-    "totalExp": 4990
+    "totalPerks": 72,
+    "totalExp": 5220
   },
-  "checksum": "D13ACCF11F259A6F85989B6005151625"
+  "checksum": "2A8638815284F54C66D021443BC99422"
 }

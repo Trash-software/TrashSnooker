@@ -245,8 +245,6 @@ public abstract class ObjectOnTable implements Cloneable {
         double xDiff = pocket.fallCenter[0] - nextX;
         double yDiff = pocket.fallCenter[1] - nextY;
         double dt = Math.hypot(xDiff, yDiff);
-        
-        double lastDt = Math.hypot(pocket.fallCenter[0] - x, pocket.fallCenter[1] - y);
 
         double holeRadius = pocket.fallRadius;
         double holeAndSlopeRadius = holeRadius + pocket.gravityZoneWidth;
@@ -255,19 +253,17 @@ public abstract class ObjectOnTable implements Cloneable {
             double pureHoleRadius = holeRadius - values.ball.ballRadius;
 
             double gravity = 9800;
-//            double vAcc;
             double[] supporter;
             if (dt <= pureHoleRadius) {
                 // 已经完全进袋了，但是我们当袋底也有点角度
-                supporter = new double[]{Algebra.HALF_SQRT2, Algebra.HALF_SQRT2};
-//                vAcc = gravity;
+                // 你不该来这里
+                return;
             } else {
                 double enteredDt = holeAndSlopeRadius - dt;
                 double enterRatio = enteredDt / (holeAndSlopeRadius - pureHoleRadius);
                 double angle = Math.acos(enterRatio);  // 球心与弧心连线 与 水平面 的夹角
-//                double[] vAccVec = Algebra.unitVectorOfAngle(angle);
-//                vAcc = vAccVec[1] * gravity;
-                supporter = Algebra.unitVectorOfAngle(Math.min(angle, Math.PI / 4));
+                supporter = Algebra.unitVectorOfAngle(Math.max(angle, Math.PI / 4));
+//                supporter = Algebra.unitVectorOfAngle(angle);
             }
 
             double gravityAcc = supporter[0] * gravity;

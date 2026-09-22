@@ -119,7 +119,9 @@ public class NaiveGameReplay extends GameReplay {
 
         int steps = Util.bytesToInt32(stepsBuf, 0);
 
-        byte[] posBuf = new byte[58];
+        boolean oldHead = item.primaryVersion <= 14 && item.secondaryVersion < 4;
+        int push = oldHead ? 2 : 8;
+        byte[] posBuf = new byte[56 + push];
         byte[] ballValueBuf = new byte[1];
 
         Movement movement = new Movement(balls);
@@ -133,20 +135,26 @@ public class NaiveGameReplay extends GameReplay {
                 throw new RuntimeException(String.format("Expected %d, got %d\n",
                         expectedBall, ball.getValue()));
             }
+            
             for (int s = 0; s < steps; s++) {
                 if (inputStream.read(posBuf) != posBuf.length) throw new IOException();
-                boolean potted = posBuf[0] == 1;
+                int potByte = posBuf[0] & 0xff;
+                boolean potted = (potByte & 0b1) == 1;
+                boolean showing;
+                if (oldHead) showing = !potted;
+                else showing = (potByte & 0b10) == 2;
                 int movementType = posBuf[1] & 0xff;
-                double x = Util.bytesToDouble(posBuf, 2);
-                double y = Util.bytesToDouble(posBuf, 10);
-                double movementValue = Util.bytesToDouble(posBuf, 18);
-                double axisX = Util.bytesToDouble(posBuf, 26);
-                double axisY = Util.bytesToDouble(posBuf, 34);
-                double axisZ = Util.bytesToDouble(posBuf, 42);
-                double rotateDeg = Util.bytesToDouble(posBuf, 50);
+                
+                double x = Util.bytesToDouble(posBuf, push);
+                double y = Util.bytesToDouble(posBuf, push + 8);
+                double movementValue = Util.bytesToDouble(posBuf, push + 16);
+                double axisX = Util.bytesToDouble(posBuf, push + 24);
+                double axisY = Util.bytesToDouble(posBuf, push + 32);
+                double axisZ = Util.bytesToDouble(posBuf, push + 40);
+                double rotateDeg = Util.bytesToDouble(posBuf, push + 48);
 
                 MovementFrame frame = new MovementFrame(x, y,
-                        axisX, axisY, axisZ, rotateDeg, potted, movementType, movementValue);
+                        axisX, axisY, axisZ, rotateDeg, potted, showing, movementType, movementValue);
                 movement.addFrame(ball, frame);
             }
         }

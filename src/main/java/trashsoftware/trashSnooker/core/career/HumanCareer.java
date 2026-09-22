@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.career;
 
+import javafx.application.Platform;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -344,6 +345,8 @@ public class HumanCareer extends Career {
             if (countTrainSeg > 0) {
                 achManager.cumulateAchievement(Achievement.TRAIN_TRAVEL, countTrainSeg, null);
             }
+
+            Platform.runLater(achManager::showAchievementPopup);
         }
     }
 
@@ -458,6 +461,8 @@ public class HumanCareer extends Career {
         finance.invoices.add(invoice);
         saveFinance();
         getInventory().saveToDisk();
+
+        Platform.runLater(AchManager.getInstance()::showAchievementPopup);
     }
 
     public void startRentHouse(Residence residence) {
@@ -479,6 +484,8 @@ public class HumanCareer extends Career {
         finance.invoices.add(invoice);
         saveFinance();
         getInventory().saveToDisk();
+
+        Platform.runLater(AchManager.getInstance()::showAchievementPopup);
     }
 
     public void sellHouse(Residence residence) {
@@ -502,6 +509,8 @@ public class HumanCareer extends Career {
         finance.invoices.add(invoice);
         saveFinance();
         getInventory().saveToDisk();
+
+        Platform.runLater(AchManager.getInstance()::showAchievementPopup);
     }
 
     public void cancelRentHouse(Residence residence) {

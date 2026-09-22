@@ -23,7 +23,7 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
     public static final int RECORD_PRIMARY_VERSION = 14;
-    public static final int RECORD_SECONDARY_VERSION = 3;
+    public static final int RECORD_SECONDARY_VERSION = 4;
     public static final int HEADER_LENGTH = 64;
     public static final int PLAYER_HEADER_LENGTH = 40;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
@@ -84,11 +84,14 @@ public abstract class ActualRecorder implements GameRecorder {
     public static boolean isSecondaryCompatible(int replayPrimary, int replaySecondary) {
         if (replaySecondary == ActualRecorder.RECORD_SECONDARY_VERSION) return true;
 
-        if (ActualRecorder.RECORD_PRIMARY_VERSION == 12 && replayPrimary == 12) {
+        if (replayPrimary == 12) {
             if ((ActualRecorder.RECORD_SECONDARY_VERSION == 8 || ActualRecorder.RECORD_SECONDARY_VERSION == 9)
                     && (replaySecondary >= 7 && replaySecondary <= 9)) {
                 return true;
             }
+        }
+        if (replayPrimary == 14) {
+            return replaySecondary >= 3;
         }
 
         return false;
