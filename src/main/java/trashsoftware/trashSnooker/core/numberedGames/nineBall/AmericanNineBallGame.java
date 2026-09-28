@@ -96,7 +96,7 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
             }
         }
 
-        double curX = getTable().firstBallPlacementX();
+        double curX = getTable().rackFirstBallX();
         double rowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
 
@@ -136,6 +136,11 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
     @Override
     public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, boolean isInLineHandBall) {
         return ball.getValue() == targetRep;
+    }
+
+    @Override
+    protected boolean ballPickableWhenValid(Ball ball) {
+        return false;
     }
 
     @Override
@@ -381,6 +386,6 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
 
     @Override
     protected double criticalBallX() {
-        return getTable().firstBallPlacementX();
+        return getTable().rackFirstBallX();
     }
 }

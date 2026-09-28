@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
  * 让球，不知道怎么翻译
  */
 public enum LetBall implements Comparable<LetBall> {
-    FRONT,  // todo: 让前和让中均未实装
+    FRONT,
     MID,
     BACK;
     

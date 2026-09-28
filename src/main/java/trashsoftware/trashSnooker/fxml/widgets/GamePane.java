@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.DirectionalLight;
+import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,6 +14,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.Algebra;
@@ -25,6 +28,7 @@ import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.GraphicsUtil;
+import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 import trashsoftware.trashSnooker.fxml.drawing.CurvedPolygonDrawer;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
@@ -49,6 +53,7 @@ public class GamePane extends StackPane {
     //    @FXML
 //    Canvas lineCanvas;
     GraphicsContext graphicsContext;
+    private Shape ballHalo;
     //    GraphicsContext lineGraphics;
     private double scale;
     private GameValues gameValues;
@@ -169,7 +174,7 @@ public class GamePane extends StackPane {
 
         for (Ball ball : gameHolder.getAllBalls()) {
             ball.model.setVisualRadius(gameValues.ball.ballRadius * scale);
-            ball.model.initRotation(randomRotate && (!ball.isWhite()));
+            ball.model.initRotation(randomRotate && (!gameHolder.isCueBall(ball)));
             getChildren().add(ball.model.sphere);
             ball.model.sphere.setMouseTransparent(true);
         }
@@ -233,6 +238,35 @@ public class GamePane extends StackPane {
 
     public double realY(double canvasY) {
         return canvasY / scale;
+    }
+    
+    public void showBallHalo(Ball ball) {
+        if (ballHalo != null) {
+            getChildren().remove(ballHalo);
+        }
+        
+        double modelRadius = ball.getRadius() * scale;
+        double strokeWidth = modelRadius * 0.2;
+        
+        Circle circle = new Circle();
+        circle.setStroke(Color.ORANGE);
+        circle.setStrokeWidth(strokeWidth);
+        circle.setFill(Color.TRANSPARENT);
+        circle.setMouseTransparent(true);
+        circle.setRadius(modelRadius + strokeWidth * 0.1);
+        circle.setTranslateX(paneX(ball.getX()));
+        circle.setTranslateY(paneY(ball.getY()));
+        
+        getChildren().add(circle);
+        
+        ballHalo = circle;
+    }
+    
+    public void hideBallHalos() {
+        if (ballHalo != null) {
+            getChildren().remove(ballHalo);
+            ballHalo = null;
+        }
     }
 
     private void setupCanvas() {

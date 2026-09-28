@@ -7,4 +7,5 @@ public enum Rule {
     FOUL_LET_OTHER_PLAY,  // 犯规后对手可让杆
     FOUL_BALL_IN_HAND,  // 犯规后送手中球
     PUSH_OUT,  // 
+    ALLOW_CUE_BALL_POT
 }

@@ -680,6 +680,7 @@ public class CareerView extends ChildInitializable {
         int type = switch (selected) {
             case SNOOKER, MINI_SNOOKER, SNOOKER_TEN, AMERICAN_NINE -> 1;
             case CHINESE_EIGHT, LIS_EIGHT -> 2;
+            case RUSSIAN -> 3;
         };
         setRankTable(type);
 
@@ -696,7 +697,13 @@ public class CareerView extends ChildInitializable {
                         myRank.career.getPlayerPerson().getName(),
                         myRank.getShownAwards(),
                         myRank.getTotalAwards()));
-            } else {
+            } else if (type == 2) {
+                myRankLabel.setText(String.format("%s  %s  %s  %s",
+                        myRank.getTier(),
+                        myRank.career.getPlayerPerson().getName(),
+                        myRank.getTotalWins(),
+                        myRank.getWinRate()));
+            } else if (type == 3) {
                 myRankLabel.setText(String.format("%s  %s  %s  %s",
                         myRank.getTier(),
                         myRank.career.getPlayerPerson().getName(),

@@ -37,7 +37,7 @@ public class NaiveActualRecorder extends ActualRecorder {
     }
 
     private void writeCueRecord(CueRecord cueRecord,
-                                TargetRecord thisTarget, 
+                                TargetRecord thisTarget,
                                 TargetRecord nextTarget) throws IOException {
         byte[] buf = new byte[CUE_RECORD_LENGTH];
         buf[0] = (byte) cueRecord.cuePlayer.getPlayerNumber();
@@ -62,6 +62,7 @@ public class NaiveActualRecorder extends ActualRecorder {
         buf[80] = (byte) cueRecord.playStage.ordinal();
         buf[81] = (byte) cueRecord.cueHand.hand.ordinal();
         buf[82] = (byte) cueRecord.cueHand.extension.ordinal();
+        buf[83] = (byte) cueRecord.cueBall.getValue();
 
         outputStream.write(buf);
     }

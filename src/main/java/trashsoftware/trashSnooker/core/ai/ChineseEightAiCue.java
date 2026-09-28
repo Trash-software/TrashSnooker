@@ -68,7 +68,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     private FinalChoice.DefenseChoice centerBreak() {
-        double dirX = game.getTable().firstBallPlacementX() - game.getCueBall().getX();
+        double dirX = game.getTable().rackFirstBallX() - game.getCueBall().getX();
         double dirY = game.getGameValues().table.midY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
         double selectedPower = aiPlayer.getPlayerPerson().getPrimaryHand().getMaxPowerPercentage();

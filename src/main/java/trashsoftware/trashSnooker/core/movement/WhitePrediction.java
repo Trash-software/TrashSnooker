@@ -206,7 +206,7 @@ public class WhitePrediction {
     
     public void setFirstBallCollidesOther(Ball firstBallCollision) {
         this.firstBallCollidesOther = firstBallCollision;
-        if (firstBallCollision.isWhite() 
+        if (firstBallCollision.equals(cueBall)
                 && whiteSecondCollide == null 
 //                && happenMs - msWhenHitFirst >= TWICE_HIT_MINIMAL_GAP_MS
                 && hitWallAfterFirstCollide

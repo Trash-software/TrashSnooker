@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
+import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
@@ -90,5 +92,10 @@ public abstract class AbstractSnookerTable extends Table {
 
     public double[] pinkBallPos() {
         return new double[]{tableMetrics.leftX + tableMetrics.innerWidth * 0.75, tableMetrics.midY};
+    }
+
+    @Override
+    public double rackFirstBallX(GameValues gameValues) {
+        return pinkBallPos()[0] + gameValues.ball.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
     }
 }

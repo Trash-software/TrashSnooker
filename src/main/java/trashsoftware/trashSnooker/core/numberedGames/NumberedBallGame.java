@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.game.FixedCueBallGame;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class NumberedBallGame<P extends NumberedBallPlayer>
-        extends Game<PoolBall, P> {
+        extends FixedCueBallGame<PoolBall, P> {
     
     protected P winingPlayer;
 
@@ -66,13 +67,13 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     }
 
     @Override
-    protected PoolBall createWhiteBall() {
+    protected PoolBall createInitWhiteBall() {
         return new PoolBall(0, true, gameValues);
     }
 
     @Override
     protected boolean isBallPlacedInHeap(Ball ball) {
-        return !ball.isWhite();
+        return !isCueBall(ball);
     }
 
     @Override

@@ -88,6 +88,10 @@ public abstract class GameReplay implements GameHolder {
                 table = new SidePocketTable(gameValues.table);
                 scoreFactory = new NineBallScoreResultFactory();
             }
+            case RUSSIAN -> {
+                table = new RussianTable(gameValues.table);
+                scoreFactory = new RussianScoreResultFactory();
+            }
             default -> throw new EnumConstantNotPresentException(GameRule.class, gameRule.name());
         }
         scoreResBuf = new byte[scoreFactory.byteLength()];
@@ -139,7 +143,13 @@ public abstract class GameReplay implements GameHolder {
 
     @Override
     public Ball getCueBall() {
+//        if (cueBall == null)
         return cueBall;
+    }
+
+    @Override
+    public boolean isCueBall(Ball ball) {
+        return ball.equals(getCueBall());
     }
 
     protected abstract void loadBallPositions() throws IOException;
@@ -236,6 +246,8 @@ public abstract class GameReplay implements GameHolder {
             }
         } else if (step instanceof BallInHandStep) {
             currentFlag = ActualRecorder.FLAG_HANDBALL;
+        } else if (step instanceof PickBallStep) {
+            currentFlag = ActualRecorder.FLAG_PICK_BALL;
         }
     }
 
@@ -292,6 +304,12 @@ public abstract class GameReplay implements GameHolder {
 //            storeLastPositions();
             loadBallInHand();
             BallInHandStep step = new BallInHandStep();
+            historySteps.add(step);
+        } else if (currentFlag == ActualRecorder.FLAG_PICK_BALL) {
+//            storeLastPositions();
+//            loadNextScoreResult();
+            loadPickBall();
+            PickBallStep step = new PickBallStep();
             historySteps.add(step);
         } else if (currentFlag == ActualRecorder.FLAG_TERMINATE) {
 //            storeLastPositions();
@@ -351,6 +369,8 @@ public abstract class GameReplay implements GameHolder {
     }
 
     protected abstract void loadBallInHand();
+    
+    protected abstract void loadPickBall();
 
     protected abstract void loadNextRecordAndMovement() throws IOException;
     
@@ -394,6 +414,9 @@ public abstract class GameReplay implements GameHolder {
     }
 
     protected static class BallInHandStep extends CueStep {
+    }
+    
+    protected static class PickBallStep extends CueStep {
     }
 
     protected static class ActualStep extends CueStep {

@@ -98,6 +98,16 @@ public enum GameRule {
         public boolean poolLike() {
             return true;
         }
+    },
+    RUSSIAN(16, "Russian",
+            new CueSize[]{CueSize.BIG, CueSize.MEDIUM},
+            new TrainType[0],
+            BreakRule.ALTERNATE,
+            Set.of(Rule.ALLOW_CUE_BALL_POT, Rule.HIT_CUSHION)) {
+        @Override
+        public boolean russianLike() {
+            return true;
+        }
     };
 
     public final String sqlKey;
@@ -149,6 +159,10 @@ public enum GameRule {
     }
 
     public boolean eightBallLike() {
+        return false;
+    }
+    
+    public boolean russianLike() {
         return false;
     }
 

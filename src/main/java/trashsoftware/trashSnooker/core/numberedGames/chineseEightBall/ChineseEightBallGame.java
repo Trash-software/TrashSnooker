@@ -33,9 +33,9 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     protected ChineseEightScoreResult curResult;
     private boolean wasBreakLoseChance;
 
-    public ChineseEightBallGame(EntireGame entireGame, 
-                                GameSettings gameSettings, 
-                                GameValues gameValues, 
+    public ChineseEightBallGame(EntireGame entireGame,
+                                GameSettings gameSettings,
+                                GameValues gameValues,
                                 int frameIndex,
                                 int frameRestartIndex) {
         super(entireGame, gameSettings, gameValues, new ChineseEightTable(gameValues.table), frameIndex, frameRestartIndex);
@@ -82,7 +82,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         Collections.shuffle(fullBalls);
         Collections.shuffle(halfBalls);
 
-        double curX = getTable().firstBallPlacementX();
+        double curX = getTable().rackFirstBallX();
         double rowStartY = gameValues.table.midY;
         double rowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
@@ -140,7 +140,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, boolean isInLineHandBall) {
-        if (!ball.isPotted() && !ball.isWhite()) {
+        if (!ball.isPotted() && !isCueBall(ball)) {
             if (isInLineHandBall) {
                 if (ball.getX() <= getTable().breakLineX()) {
                     return false;
@@ -217,14 +217,14 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         if (target == 8) return 1;
         else if (target == FULL_BALL_REP) {
             int rem = 1;
-            for (int i = 1; i <= 8; i++) {
+            for (int i = 1; i < 8; i++) {
                 Ball ball = getAllBalls()[i];
                 if (!ball.isPotted()) rem++;
             }
             return rem;
         } else if (target == HALF_BALL_REP) {
             int rem = 1;
-            for (int i = 8; i <= 15; i++) {
+            for (int i = 9; i <= 15; i++) {
                 Ball ball = getAllBalls()[i];
                 if (!ball.isPotted()) rem++;
             }
@@ -232,7 +232,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         } else {
             int rem = 1;
             for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite() && !ball.isPotted()) rem++;
+                if (!isCueBall(ball) && !ball.isPotted()) rem++;
             }
             return rem;
         }
@@ -272,6 +272,68 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     private boolean isTargetSelected() {
         return player1.getBallRange() != 0;
+    }
+
+    @Override
+    protected void updateAskPickBall() {
+        askingPickBall = timeToPickBall();
+    }
+    
+    private boolean timeToPickBall() {
+        if (!isTargetSelected()) return false;
+
+        ChineseEightBallPlayer player = getCuingPlayer();
+        Map<LetBall, Integer> lets = player.getLettedBalls();
+        if (!lets.isEmpty()) {
+            if (!player.letFulfilled(LetBall.FRONT)) {
+                // 只要选了球，就该让前了
+                // 极端情况，比如开球/对手在让球之前把球打没了
+                return getRemainingBallsOfPlayer(player) > 1;
+            }
+            if (!player.letFulfilled(LetBall.MID)) {
+                int midLet = lets.get(LetBall.MID);
+                int selfRem = getRemainingBallsOfPlayer(player) - 1;
+                if (selfRem == 0) return false;  // 还是那种极端情况
+                boolean canPick = false;
+                if (midLet == 1) {
+                    if (selfRem <= 4) canPick = true;
+                } else if (midLet <= 3) {
+                    if (selfRem <= 5) canPick = true;
+                } else {
+                    // 中4以上？？
+                    System.err.println("哪有让中" + lets.get(LetBall.MID) + "?");
+                }
+                return canPick;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    protected boolean ballPickableWhenValid(Ball ball) {
+        return timeToPickBall() && isLegalBall(ball, currentTarget, false, false);
+    }
+
+    @Override
+    public void pickBall(Ball validBall) {
+        LetBall let;
+        ChineseEightBallPlayer player = getCuingPlayer();
+        if (!player.letFulfilled(LetBall.FRONT)) {
+            let = LetBall.FRONT;
+        } else if (!player.letFulfilled(LetBall.MID)) {
+            let = LetBall.MID;
+        } else {
+            System.err.println("Shouldn't be back let");
+            let = LetBall.BACK;
+        }
+        player.letBall(let, (PoolBall) validBall);
+
+        validBall.pot();
+        currentPlayer.addScore(1);
+        
+        updateAskPickBall();
+        updateTargetPotSuccess(false);
     }
 
     @Override
@@ -419,6 +481,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             if (player.getBallRange() == FULL_BALL_REP) {
                 for (Ball ball : getAllBalls()) {
                     if (!ball.isPotted() && isFullBall(ball)) {
+                        player.letBall(LetBall.BACK, (PoolBall) ball);
                         ball.pot();
                         player.forceSetScore(7);
                     }
@@ -426,6 +489,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             } else if (player.getBallRange() == HALF_BALL_REP) {
                 for (Ball ball : getAllBalls()) {
                     if (!ball.isPotted() && isHalfBall(ball)) {
+                        player.letBall(LetBall.BACK, (PoolBall) ball);
                         ball.pot();
                         player.forceSetScore(7);
                     }
@@ -680,7 +744,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     protected double criticalBallX() {
-        return getTable().firstBallPlacementX();
+        return getTable().rackFirstBallX();
 //        return eightBallPosX;
     }
 }

@@ -270,6 +270,10 @@ public class FastGameView extends ChildInitializable implements GameViewStarter 
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.POOL_TABLE_9);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
                 }
+                case RUSSIAN -> {
+                    tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.RUSSIAN);
+                    ballMetricsBox.getSelectionModel().select(BallMetrics.RUSSIAN_BALL);
+                }
             }
             subRuleBox.getItems().clear();
             switch (newValue) {
@@ -277,6 +281,8 @@ public class FastGameView extends ChildInitializable implements GameViewStarter 
                         subRuleBox.getItems().addAll(SubRule.SNOOKER_STD, SubRule.SNOOKER_GOLDEN);
                 case CHINESE_EIGHT ->
                         subRuleBox.getItems().addAll(SubRule.CHINESE_EIGHT_STD, SubRule.CHINESE_EIGHT_JOE);
+                case RUSSIAN ->
+                        subRuleBox.getItems().addAll(SubRule.RUSSIAN_FREE, SubRule.RUSSIAN_MOSCOW, SubRule.RUSSIAN_PETERSBURG);
                 default -> subRuleBox.getItems().add(SubRule.RAW_STD);
             }
             subRuleBox.getSelectionModel().select(0);

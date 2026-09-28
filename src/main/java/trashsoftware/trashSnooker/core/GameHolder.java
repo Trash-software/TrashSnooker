@@ -10,6 +10,8 @@ public interface GameHolder {
     Ball getBallByValue(int value);
 
     Ball getCueBall();
+    
+    boolean isCueBall(Ball ball);
 
     Ball[] getAllBalls();
     

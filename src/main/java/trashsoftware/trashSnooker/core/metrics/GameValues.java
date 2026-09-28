@@ -228,7 +228,7 @@ public class GameValues implements Cloneable {
             } 
             case SNOOKER_TEN -> 17;
             case MINI_SNOOKER -> 13;
-            case CHINESE_EIGHT, LIS_EIGHT -> 16;
+            case CHINESE_EIGHT, LIS_EIGHT, RUSSIAN -> 16;
             case AMERICAN_NINE -> 10;
         };
     }

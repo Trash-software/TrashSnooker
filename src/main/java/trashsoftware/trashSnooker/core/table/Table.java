@@ -4,11 +4,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
+import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.HashMap;
 
@@ -153,4 +157,6 @@ public abstract class Table {
     }
 
     public abstract double breakLineX();
+    
+    public abstract double rackFirstBallX(GameValues gameValues);
 }

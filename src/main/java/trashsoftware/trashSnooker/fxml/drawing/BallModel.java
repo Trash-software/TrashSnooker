@@ -1,19 +1,29 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
+import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Point3D;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
+import org.controlsfx.control.PopOver;
 import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.russian.RussianBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 
 import java.util.Random;
+import java.util.ResourceBundle;
 
 public abstract class BallModel {
 
@@ -22,6 +32,7 @@ public abstract class BallModel {
     private CustomSphere staticSphere;
     private double[] initRotateAngle = new double[3];  // x,y,z
     protected boolean textured;
+    protected PopOver ballPopOver;
 
     protected BallModel(BallsGroupPreset preset, boolean equirectangular) {
         this.preset = preset;
@@ -39,6 +50,8 @@ public abstract class BallModel {
             return new PoolBallModel(preset, ball.getValue());
         } else if (ball instanceof SnookerBall) {
             return new SnookerBallModel(preset, ball.getValue());
+        } else if (ball instanceof RussianBall) {
+            return new RussianBallModel(preset, ball.getValue());
         } else {
             throw new RuntimeException("No such ball type");
         }
@@ -71,6 +84,10 @@ public abstract class BallModel {
         }
 
         return staticSphere;
+    }
+
+    public CustomSphere getSphere() {
+        return sphere;
     }
 
     public void setVisualRadius(double visualRadius) {
@@ -110,5 +127,54 @@ public abstract class BallModel {
 
     public boolean textured() {
         return textured;
+    }
+    
+    public void showPickBallPopOver(ResourceBundle strings, Runnable yesCallback) {
+        if (ballPopOver != null) {
+            ballPopOver.hide();
+        }
+
+        VBox content = new VBox(8);
+        content.setPadding(new Insets(12));
+
+        Button yesButton = new Button(strings.getString("yes"));
+        yesButton.setOnAction(_ -> {
+            Platform.runLater(yesCallback);
+            ballPopOver.hide();
+        });
+        
+        Button noButton = new Button(strings.getString("no"));
+        noButton.setOnAction(_ -> ballPopOver.hide());
+
+        HBox buttonBox =
+                new HBox(yesButton, noButton);
+        buttonBox.setSpacing(8.0);
+
+        buttonBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        content.getChildren().addAll(
+                new Label(strings.getString("confirmPickBall")),
+                buttonBox
+        );
+        
+        PopOver popOver = new PopOver(content);
+
+        popOver.setDetachable(false);
+        popOver.setAutoHide(true);
+        popOver.setHeaderAlwaysVisible(false);
+        popOver.setCloseButtonEnabled(false);
+
+        popOver.setArrowLocation(
+                PopOver.ArrowLocation.LEFT_CENTER
+        );
+
+        ballPopOver = popOver;
+
+        /*
+         * marker 就是箭头所指向的 owner。
+         */
+        popOver.show(sphere);
     }
 }

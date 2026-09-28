@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.russian.RussianBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -41,6 +42,11 @@ public class NaiveGameReplay extends GameReplay {
                     b = new SnookerBall(val, new double[]{x, y}, gameValues);
                     b.setPotted(potted);
                 }
+                case RUSSIAN -> {
+                    b = new RussianBall(val, potted, gameValues);
+                    b.setX(x);
+                    b.setY(y);
+                }
                 default -> throw new RuntimeException("No such ball");
             }
 
@@ -61,7 +67,9 @@ public class NaiveGameReplay extends GameReplay {
             if (balls[i] == null) {
                 balls[i] = b;
                 valueBallMap.put(b.getValue(), b);
-                if (b.isWhite()) cueBall = b;
+                if (cueBall == null && b.getValue() == 0) {
+                    cueBall = b;  // 初始的母球
+                }
             }
         }
     }
@@ -113,6 +121,16 @@ public class NaiveGameReplay extends GameReplay {
         }
     }
 
+    @Override
+    protected void loadPickBall() {
+        try {
+            loadNextScoreResult();
+            loadBallPositions();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Movement getNextMovement() throws IOException {
         byte[] stepsBuf = new byte[4];
         if (inputStream.read(stepsBuf) != stepsBuf.length) throw new IOException();
@@ -124,7 +142,7 @@ public class NaiveGameReplay extends GameReplay {
         byte[] posBuf = new byte[56 + push];
         byte[] ballValueBuf = new byte[1];
 
-        Movement movement = new Movement(balls);
+        Movement movement = new Movement(balls, currentCueRecord.cueBall);
         for (int ballIndex = 0; ballIndex < gameValues.nBalls(); ballIndex++) {
             if (inputStream.read(ballValueBuf) != ballValueBuf.length) {
                 throw new IOException();
@@ -166,6 +184,15 @@ public class NaiveGameReplay extends GameReplay {
 
         return movement;
     }
+    
+    private Ball findBallByValue(int value) {
+        for (Ball ball : balls) {
+            if (ball.getValue() == value) {
+                return ball;
+            }
+        }
+        return balls[0];
+    }
 
     private void readCueRecordAndTargets() throws IOException {
         byte[] buf = new byte[NaiveActualRecorder.CUE_RECORD_LENGTH];
@@ -173,6 +200,7 @@ public class NaiveGameReplay extends GameReplay {
         
         PlayerHand.Hand hand = PlayerHand.Hand.values()[buf[81] & 0xff];
         PlayerHand.CueExtension extension = PlayerHand.CueExtension.values()[buf[82] & 0xff];
+        int cueBallValue = buf[83] & 0xff;  // 一个trick，老的读出来就是0，新的读出来可能有值
 
         currentCueRecord = new CueRecord(
                 buf[0] == 1 ? p1 : p2,
@@ -187,8 +215,11 @@ public class NaiveGameReplay extends GameReplay {
                 Util.bytesToDouble(buf, 64),
                 Util.bytesToDouble(buf, 72),
                 GamePlayStage.values()[buf[80] & 0xff],
-                new PlayerHand.CueHand(hand, null, extension)
+                new PlayerHand.CueHand(hand, null, extension),
+                findBallByValue(cueBallValue)
         );
+        
+        cueBall = currentCueRecord.cueBall;
 
         thisTarget = new TargetRecord(
                 buf[2] & 0xff,

@@ -23,7 +23,7 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
     public static final int RECORD_PRIMARY_VERSION = 14;
-    public static final int RECORD_SECONDARY_VERSION = 4;
+    public static final int RECORD_SECONDARY_VERSION = 5;
     public static final int HEADER_LENGTH = 64;
     public static final int PLAYER_HEADER_LENGTH = 40;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
@@ -34,6 +34,7 @@ public abstract class ActualRecorder implements GameRecorder {
     public static final int FLAG_CUE = 1;
     public static final int FLAG_HANDBALL = 2;
     public static final int FLAG_REPOSITION = 3;
+    public static final int FLAG_PICK_BALL = 4;
 
     public static final int NO_COMPRESSION = 0;
     public static final int DEFLATE_COMPRESSION = 1;
@@ -186,6 +187,19 @@ public abstract class ActualRecorder implements GameRecorder {
         try {
             outputStream.write(FLAG_HANDBALL);
             writeBallInHand();
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
+    }
+
+    @Override
+    public void writePickBall() {
+        try {
+            outputStream.write(FLAG_PICK_BALL);
+            byte[] b = scoreResult.toBytes();
+            outputStream.write(b);
+            recordPositions();
+            scoreResult = null;
         } catch (IOException e) {
             EventLogger.error(e);
         }

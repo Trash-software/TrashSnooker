@@ -127,9 +127,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         clearMovement();
     }
 
-    public boolean isWhite() {
-        return value == 0;
-    }
+//    public boolean isWhite() {
+//        return value == 0;
+//    }
 
     public void setSpin(double xSpin, double ySpin, double sideSpin) {
         phyFramesSinceCue = 0;

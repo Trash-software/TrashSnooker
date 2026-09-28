@@ -139,7 +139,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         for (Game.PocketDirection pd : dirHolePoints) {
             double[][] dirHolePoint = pd.dirHole();
             for (Ball other : game.getAllBalls()) {
-                if (ball != other && !other.isPotted() && !other.isWhite()) {
+                if (ball != other && !other.isPotted() && !game.isCueBall(other)) {
                     double obstaclePotPointDt =
                             Math.hypot(other.getX() - dirHolePoint[2][0], other.getY() - dirHolePoint[2][1]);
                     if (obstaclePotPointDt <= diameter) {

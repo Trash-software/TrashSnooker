@@ -1,5 +1,5 @@
 {
-  "stageIndex": 4,
+  "stageIndex": 2,
   "seedRanks": {
     "custom_8B2113B482528C95": 32,
     "random_player_46": 19,
@@ -70,8 +70,11 @@
   "matchTree": {"root": {
     "p1": {
       "p1": {
+        "p1wins": 0,
         "p1": {
+          "p1wins": 0,
           "p1": {
+            "p1wins": 3,
             "p1": {"winner": "Murphy"},
             "p2": {
               "p1wins": 2,
@@ -90,10 +93,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-16",
               "p2wins": 0
             },
+            "winner": "Murphy",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-32"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-32",
+            "p2wins": 0
           },
           "p2": {
+            "p1wins": 3,
             "p1": {"winner": "Ding Junhui"},
             "p2": {
               "p1wins": 0,
@@ -112,14 +118,20 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-17",
               "p2wins": 2
             },
+            "winner": "Ding Junhui",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-33"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-33",
+            "p2wins": 0
           },
+          "winner": "Ding Junhui",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-48"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-48",
+          "p2wins": 3
         },
         "p2": {
+          "p1wins": 3,
           "p1": {
+            "p1wins": 3,
             "p1": {"winner": "Selby"},
             "p2": {
               "p1wins": 1,
@@ -138,10 +150,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-18",
               "p2wins": 2
             },
+            "winner": "Selby",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-34"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-34",
+            "p2wins": 0
           },
           "p2": {
+            "p1wins": 3,
             "p1": {"winner": "Yan Bingtao"},
             "p2": {
               "p1wins": 2,
@@ -160,18 +175,26 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-19",
               "p2wins": 0
             },
+            "winner": "Yan Bingtao",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-35"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-35",
+            "p2wins": 1
           },
+          "winner": "Selby",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-49"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-49",
+          "p2wins": 0
         },
+        "winner": "Selby",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-56"
+        "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-56",
+        "p2wins": 3
       },
       "p2": {
         "p1": {
+          "p1wins": 0,
           "p1": {
+            "p1wins": 3,
             "p1": {"winner": "Stuart Bingham"},
             "p2": {
               "p1wins": 1,
@@ -190,10 +213,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-20",
               "p2wins": 2
             },
+            "winner": "Stuart Bingham",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-36"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-36",
+            "p2wins": 0
           },
           "p2": {
+            "p1wins": 3,
             "p1": {"winner": "Matthew Stevens"},
             "p2": {
               "p1wins": 2,
@@ -212,14 +238,20 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-21",
               "p2wins": 0
             },
+            "winner": "Matthew Stevens",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-37"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-37",
+            "p2wins": 2
           },
+          "winner": "Matthew Stevens",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-50"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-50",
+          "p2wins": 3
         },
         "p2": {
+          "p1wins": 0,
           "p1": {
+            "p1wins": 3,
             "p1": {"winner": "John Wizard"},
             "p2": {
               "p1wins": 0,
@@ -238,10 +270,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-22",
               "p2wins": 2
             },
+            "winner": "John Wizard",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-38"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-38",
+            "p2wins": 1
           },
           "p2": {
+            "p1wins": 1,
             "p1": {"winner": "Neil Robertson"},
             "p2": {
               "p1wins": 2,
@@ -260,11 +295,15 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-23",
               "p2wins": 0
             },
+            "winner": "custom_8B2113B482528C95",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-39"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-39",
+            "p2wins": 3
           },
+          "winner": "custom_8B2113B482528C95",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-51"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-51",
+          "p2wins": 3
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-57"
@@ -274,8 +313,11 @@
     },
     "p2": {
       "p1": {
+        "p1wins": 3,
         "p1": {
+          "p1wins": 3,
           "p1": {
+            "p1wins": 3,
             "p1": {"winner": "Jack Lisowski"},
             "p2": {
               "p1wins": 0,
@@ -294,10 +336,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-24",
               "p2wins": 2
             },
+            "winner": "Jack Lisowski",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-40"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-40",
+            "p2wins": 0
           },
           "p2": {
+            "p1wins": 3,
             "p1": {"winner": "Mark Allen"},
             "p2": {
               "p1wins": 2,
@@ -316,14 +361,20 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-25",
               "p2wins": 0
             },
+            "winner": "Mark Allen",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-41"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-41",
+            "p2wins": 0
           },
+          "winner": "Jack Lisowski",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-52"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-52",
+          "p2wins": 1
         },
         "p2": {
+          "p1wins": 0,
           "p1": {
+            "p1wins": 3,
             "p1": {"winner": "Trump"},
             "p2": {
               "p1wins": 2,
@@ -342,10 +393,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-26",
               "p2wins": 1
             },
+            "winner": "Trump",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-42"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-42",
+            "p2wins": 0
           },
           "p2": {
+            "p1wins": 0,
             "p1": {"winner": "Li chengzhen"},
             "p2": {
               "p1wins": 2,
@@ -364,18 +418,27 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-27",
               "p2wins": 0
             },
+            "winner": "Small Egg High",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-43"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-43",
+            "p2wins": 3
           },
+          "winner": "Small Egg High",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-53"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-53",
+          "p2wins": 3
         },
+        "winner": "Jack Lisowski",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-58"
+        "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-58",
+        "p2wins": 1
       },
       "p2": {
+        "p1wins": 3,
         "p1": {
+          "p1wins": 1,
           "p1": {
+            "p1wins": 0,
             "p1": {"winner": "Karen Wilson"},
             "p2": {
               "p1wins": 2,
@@ -394,10 +457,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-28",
               "p2wins": 0
             },
+            "winner": "Glass Heart",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-44"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-44",
+            "p2wins": 3
           },
           "p2": {
+            "p1wins": 3,
             "p1": {"winner": "Mark Williams"},
             "p2": {
               "p1wins": 0,
@@ -416,14 +482,20 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-29",
               "p2wins": 2
             },
+            "winner": "Mark Williams",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-45"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-45",
+            "p2wins": 0
           },
+          "winner": "Mark Williams",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-54"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-54",
+          "p2wins": 3
         },
         "p2": {
+          "p1wins": 3,
           "p1": {
+            "p1wins": 3,
             "p1": {"winner": "O_Sullivan"},
             "p2": {
               "p1wins": 0,
@@ -442,10 +514,13 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-30",
               "p2wins": 2
             },
+            "winner": "O_Sullivan",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-46"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-46",
+            "p2wins": 0
           },
           "p2": {
+            "p1wins": 3,
             "p1": {"winner": "Zhao Xintong"},
             "p2": {
               "p1wins": 2,
@@ -464,14 +539,20 @@
               "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-31",
               "p2wins": 0
             },
+            "winner": "Zhao Xintong",
             "stage": "ROUND_1",
-            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-47"
+            "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-47",
+            "p2wins": 0
           },
+          "winner": "O_Sullivan",
           "stage": "ROUND_2",
-          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-55"
+          "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-55",
+          "p2wins": 2
         },
+        "winner": "Mark Williams",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-59"
+        "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-59",
+        "p2wins": 0
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-SEMI_FINAL-61"
@@ -482,6 +563,141 @@
   "finished": false,
   "snookerBreaks": [
     {
+      "score": 135,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-32",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-56",
+      "playerId": "Selby"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-49",
+      "playerId": "Selby"
+    },
+    {
+      "score": 126,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-52",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 126,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-34",
+      "playerId": "Selby"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-54",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-56",
+      "playerId": "Selby"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-54",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 122,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-34",
+      "playerId": "Selby"
+    },
+    {
+      "score": 121,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-32",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 120,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-59",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 120,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-34",
+      "playerId": "Selby"
+    },
+    {
+      "score": 118,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-35",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 117,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-59",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 116,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-49",
+      "playerId": "Selby"
+    },
+    {
       "score": 113,
       "maximumType": "NONE",
       "stage": "PRE_ROUND_1",
@@ -489,6 +705,15 @@
       "numFrame": 1,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_1-7",
       "playerId": "Fat Guy"
+    },
+    {
+      "score": 111,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-54",
+      "playerId": "Mark Williams"
     },
     {
       "score": 109,
@@ -500,6 +725,78 @@
       "playerId": "Liu Mang"
     },
     {
+      "score": 105,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-50",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 101,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-48",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 98,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-45",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 97,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-55",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 97,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-44",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 95,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-49",
+      "playerId": "Selby"
+    },
+    {
+      "score": 94,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-32",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 86,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-47",
+      "playerId": "Zhao Xintong"
+    },
+    {
       "score": 82,
       "maximumType": "NONE",
       "stage": "PRE_ROUND_2",
@@ -507,6 +804,51 @@
       "numFrame": 2,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-18",
       "playerId": "random_player_27"
+    },
+    {
+      "score": 81,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-38",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 79,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-33",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-55",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-39",
+      "playerId": "custom_8B2113B482528C95"
+    },
+    {
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-41",
+      "playerId": "Mark Allen"
     },
     {
       "score": 78,
@@ -520,11 +862,47 @@
     {
       "score": 76,
       "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-52",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 76,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-46",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 76,
+      "maximumType": "NONE",
       "stage": "PRE_ROUND_1",
       "sim": true,
       "numFrame": 2,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_1-3",
       "playerId": "High Stick"
+    },
+    {
+      "score": 75,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-46",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 73,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-42",
+      "playerId": "Trump"
     },
     {
       "score": 73,
@@ -534,6 +912,33 @@
       "numFrame": 2,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-30",
       "playerId": "Smart"
+    },
+    {
+      "score": 71,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-53",
+      "playerId": "Small Egg High"
+    },
+    {
+      "score": 70,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-58",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 69,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-58",
+      "playerId": "Jack Lisowski"
     },
     {
       "score": 68,
@@ -547,6 +952,15 @@
     {
       "score": 67,
       "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-37",
+      "playerId": "random_player_46"
+    },
+    {
+      "score": 67,
+      "maximumType": "NONE",
       "stage": "PRE_ROUND_2",
       "sim": false,
       "numFrame": 1,
@@ -556,11 +970,74 @@
     {
       "score": 66,
       "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-QUARTER_FINAL-58",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 66,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-39",
+      "playerId": "custom_8B2113B482528C95"
+    },
+    {
+      "score": 66,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-35",
+      "playerId": "random_player_92"
+    },
+    {
+      "score": 66,
+      "maximumType": "NONE",
       "stage": "PRE_ROUND_2",
       "sim": true,
       "numFrame": 1,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-28",
       "playerId": "Glass Heart"
+    },
+    {
+      "score": 65,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-51",
+      "playerId": "custom_8B2113B482528C95"
+    },
+    {
+      "score": 65,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-52",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 65,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-33",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-40",
+      "playerId": "Jack Lisowski"
     },
     {
       "score": 64,
@@ -574,11 +1051,29 @@
     {
       "score": 63,
       "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-35",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 63,
+      "maximumType": "NONE",
       "stage": "PRE_ROUND_1",
       "sim": true,
       "numFrame": 2,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_1-10",
       "playerId": "random_player_69"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-40",
+      "playerId": "Jack Lisowski"
     },
     {
       "score": 62,
@@ -592,10 +1087,46 @@
     {
       "score": 61,
       "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-50",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 61,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-40",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 61,
+      "maximumType": "NONE",
       "stage": "PRE_ROUND_2",
       "sim": true,
       "numFrame": 2,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_2-28",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-54",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-44",
       "playerId": "Glass Heart"
     },
     {
@@ -606,6 +1137,24 @@
       "numFrame": 1,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_1-5",
       "playerId": "random_player_43"
+    },
+    {
+      "score": 59,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-48",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 59,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-36",
+      "playerId": "Stuart Bingham"
     },
     {
       "score": 58,
@@ -635,6 +1184,15 @@
       "playerId": "custom_8B2113B482528C95"
     },
     {
+      "score": 55,
+      "maximumType": "NONE",
+      "stage": "ROUND_2",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_2-51",
+      "playerId": "custom_8B2113B482528C95"
+    },
+    {
       "score": 54,
       "maximumType": "NONE",
       "stage": "PRE_ROUND_2",
@@ -653,6 +1211,15 @@
       "playerId": "random_player_66"
     },
     {
+      "score": 53,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-46",
+      "playerId": "Smart"
+    },
+    {
       "score": 52,
       "maximumType": "NONE",
       "stage": "PRE_ROUND_1",
@@ -660,6 +1227,33 @@
       "numFrame": 2,
       "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-PRE_ROUND_1-6",
       "playerId": "random_player_88"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-39",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-44",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_8B2113B482528C95+2023+united_kingdom_champ-ROUND_1-33",
+      "playerId": "Ding Junhui"
     },
     {
       "score": 50,

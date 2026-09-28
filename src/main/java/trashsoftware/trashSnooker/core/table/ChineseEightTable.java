@@ -23,8 +23,8 @@ public class ChineseEightTable extends NumberedBallTable {
         super.drawTableMarks(view, graphicsContext, scale);
 
         // 中八的置球线
-        double firstBallX = firstBallPlacementX();
-        double botPointX = firstBallPlacementX() + tableMetrics.innerWidth / 8;
+        double firstBallX = rackFirstBallX();
+        double botPointX = rackFirstBallX() + tableMetrics.innerWidth / 8;
         double botCanvasX = view.canvasX(botPointX);
         double midY = view.canvasY(tableMetrics.midY);
 

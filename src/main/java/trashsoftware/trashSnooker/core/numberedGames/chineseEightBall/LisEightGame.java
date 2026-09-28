@@ -44,7 +44,7 @@ public class LisEightGame extends ChineseEightBallGame {
     protected boolean canPlaceWhiteInTable(double x, double y) {
         double range = gameValues.ball.ballDiameter * 2;
         return (Algebra.distanceToPoint(x, y, getTable().breakLineX(), gameValues.table.midY) < range ||
-                Algebra.distanceToPoint(x, y, getTable().firstBallPlacementX(), gameValues.table.midY) < range)
+                Algebra.distanceToPoint(x, y, getTable().rackFirstBallX(), gameValues.table.midY) < range)
                 && !isOccupied(x, y);
     }
 

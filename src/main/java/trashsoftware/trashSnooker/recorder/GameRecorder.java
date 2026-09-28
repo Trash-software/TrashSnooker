@@ -40,5 +40,7 @@ public interface GameRecorder {
 
     void writeBallInHandPlacement();
     
+    void writePickBall();
+    
     boolean isFinished();
 }

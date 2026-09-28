@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.game.FixedCueBallGame;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlayer> {
+public abstract class AbstractSnookerGame extends FixedCueBallGame<SnookerBall, SnookerPlayer> {
 
     public static final int RAW_COLORED_REP = 0;  // 代表任意彩球
     public final double redRowOccupyX;
@@ -93,7 +94,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
         coloredBalls = new SnookerBall[6];
         allBalls = new SnookerBall[redBalls.length + nColorBalls + 1];
-        allBalls[0] = cueBall;
+        allBalls[0] = getCueBall();
         System.arraycopy(redBalls, 0, allBalls, 1, redBalls.length);
         allBalls[redBalls.length + 1] = yellowBall;
         allBalls[redBalls.length + 2] = greenBall;
@@ -187,7 +188,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     @Override
-    protected SnookerBall createWhiteBall() {
+    protected SnookerBall createInitWhiteBall() {
         return new SnookerBall(0, gameValues);
     }
 
@@ -265,6 +266,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (thisCueFoul.isFoul()) {
             // 当从白球处无法看到任何一颗目标球的最薄边时
             List<Ball> currentTarBalls = getAllLegalBalls(currentTarget, false, false);
+            SnookerBall cueBall = getCueBall();
             int canSeeBallCount = countSeeAbleTargetBalls(cueBall.getX(), cueBall.getY(),
                     currentTarBalls, 3).seeAbleTargets;
             System.out.println("Target: " + currentTarget + ", Free ball check: " +
@@ -358,7 +360,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         // 延分，争黑球
         blackBattle = true;
         startingBlackBattle = true;
-        cueBall.pot();
+        getCueBall().pot();
         currentTarget = 7;
         SnookerBall black = getBallOfValue(7);
         black.pot();
@@ -460,6 +462,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     protected void updateScoreAndTarget(Set<SnookerBall> pottedBalls, boolean isFreeBall) {
         int score = 0;
         boolean baseFoul = checkStandardFouls(() -> getFoulScore(pottedBalls));
+        SnookerBall cueBall = getCueBall();
         if (baseFoul) {
             // 不同的分支
             if (whiteFirstCollide != null) {
@@ -759,6 +762,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (!gameValues.isTraining()) {
             checkScoreSumAchievement();
         }
+    }
+
+    @Override
+    protected boolean ballPickableWhenValid(Ball ball) {
+        return false;
     }
 
     public boolean isBlackBattle() {
@@ -1147,7 +1155,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     public boolean wasLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
-        if (!ball.isWhite()) {
+        if (!isCueBall(ball)) {
             if (targetRep == RAW_COLORED_REP) {
                 return ball.getValue() > 1 && ball.getValue() <= 7;
             } else {
@@ -1161,7 +1169,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, boolean isInLineHandBall) {
-        if (!ball.isPotted() && !ball.isWhite()) {
+        if (!ball.isPotted() && !isCueBall(ball)) {
             if (targetRep == RAW_COLORED_REP) {
                 return ball.getValue() > 1 && ball.getValue() <= 7;
             } else {
@@ -1346,7 +1354,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     protected void initRedBalls() {
-        double curX = firstRedX();
+        double curX = table.rackFirstBallX(gameValues);
         double rowStartY = gameValues.table.midY;
 
         int nRows = numRedRows();
@@ -1379,10 +1387,6 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             rowStartY -= gameValues.ball.ballRadius + redGapDt * 0.6;
             curX += redRowOccupyX;
         }
-    }
-
-    public double firstRedX() {
-        return getTable().pinkBallPos()[0] + gameValues.ball.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
     }
 
     @Override

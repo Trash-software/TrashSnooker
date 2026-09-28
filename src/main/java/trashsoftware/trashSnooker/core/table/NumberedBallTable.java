@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.table;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.Values;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
@@ -82,7 +83,7 @@ public abstract class NumberedBallTable extends Table {
                 {breakLineX(), tableMetrics.topY + pointYGap},
                 {breakLineX(), tableMetrics.topY + pointYGap * 2},
                 {breakLineX(), tableMetrics.topY + pointYGap * 3},
-                {firstBallPlacementX(), tableMetrics.midY}
+                {rackFirstBallX(), tableMetrics.midY}
         };
         
         graphicsContext.setFill(GameView.WHITE);
@@ -109,8 +110,13 @@ public abstract class NumberedBallTable extends Table {
         }
     }
 
-    public double firstBallPlacementX() {
+    @Override
+    public double rackFirstBallX(GameValues gameValues) {
         return tableMetrics.leftX + (tableMetrics.innerWidth * 0.75);
+    }
+
+    public double rackFirstBallX() {
+        return rackFirstBallX(null);
     }
 
     public double breakLineX() {

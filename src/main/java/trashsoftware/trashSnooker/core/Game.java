@@ -19,6 +19,7 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGa
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.russian.RussianGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
@@ -59,7 +60,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected final GameSettings gameSettings;
     protected final ResourceBundle strings = App.getStrings();
     private final Map<B, int[]> ballCushionCountAndCrossLine = new HashMap<>();  // 本杆的{库数, 过线次数}
-    protected B cueBall;
     protected P player1;
     protected P player2;
     protected boolean wasDoingFreeBall;  // 记录上一杆是不是自由球，复位用
@@ -85,6 +85,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected boolean playingRepositionBall;  // 是否在打复位的球
     protected boolean playingLetBall;  // 是否在打对方的让杆
     protected boolean ballHeapIntact = true;  // 球堆是否没被动过
+    protected boolean askingPickBall = false;  // 是否在要求玩家捡球
     protected GameValues gameValues;
     //    protected String foulReason;
     protected int thinkTime;
@@ -121,7 +122,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             lastCuedPlayer = currentPlayer;  // 这里不重要，只要是防null
             setBreakingPlayer(currentPlayer);
         }
-        cueBall = createWhiteBall();
+        setCueBall(createInitWhiteBall());
     }
 
     public static Game<? extends Ball, ? extends Player> createGame(
@@ -225,6 +226,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             } else {
                 game = new AmericanNineBallGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
             }
+        } else if (gameValues.rule == GameRule.RUSSIAN) {
+            if (gameValues.isTraining()) {
+                throw new RuntimeException();
+            } else {
+                game = new RussianGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
+            }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
         return game;
     }
@@ -273,9 +280,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             copy.cloneBalls(allBalls);
 
+            B origCueBall = getCueBall();
             for (B ball : copy.getAllBalls()) {
-                if (ball.isWhite()) {
-                    copy.cueBall = ball;
+                if (ball.equals(origCueBall)) {
+                    copy.setCueBall(ball);
                     break;
                 }
             }
@@ -302,7 +310,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected abstract void initPlayers();
 
-    protected abstract B createWhiteBall();
+    protected abstract B createInitWhiteBall();
 
     protected abstract boolean isBallPlacedInHeap(Ball ball);
 
@@ -317,7 +325,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<Ball> balls = new ArrayList<>();
         for (Ball ball : getAllBalls()) {
             if (!ball.isNotOnTable() &&
-                    !ball.isWhite() &&
+                    !isCueBall(ball) &&
                     isLegalBall(ball, targetRep, isSnookerFreeBall, isLineInFreeBall))
                 balls.add(ball);
         }
@@ -328,7 +336,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<Ball> legals = new ArrayList<>();
         List<Ball> illegals = new ArrayList<>();
         for (Ball ball : getAllBalls()) {
-            if (!ball.isNotOnTable() && !ball.isWhite()) {
+            if (!ball.isNotOnTable() && !isCueBall(ball)) {
                 if (isLegalBall(ball, currentTarget, isDoingSnookerFreeBll(), isInLineHandBall())) {
                     legals.add(ball);
                 } else {
@@ -457,6 +465,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         placedHandBallButNoHit = false;
 
         lastCueVx = params.vx;
+        B cueBall = getCueBall();
         cueBall.setVx(params.vx / phy.calculationsPerSec);
         cueBall.setVy(params.vy / phy.calculationsPerSec);
         params.xSpin = params.xSpin == 0.0d ? params.vx / 1000.0 : params.xSpin;  // 避免完全无旋转造成的NaN
@@ -512,6 +521,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean stopAtCollision,
                                         boolean wipe,
                                         boolean useClone) {
+        
+        B cueBall = getCueBall();
+        
         if (cueBall.isNotOnTable()) {
             return null;
         }
@@ -601,11 +613,33 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         recordInfo(newlyPot, pScores, specials);
         isBreaking = false;
         finishedCuesCount++;
+        updateAskPickBall();
         gameView.finishCue(player, currentPlayer);
     }
 
     public boolean isCalculating() {
         return physicsCalculator != null && physicsCalculator.notTerminated;
+    }
+
+    public boolean isAskingPickBall() {
+        return askingPickBall;
+    }
+    
+    public final boolean ballPickable(Ball ball) {
+        return askingPickBall && ballPickableWhenValid(ball);
+    }
+
+    /**
+     * 需要在下一杆的player和target等都设置好了之后再调用
+     */
+    protected void updateAskPickBall() {
+        
+    }
+    
+    protected abstract boolean ballPickableWhenValid(Ball ball);
+    
+    public void pickBall(Ball validBall) {
+        throw new RuntimeException("Pick ball not implemented for game " + getClass().getName());
     }
 
     public void forcedTerminate() {
@@ -647,9 +681,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
     }
 
-    public B getCueBall() {
-        return cueBall;
-    }
+    public abstract void setCueBall(Ball newCueBall);
+    
+    public abstract B getCueBall();
 
     public int nBalls() {
         return getAllBalls().length;
@@ -659,6 +693,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public void forcePlaceWhiteNoRecord(double realX, double realY) {
+        B cueBall = getCueBall();
         cueBall.setX(realX);
         cueBall.setY(realY);
         cueBall.pickup();
@@ -666,6 +701,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public void placeWhiteBall(double realX, double realY) {
         if (canPlaceWhite(realX, realY)) {
+            B cueBall = getCueBall();
             cueBall.setX(realX);
             cueBall.setY(realY);
             cueBall.pickup();
@@ -718,6 +754,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                                        double cursorPointingY,
                                                        double cueWidth) {
 //        long st = System.currentTimeMillis();
+        B cueBall = getCueBall();
         CueBackPredictor cueBackPredictor =
                 new CueBackPredictor(this, cursorPointingX, cursorPointingY, cueWidth,
                         getCuingPlayer().getInGamePlayer()
@@ -740,7 +777,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 y >= gameValues.table.topY &&
                 y < gameValues.table.botY) {
             for (Ball ball : getAllBalls()) {
-                if (!ball.isNotOnTable() && !ball.isWhite()) {
+                if (!ball.isNotOnTable() && !isCueBall(ball)) {
                     if (Algebra.distanceToPoint(
                             x, y, ball.x, ball.y
                     ) < gameValues.ball.ballDiameter) {
@@ -771,6 +808,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public B getBallByValue(int number) {
         Map<Integer, B> map = getNumberBallMap();
         return map.get(number);
+    }
+    
+    public boolean isCueBall(Ball ball) {
+        return ball.equals(getCueBall());
     }
 
     /**
@@ -942,7 +983,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         if (!pointToPointCanPassBall(whiteX, whiteY,
                 collPos[0], collPos[1],
-                cueBall, ball,
+                getCueBall(), ball,
                 true, true)) {
             // 白球处看不到点
             return null;
@@ -1124,7 +1165,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             boolean canSee = true;
 
             for (Ball ball : obstaclesInConsideration) {
-                if (!ball.isWhite() && !ball.isNotOnTable() && !legalSet.contains(ball)) {
+                if (!isCueBall(ball) && !ball.isNotOnTable() && !legalSet.contains(ball)) {
                     // 是障碍球
                     double xDiff = ball.x - whiteX;
                     double yDiff = ball.y - whiteY;
@@ -1302,6 +1343,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected void setBallInHand() {
         ballInHand = true;
+        B cueBall = getCueBall();
         if (!cueBall.isPotted()) {
             cueBall.pot();
         }
@@ -1309,6 +1351,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public boolean isSnookered() {
+        B cueBall = getCueBall();
         return isSnookered(cueBall.x, cueBall.y,
                 getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll(),
                         isInLineHandBall()));
@@ -1319,6 +1362,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public boolean isAnyFullBallVisible() {
+        B cueBall = getCueBall();
         return countSeeAbleTargetBalls(
                 cueBall.x, cueBall.y,
                 getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll(),
@@ -1426,7 +1470,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         int uniqueBallsHitCushion = 0;
         int acrossBreakLine = 0;
         for (B ball : getAllBalls()) {
-            if (!ball.isWhite()) {
+            if (!isCueBall(ball)) {
                 int[] stats = computeCushionAndAcrossLineOfBall(ball);
                 acrossBreakLine += stats[1];
                 if (stats[0] > 0) {
@@ -1493,10 +1537,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (whiteFirstCollide == null) {
             // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
             thisCueFoul.addFoul(strings.getString("emptyCue"), foulScoreCalculator.get(), true);
-            if (cueBall.isPotted()) setBallInHand();
+            if (getCueBall().isPotted()) setBallInHand();
             AchManager.getInstance().addAchievement(Achievement.MISSED_SHOT, getCuingIgp());
         }
-        if (cueBall.isPotted()) {
+        if (!rule.hasRule(Rule.ALLOW_CUE_BALL_POT) && getCueBall().isPotted()) {
             thisCueFoul.addFoul(strings.getString("cueBallPot"), foulScoreCalculator.get(), false);
             setBallInHand();
             AchManager.getInstance().addAchievement(Achievement.CUE_BALL_POT, getCuingIgp());
@@ -1533,7 +1577,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         double sumY = 0;
         int count = 0;
         for (B ball : getAllBalls()) {
-            if (ball.isWhite() || ball.isPotted() || ball == excluded) {
+            if (isCueBall(ball) || ball.isPotted() || ball == excluded) {
                 continue;
             }
             if (isLegalBall(ball, targetRep, false, false)) {
@@ -1580,6 +1624,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         if (targets.isEmpty()) return null;
 
+        B cueBall = getCueBall();
         double[] whitePos = new double[]{cueBall.x, cueBall.y};
 
         List<AttackChoice.DirectAttackChoice> directAttackChoices = new ArrayList<>();
@@ -1681,6 +1726,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isStarted() {
         return finishedCuesCount > 0;
     }
+    
+    public abstract boolean cueBallSwitchable();
 
     protected abstract void endMoveAndUpdate();
 
@@ -2047,7 +2094,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        }
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite() && !ball.isPotted()
+                if (!isCueBall(ball) && !ball.isPotted()
                         && (predictTargetBall || ball != prediction.getFirstCollide())  // 不predict target时，firstBall会在那里像坨石头一样
                 ) {
                     double curDt = cueBallClone.currentDtTo(ball);
@@ -2088,13 +2135,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         private boolean tryWhiteHitBallFirst() {
             for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite() && !ball.isPotted()) {
+                if (!isCueBall(ball) && !ball.isPotted()) {
                     if (cueBallClone.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ball.ballDiameter) {
                         double whiteVx = cueBallClone.vx;
                         double whiteVy = cueBallClone.vy;
                         if (!cueBallClone.twoMovingBallsHitCore(ball, phy)) {
-                            System.err.println("Will hit but not hit");
+                            System.err.println("Will hit but not hit: " + cueBallClone.value);
                             continue;
                         }
                         double[] rawBallUnitVec = Algebra.unitVector(
@@ -2147,7 +2194,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
 
         Movement calculate() {
-            movement = new Movement(getAllBalls());
+            movement = new Movement(getAllBalls(), getCueBall());
             movement.startTrace();
             while (!oneRun() && notTerminated) {
                 if (cumulatedPhysicalTime >= CONGESTION_LIMIT) {
@@ -2173,7 +2220,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                 }
             }
-            System.out.println("Frames: " + movement.getMovementMap().get(cueBall).size());
+            System.out.println("Frames: " + movement.getMovementMap().get(getCueBall()).size());
 
             return movement;
         }
@@ -2276,7 +2323,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (holeAreaResult.result() == 2) {
                             collidesWall = true;
                             recordHitCushion(ball);
-                            if (ball.isWhite())
+                            if (isCueBall(ball))
                                 movement.getWhiteTrace().hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
                             else
                                 movement.getTraceOfBallNotNull(ball).hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
@@ -2292,7 +2339,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         // 库边
                         collidesWall = true;
                         recordHitCushion(ball);
-                        if (ball.isWhite())
+                        if (isCueBall(ball))
                             movement.getWhiteTrace().hitCushion(cushion, ball.getPositionArray());
                         else
                             movement.getTraceOfBallNotNull(ball).hitCushion(cushion, ball.getPositionArray());
@@ -2332,7 +2379,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         // 没进且晃了很多下
                         AchManager.getInstance().addAchievement(Achievement.SHAKE_POCKET, getCuingIgp());
                     }
-                    if (ball.isWhite()) {
+                    if (isCueBall(ball)) {
                         movement.getWhiteTrace().setDistanceMoved(ball.getDistanceMoved());
                     } else {
                         movement.getTraceOfBallNotNull(ball).setDistanceMoved(ball.getDistanceMoved());
@@ -2386,8 +2433,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (ball.tryHitBall(Game.this, otherBall, true, phy)) {
                         // hit ball
                         hit = true;
-                        if (ball.isWhite()) whiteCollide(ball, otherBall);  // 记录白球撞到的球
-                        else if (otherBall.isWhite()) whiteCollide(otherBall, ball);
+                        if (isCueBall(ball)) whiteCollide(ball, otherBall);  // 记录白球撞到的球
+                        else if (isCueBall(otherBall)) whiteCollide(otherBall, ball);
                         break;  // 假设一颗球在一物理帧内不会撞到两颗球
                     }
                 }

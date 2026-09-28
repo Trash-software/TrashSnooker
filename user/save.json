@@ -1,19 +1,19 @@
 {
   "p1": {
     "playerNumber": 1,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "RUSSIAN",
     "handFeelEffort": 1,
-    "psyStatus": 0.9567099999999996,
+    "psyStatus": 0.9982500000000001,
     "person": "Neil Robertson",
     "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "RUSSIAN",
     "handFeelEffort": 1,
-    "psyStatus": 1,
+    "psyStatus": 0.988336,
     "person": "Mark Allen",
     "playerType": "PLAYER",
     "let": {"type": "notLet"}
@@ -21,19 +21,19 @@
   "codeGameCounter": 1,
   "p2BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
-    "subRules": ["CHINESE_EIGHT_STD"],
+    "ball": "RUSSIAN_BALL",
+    "gameRule": "RUSSIAN",
+    "subRules": ["RUSSIAN_FREE"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 1,
-      "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 3
+      "tableOrdinal": 7,
+      "pocketDifficultyOrdinal": 0,
+      "holeSizeOrdinal": 0
     }
   },
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
-  "startTime": 1790095399720,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
+  "startTime": 1790630325883,
   "p1BreakLoseChance": 0,
   "totalFrames": 1,
   "cloth": {

@@ -17,7 +17,10 @@ public enum SubRule {
     CHINESE_EIGHT_STD(1, Detail.ILLEGAL_BREAK_CUSHION),
     CHINESE_EIGHT_JOE(1, Detail.PAPER_BREAK, Detail.LOSE_CHANCE_ACROSS_LINE),
     SNOOKER_STD(2),
-    SNOOKER_GOLDEN(2);
+    SNOOKER_GOLDEN(2),
+    RUSSIAN_FREE(3),
+    RUSSIAN_MOSCOW(3),
+    RUSSIAN_PETERSBURG(3);
     
     private final int typeId;  // 同typeId的SubRule只能存在最多一个
     public final Detail[] detailRules;

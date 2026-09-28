@@ -58,6 +58,11 @@ public class InvalidRecorder implements GameRecorder {
     }
 
     @Override
+    public void writePickBall() {
+        
+    }
+
+    @Override
     public void setCompression(int compression) {
 
     }

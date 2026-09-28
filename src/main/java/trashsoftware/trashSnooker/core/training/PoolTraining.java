@@ -210,7 +210,7 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
     private int getRemTargetBallsOnTable() {
         int rem = 0;
         for (Ball ball : getAllBalls()) {
-            if (!ball.isWhite() && !ball.isPotted()) rem++;
+            if (!isCueBall(ball) && !ball.isPotted()) rem++;
         }
         return rem;
     }

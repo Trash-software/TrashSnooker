@@ -13,13 +13,15 @@ public class Movement {
     private final Map<Ball, List<MovementFrame>> movementMap = new HashMap<>();  // 必须是hashmap，详见ball.compareTo()
     private final Map<Ball, MovementFrame> startingPositions = new HashMap<>();
     private final Ball anyBall;
+    private final Ball cueBall;
     private boolean congested = false;
     private transient Trace whiteTrace;  // 仅用于游戏，不用于录像
     private transient Ball whiteFirstCollide;  // 录像游戏都用，但不保存
     private transient final Map<Ball, Trace> ballTraces = new HashMap<>();  // 仅用于游戏，不用于录像
 
-    public Movement(Ball[] allBalls) {
+    public Movement(Ball[] allBalls, Ball cueBall) {
         anyBall = allBalls[0];
+        this.cueBall = cueBall;
         for (Ball ball : allBalls) {
             List<MovementFrame> positionList = new ArrayList<>();
             MovementFrame frame = new MovementFrame(ball.getX(), ball.getY(),
@@ -33,13 +35,6 @@ public class Movement {
     }
 
     public void setupReplay() {
-        Ball cueBall = null;
-        for (Ball ball : movementMap.keySet()) {
-            if (ball.isWhite()) {
-                cueBall = ball;
-                break;
-            }
-        }
         if (cueBall == null) throw new RuntimeException("No cue ball in this movement");
 
         // 实则是找到第一颗动的非白球
@@ -49,7 +44,7 @@ public class Movement {
         OUT_LOOP:
         for (int i = 0; i < nFrames - 1; i++) {
             for (Map.Entry<Ball, List<MovementFrame>> entry : movementMap.entrySet()) {
-                if (entry.getKey().isWhite()) continue;  // 不管白球
+                if (entry.getKey().equals(cueBall)) continue;  // 不管白球
                 MovementFrame curFrame = entry.getValue().get(i);
                 if (curFrame.potted) continue;
                 MovementFrame nextFrame = entry.getValue().get(i + 1);
