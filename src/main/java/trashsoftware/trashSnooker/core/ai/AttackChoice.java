@@ -16,7 +16,7 @@ import java.util.Arrays;
 public abstract class AttackChoice implements Comparable<AttackChoice> {
 
     protected Ball ball;
-    protected Game<?, ?> game;
+    protected Game<?, ?, ?> game;
     protected Player attackingPlayer;
     protected boolean isPositioning;  // 是走位预测还是进攻
 
@@ -132,7 +132,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     }
 
     private static AttackParam createDefaultRef(AttackChoice attackChoice,
-                                                Game<?, ?> game,
+                                                Game<?, ?, ?> game,
                                                 Phy phy,
                                                 InGamePlayer igp,
                                                 CuePlayerHand playerHand) {
@@ -177,7 +177,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
         /**
          * @param lastAiPottedBall 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
          */
-        public static DoubleAttackChoice createChoice(Game<?, ?> game,
+        public static DoubleAttackChoice createChoice(Game<?, ?, ?> game,
                                                       Phy phy,
                                                       Player attackingPlayer,
                                                       double[] whitePos,
@@ -324,7 +324,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
         /**
          * @param lastAiPottedBall 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
          */
-        public static DirectAttackChoice createChoice(Game<?, ?> game,
+        public static DirectAttackChoice createChoice(Game<?, ?, ?> game,
                                                       Phy phy,
                                                       Player attackingPlayer,
                                                       double[] whitePos,
@@ -469,7 +469,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             return holeWidth - values.ball.ballDiameter * 0.9;  // 0.9是随手写的
         }
 
-        protected static double holeDifficulty(Game<?, ?> game,
+        protected static double holeDifficulty(Game<?, ?, ?> game,
                                                boolean isMidHole,
                                                double[] targetHoleVec) {
 
@@ -485,7 +485,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             }
         }
 
-        private static double toleranceToOneDir(Game<?, ?> game,
+        private static double toleranceToOneDir(Game<?, ?, ?> game,
                                                 Ball cueBall,
                                                 Ball targetBall,
                                                 double eachTickMm,
@@ -530,7 +530,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
          * 返回这个attackChoice白球允许的最大偏差, mm。
          * 以 白球实际位置与目标球进球点连线 的 垂线 为基准，在左为负，右为正。
          */
-        public static double[] leftRightTolerance(Game<?, ?> game,
+        public static double[] leftRightTolerance(Game<?, ?, ?> game,
                                                   Ball cueBall,
                                                   Ball targetBall,
                                                   double[] whitePos,

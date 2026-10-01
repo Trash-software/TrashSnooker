@@ -9,13 +9,13 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.infoRec.MatchInfoRec;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GeneralSaveManager;
 import trashsoftware.trashSnooker.util.Util;
@@ -40,32 +40,32 @@ public class EntireGame {
     final InGamePlayer p2;
     private final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
     private final MetaMatchInfo metaMatchInfo;  // nullable
-    Game<? extends Ball, ? extends Player> game;
+    Game<? extends Ball, ? extends Player, ? extends Table> game;
     private final Timestamp startTime;
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
     private int codeGameCounter;
-    
+
     private int p1BreakLoseChance;
     private int p2BreakLoseChance;
-    
+
     protected MatchInfoRec matchInfoRec;
 
-    public EntireGame(InGamePlayer p1, 
-                      InGamePlayer p2, 
+    public EntireGame(InGamePlayer p1,
+                      InGamePlayer p2,
                       GameValues gameValues,
-                      int totalFrames, 
+                      int totalFrames,
                       TableCloth cloth,
                       MetaMatchInfo metaMatchInfo) {
-        this(p1, p2, gameValues, totalFrames, cloth,true, System.currentTimeMillis(), metaMatchInfo);
+        this(p1, p2, gameValues, totalFrames, cloth, true, System.currentTimeMillis(), metaMatchInfo);
     }
 
-    private EntireGame(InGamePlayer p1, 
-                       InGamePlayer p2, 
+    private EntireGame(InGamePlayer p1,
+                       InGamePlayer p2,
                        GameValues gameValues,
-                       int totalFrames, 
-                       TableCloth cloth, 
+                       int totalFrames,
+                       TableCloth cloth,
                        boolean isNewCreate,
                        long startTime,
                        MetaMatchInfo metaMatchInfo) {
@@ -84,15 +84,15 @@ public class EntireGame {
         this.metaMatchInfo = metaMatchInfo;
 
         String careerMatchId = null;
-        
+
         if (metaMatchInfo != null) {
             careerMatchId = metaMatchInfo.matchId;
-            
+
             if (metaMatchInfo.stage == ChampionshipStage.SEMI_FINAL) {
                 AchManager.getInstance().addAchievement(Achievement.SEMIFINAL_STAGE,
                         p1.isHuman() ? p1 : p2);
             } else if (metaMatchInfo.stage == ChampionshipStage.FINAL) {
-                AchManager.getInstance().addAchievement(Achievement.FINAL_STAGE, 
+                AchManager.getInstance().addAchievement(Achievement.FINAL_STAGE,
                         p1.isHuman() ? p1 : p2);
             }
         }
@@ -101,9 +101,9 @@ public class EntireGame {
             String entireBeginTime = getEntireBeginTimeFileName();
             if (isNewCreate) {
                 DBAccess.getInstance().recordAnEntireGameStarts(this, metaMatchInfo);
-                matchInfoRec = MatchInfoRec.createMatchRec(gameValues, 
+                matchInfoRec = MatchInfoRec.createMatchRec(gameValues,
                         totalFrames,
-                        entireBeginTime, 
+                        entireBeginTime,
                         careerMatchId,
                         new String[]{p1.getPlayerPerson().getPlayerId(), p2.getPlayerPerson().getPlayerId()});
             } else {
@@ -142,9 +142,9 @@ public class EntireGame {
         entireGame.p1Wins = jsonObject.getInt("p1Wins");
         entireGame.p2Wins = jsonObject.getInt("p2Wins");
         entireGame.p1Breaks = jsonObject.getBoolean("p1Breaks");
-        entireGame.codeGameCounter = jsonObject.optInt("codeGameCounter", 
+        entireGame.codeGameCounter = jsonObject.optInt("codeGameCounter",
                 entireGame.p1Wins + entireGame.p2Wins);
-        
+
         if (jsonObject.has("p1BreakLoseChance") && jsonObject.has("p2BreakLoseChance")) {
             entireGame.p1BreakLoseChance = jsonObject.getInt("p1BreakLoseChance");
             entireGame.p2BreakLoseChance = jsonObject.getInt("p2BreakLoseChance");
@@ -205,7 +205,7 @@ public class EntireGame {
 
         object.put("winRecords", winRecords);
         object.put("matchId", metaMatchInfo == null ? null : metaMatchInfo.toString());
-        
+
         object.put("p1BreakLoseChance", p1BreakLoseChance);
         object.put("p2BreakLoseChance", p2BreakLoseChance);
 
@@ -216,7 +216,7 @@ public class EntireGame {
         GeneralSaveManager.getInstance().save(this);
     }
 
-    public Game<? extends Ball, ? extends Player> getGame() {
+    public Game<? extends Ball, ? extends Player, ? extends Table> getGame() {
         return game;
     }
 
@@ -232,7 +232,7 @@ public class EntireGame {
         }
         return count;
     }
-    
+
     public void quitMatch(PlayerPerson quitPerson) {
         InGamePlayer winner;
         if (quitPerson.getPlayerId().equals(p1.getPlayerPerson().getPlayerId())) {
@@ -256,7 +256,7 @@ public class EntireGame {
     public int getP2Wins() {
         return p2Wins;
     }
-    
+
 //    public int[] getNextFrameIndexAndRestartIndex() {
 //        return new int[]{p1Wins + p2Wins + 1, game == null ? 0 : game.frameRestartIndex};
 //    }
@@ -289,7 +289,7 @@ public class EntireGame {
             updateFrameRecords(game.getPlayer2(), null);
         }
     }
-    
+
     private boolean playerWinsAframe(InGamePlayer frameWinner, boolean record) {
         if (game != null && record) {
             if (gameValues.isStandard()) {
@@ -336,10 +336,10 @@ public class EntireGame {
         } catch (JSONException je) {
             EventLogger.error(je);
         }
-        
+
         return end;
     }
-    
+
     public boolean isSessionInternalRest(int finishedFrames) {
         int framesFromSessionBegin = finishedFrames;
         int[] sessionDivisions = gameValues.rule.sessionDivision(totalFrames);
@@ -365,7 +365,7 @@ public class EntireGame {
         }
         return false;
     }
-    
+
     public boolean isSessionalBreak(int finishedFrames) {
         int[] sessionDivisions = gameValues.rule.sessionDivision(totalFrames);
         int cumulated = 0;
@@ -376,7 +376,7 @@ public class EntireGame {
         }
         return false;
     }
-    
+
     public EntireGameTitle toEgt() {
         return new EntireGameTitle(
                 startTime,
@@ -451,7 +451,7 @@ public class EntireGame {
     public String getStartTimeSqlString() {
         return Util.timeStampFmt(startTime);
     }
-    
+
     public String getEntireBeginTimeFileName() {
         return Util.entireBeginTimeToFileName(startTime);
     }
@@ -476,7 +476,7 @@ public class EntireGame {
 
     /**
      * 重开这一局，比如开球失机重开、斯诺克死局重开等
-     * 
+     *
      * @param keepBreakPlayer 是否还是由原先开球的球员开球。在轮开制中，无论是否，都不影响后续开球顺序。
      */
     public void restartThisFrame(boolean keepBreakPlayer) {
@@ -488,10 +488,10 @@ public class EntireGame {
                 .player1Breaks(isP1Break)
                 .players(p1, p2)
                 .build();
-        
-        game = Game.createGame(gameSettings, gameValues, this, 
+
+        game = Game.createGame(gameSettings, gameValues, this,
                 ++codeGameCounter, p1Wins + p2Wins + 1);
-        
+
         if (!isRestart) {
             if (totalFrames >= 5 && p1Wins + p2Wins + 1 == totalFrames) {
                 // 决胜局
@@ -507,11 +507,11 @@ public class EntireGame {
                 }
             }
         }
-        
+
         if (gameValues.isStandard())
             DBAccess.getInstance().recordAFrameStarts(
                     this, game);
-        
+
         matchInfoRec.startNextFrame(game.frameIndex, game.frameNumber);
     }
 
@@ -526,7 +526,7 @@ public class EntireGame {
             p1BreakLoseChance++;
         }
     }
-    
+
     public void clearBreakLoseChance(int playerNum) {
         if (playerNum == 2) {
             p2BreakLoseChance = 0;

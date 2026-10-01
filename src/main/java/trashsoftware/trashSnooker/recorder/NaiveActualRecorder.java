@@ -16,7 +16,7 @@ public class NaiveActualRecorder extends ActualRecorder {
     public static final int CUE_RECORD_LENGTH = 84;
     public static final int CUE_ANIMATION_BUF_LEN = 128;  // 8 + 120
 
-    public NaiveActualRecorder(Game<?, ?> game, MetaMatchInfo metaMatchInfo) {
+    public NaiveActualRecorder(Game<?, ?, ?> game, MetaMatchInfo metaMatchInfo) {
         super(game, metaMatchInfo);
     }
 

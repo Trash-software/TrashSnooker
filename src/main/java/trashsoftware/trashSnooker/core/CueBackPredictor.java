@@ -14,9 +14,9 @@ public class CueBackPredictor {
     private final double x;
     private final double y;
     private final double maxDistance;
-    private final Game<?, ?> game;
+    private final Game<?, ?, ?> game;
     
-    CueBackPredictor(Game<?, ?> game, double cursorPointingX, double cursorPointingY,
+    CueBackPredictor(Game<?, ?, ?> game, double cursorPointingX, double cursorPointingY,
                      double cueWidth, double maxDistance, double whiteX, double whiteY) {
         this.game = game;
         this.x = whiteX;

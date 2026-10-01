@@ -8,7 +8,7 @@ import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.MiniSnookerTable;
 import trashsoftware.trashSnooker.fxml.GameView;
 
-public class MiniSnookerGame extends AbstractSnookerGame {
+public class MiniSnookerGame extends AbstractSnookerGame<MiniSnookerTable> {
 
     public MiniSnookerGame(EntireGame entireGame,
                            GameSettings gameSettings,
@@ -16,11 +16,6 @@ public class MiniSnookerGame extends AbstractSnookerGame {
                            int frameIndex,
                            int frameRestartIndex) {
         super(entireGame, gameSettings, gameValues, new MiniSnookerTable(gameValues.table), frameIndex, frameRestartIndex);
-    }
-
-    @Override
-    public AbstractSnookerTable getTable() {
-        return super.getTable();
     }
 
     @Override

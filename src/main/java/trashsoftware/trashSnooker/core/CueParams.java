@@ -48,7 +48,7 @@ public class CueParams {
                                              double selectedFrontBackSpin,
                                              double selectedSideSpin,
                                              double cueAngleDeg,
-                                             Game<?, ?> game,
+                                             Game<?, ?, ?> game,
                                              InGamePlayer inGamePlayer,
                                              @Nullable CuePlayerHand handSkill) {
 //        Cue cue = inGamePlayer.getCurrentCue(game);
@@ -80,7 +80,7 @@ public class CueParams {
                                            double actualFrontBackSpin,
                                            double actualSideSpin,
                                            double cueAngleDeg,
-                                           Game<?, ?> game,
+                                           Game<?, ?, ?> game,
                                            InGamePlayer inGamePlayer,
                                            CuePlayerHand cuePlayerHand) {
 //        Cue cue = inGamePlayer.getCurrentCue(game);
@@ -110,7 +110,7 @@ public class CueParams {
                 cuePlayerHand);
     }
 
-    public static double selectedPowerToActualPower(Game<?, ?> game,
+    public static double selectedPowerToActualPower(Game<?, ?, ?> game,
                                                     InGamePlayer igp,
                                                     double selectedPower,
                                                     double unitCuePointX,
@@ -124,7 +124,7 @@ public class CueParams {
                 game.getGameValues().ball.ballWeightRatio;
     }
 
-    public static double actualPowerToSelectedPower(Game<?, ?> game,
+    public static double actualPowerToSelectedPower(Game<?, ?, ?> game,
                                                     InGamePlayer igp,
                                                     double actualPower,
                                                     double unitCuePointX,

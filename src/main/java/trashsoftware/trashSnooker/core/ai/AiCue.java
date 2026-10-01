@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 // todo: 黑八半场自由球只能向下打，
 
-public abstract class AiCue<G extends Game<?, P>, P extends Player> {
+public abstract class AiCue<G extends Game<?, P, ?>, P extends Player> {
 
 //    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
 
@@ -131,7 +131,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         this.forcedAttack = forcedAttack;
     }
 
-    public static double ballAlivePrice(Game<?, ?> game, Ball ball) {
+    public static double ballAlivePrice(Game<?, ?, ?> game, Ball ball) {
         List<Game.PocketDirection> dirHolePoints = game.directionsToAccessibleHoles(ball);
         double price = 0.0;
         final double diameter = game.getGameValues().ball.ballDiameter;
@@ -263,10 +263,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             Phy phy,
             GamePlayStage stage,
             boolean mustAttack,
-            @Nullable Game<?, P>[] gameClonesPool) {
+            @Nullable Game<?, P, ?>[] gameClonesPool) {
         long t1 = System.currentTimeMillis();
         if (gameClonesPool == null) {
-            gameClonesPool = (Game<?, P>[]) new Game[nThreads];
+            gameClonesPool = (Game<?, P, ?>[]) new Game[nThreads];
             for (int i = 0; i < gameClonesPool.length; i++) {
                 gameClonesPool[i] = game.clone();
             }
@@ -513,7 +513,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         lastResortAttackChoices.put(choice, backups);
 
         @SuppressWarnings("unchecked")
-        Game<?, P>[] gameClonesPool = (Game<?, P>[]) new Game[nThreads];
+        Game<?, P, ?>[] gameClonesPool = (Game<?, P, ?>[]) new Game[nThreads];
         for (int i = 0; i < gameClonesPool.length; i++) {
             gameClonesPool[i] = game.clone();
         }
@@ -1002,7 +1002,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         List<DefenseThread> defenseThreads = new ArrayList<>();
         @SuppressWarnings("unchecked")
-        Game<?, P>[] gameClonesPool = (Game<?, P>[]) new Game[nThreads];
+        Game<?, P, ?>[] gameClonesPool = (Game<?, P, ?>[]) new Game[nThreads];
         for (int i = 0; i < gameClonesPool.length; i++) {
             gameClonesPool[i] = game.clone();
         }
@@ -1084,7 +1084,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double[] whitePos = new double[]{cueBall.getX(), cueBall.getY()};
 
         @SuppressWarnings("unchecked")
-        Game<?, P>[] gameClonesPool = (Game<?, P>[]) new Game[nThreads];
+        Game<?, P, ?>[] gameClonesPool = (Game<?, P, ?>[]) new Game[nThreads];
         for (int i = 0; i < gameClonesPool.length; i++) {
             gameClonesPool[i] = game.clone();
         }
@@ -1232,7 +1232,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         final List<Ball> nextStepLegalBalls;
         final Phy phy;
         final GamePlayStage stage;
-        final Game<?, ?>[] gameClonesPool;
+        final Game<?, ?, ?>[] gameClonesPool;
         final Player aiPlayer;
         final KickPriceCalculator kickPriceCalculator;
 //        Game<?, ?> game2;  // todo: 这里的clone可以用线程池优化
@@ -1244,7 +1244,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                int nextTarget,
                                List<Ball> nextStepLegalBalls,
                                Phy phy,
-                               Game<?, ?>[] gameClonesPool,
+                               Game<?, ?, ?>[] gameClonesPool,
                                Player aiPlayer,
                                GamePlayStage stage,
                                KickPriceCalculator kickPriceCalculator) {
@@ -1262,7 +1262,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         @Override
         public void run() {
             int threadIndex = (int) (Thread.currentThread().threadId() % gameClonesPool.length);
-            Game<?, ?> copy = gameClonesPool[threadIndex];
+            Game<?, ?, ?> copy = gameClonesPool[threadIndex];
             if (copy.isAiCueInterrupted()) return;
             //        System.out.print(selectedPower);
 
@@ -1381,7 +1381,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         boolean considerPostEffect;  // 解球的后效，应该仅在解斯诺克时起作用
         Set<Ball> legalSet;
         Phy phy;
-        Game<?, P>[] gameClonesPool;
+        Game<?, P, ?>[] gameClonesPool;
         boolean allowPocketCorner;
 
         FinalChoice.DefenseChoice result;
@@ -1393,7 +1393,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                 boolean isSolving,
                                 Set<Ball> legalSet,
                                 Phy phy,
-                                Game<?, P>[] gameClonesPool,
+                                Game<?, P, ?>[] gameClonesPool,
                                 boolean considerPostEffect,
                                 boolean allowPocketCorner) {
             this.rad = rad;
@@ -1412,7 +1412,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         public void run() {
             if (interrupted) return;
             int threadIndex = (int) (Thread.currentThread().threadId() % gameClonesPool.length);
-            Game<?, P> copy = gameClonesPool[threadIndex];
+            Game<?, P, ?> copy = gameClonesPool[threadIndex];
 
             double[] unitXY = Algebra.unitVectorOfAngle(rad);
 
@@ -1488,7 +1488,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double[] whitePos;
         Set<Ball> legalSet;
         Phy phy;
-        Game<?, P>[] gameClonesPool;
+        Game<?, P, ?>[] gameClonesPool;
 
         AttackParam attackParam;
         GameValues values;
@@ -1501,7 +1501,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 double[] whitePos,
                 Set<Ball> legalSet,
                 Phy phy,
-                Game<?, P>[] gameClonesPool,
+                Game<?, P, ?>[] gameClonesPool,
                 GameValues values) {
             this.attackParam = attackParam;
             this.whitePos = whitePos;
@@ -1515,7 +1515,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         public void run() {
             if (interrupted) return;
             int threadIndex = (int) (Thread.currentThread().threadId() % gameClonesPool.length);
-            Game<?, P> copy = gameClonesPool[threadIndex];
+            Game<?, P, ?> copy = gameClonesPool[threadIndex];
 
             // todo: 有可能出现加了弧线就绕不过去那种情况
             double[] dirWithAngleCurve = Analyzer.estimateRealCueDirWithCurve(

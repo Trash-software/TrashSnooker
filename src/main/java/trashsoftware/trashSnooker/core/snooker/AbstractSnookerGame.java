@@ -17,6 +17,7 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
+import trashsoftware.trashSnooker.core.table.SnookerTable;
 import trashsoftware.trashSnooker.core.table.Table;
 
 import java.util.HashSet;
@@ -24,7 +25,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public abstract class AbstractSnookerGame extends FixedCueBallGame<SnookerBall, SnookerPlayer> {
+public abstract class AbstractSnookerGame<T extends AbstractSnookerTable> 
+        extends FixedCueBallGame<SnookerBall, SnookerPlayer, T> {
 
     public static final int RAW_COLORED_REP = 0;  // 代表任意彩球
     public final double redRowOccupyX;
@@ -62,7 +64,7 @@ public abstract class AbstractSnookerGame extends FixedCueBallGame<SnookerBall, 
     protected AbstractSnookerGame(EntireGame entireGame,
                                   GameSettings gameSettings,
                                   GameValues gameValues,
-                                  Table table,
+                                  T table,
                                   int frameIndex,
                                   int frameRestartIndex) {
         super(entireGame, gameSettings, gameValues, table, frameIndex, frameRestartIndex);
@@ -149,11 +151,6 @@ public abstract class AbstractSnookerGame extends FixedCueBallGame<SnookerBall, 
             default ->
                     throw new IllegalArgumentException("Game rule " + gameRule.name() + " is not snooker-like.");
         };
-    }
-
-    @Override
-    public AbstractSnookerTable getTable() {
-        return (AbstractSnookerTable) super.getTable();
     }
 
     protected abstract int numRedBalls();

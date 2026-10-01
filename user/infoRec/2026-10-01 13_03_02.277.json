@@ -1,0 +1,676 @@
+{
+  "saveVersion": 66,
+  "frames": [{
+    "frameIndex": 1,
+    "frameNumber": 1,
+    "cueRecs": [
+      {
+        "scoresAfter": [
+          0,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdBreakCue",
+          "hand": "RIGHT"
+        },
+        "specials": ["BALL_IN_HAND"],
+        "firstHit": 5,
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": false,
+          "type": "BREAK"
+        },
+        "player": 1,
+        "target": 0
+      },
+      {
+        "scoresAfter": [
+          0,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 14,
+        "potInfo": {
+          "targetPos": [
+            1797.7624655489255,
+            1112.8253897053862
+          ],
+          "estPotProb": 0.5753102924029332,
+          "tarPocketDt": 874.9200447720857,
+          "whiteTarDt": 660.9137039759455,
+          "angle": 0.2781407254655246,
+          "whitePos": [
+            1137.338130785854,
+            1087.3966233971655
+          ],
+          "collisionPos": [
+            1742.7888834947796,
+            1097.2040012672053
+          ],
+          "tarCushionPos": [
+            2422.3140472854825,
+            1365.2758592176674
+          ],
+          "pocketName": "BOT_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": false,
+          "type": "ATTACK"
+        },
+        "player": 2,
+        "target": 0
+      },
+      {
+        "scoresAfter": [
+          1,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 12,
+        "pots": {"12": 1},
+        "potInfo": {
+          "targetPos": [
+            2397.3729108455527,
+            1135.1377285983854
+          ],
+          "estPotProb": 0.9995043121956118,
+          "tarPocketDt": 331.21144986307144,
+          "whiteTarDt": 405.09731080860746,
+          "angle": 0.25328718002199035,
+          "whitePos": [
+            2052.2066561146594,
+            923.0903569584295
+          ],
+          "collisionPos": [
+            2355.694731885333,
+            1096.0346355253546
+          ],
+          "tarCushionPos": null,
+          "pocketName": "BOT_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 0
+      },
+      {
+        "scoresAfter": [
+          2,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 15,
+        "pots": {"15": 1},
+        "potInfo": {
+          "targetPos": [
+            1053.194363119634,
+            575.2159098619601
+          ],
+          "estPotProb": 0.30838743781765543,
+          "tarPocketDt": 994.857063057282,
+          "whiteTarDt": 1583.140585146422,
+          "angle": 0.16098120871533483,
+          "whitePos": [
+            2573.1066606908544,
+            1018.1614144441031
+          ],
+          "collisionPos": [
+            1105.1747371741124,
+            598.9680297477677
+          ],
+          "tarCushionPos": [
+            130.78504721251213,
+            152.98484014634292
+          ],
+          "pocketName": "TOP_LEFT",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          3,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 13,
+        "pots": {"13": 1},
+        "potInfo": {
+          "targetPos": [
+            1529.4955216541136,
+            981.054732590616
+          ],
+          "estPotProb": 0.4265959755093038,
+          "tarPocketDt": 1170.8204446211066,
+          "whiteTarDt": 960.3031397096247,
+          "angle": 0.023636051729489238,
+          "whitePos": [
+            629.6473429454553,
+            645.7110649735376
+          ],
+          "collisionPos": [
+            1475.6942700795921,
+            961.7791577082727
+          ],
+          "tarCushionPos": [
+            2678.511617944497,
+            1389.9357165977428
+          ],
+          "pocketName": "BOT_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          3,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 11,
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "DEFENSE"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          3,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 1,
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "DEFENSE"
+        },
+        "player": 2,
+        "target": 16
+      },
+      {
+        "scoresAfter": [
+          3,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "foulInfo": {
+          "foulReasonAndScore": {"白球落袋": 1},
+          "illegal": false,
+          "miss": false
+        },
+        "firstHit": 11,
+        "pots": {"0": 1},
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": false,
+          "type": "DEFENSE"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          3,
+          1
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "specials": ["BALL_IN_HAND"],
+        "firstHit": 4,
+        "pots": {"4": 1},
+        "potInfo": {
+          "targetPos": [
+            2479.9744159235793,
+            828.8688478733588
+          ],
+          "estPotProb": 0.8846628589299583,
+          "tarPocketDt": 1225.1718491494482,
+          "whiteTarDt": 175.80234375000003,
+          "angle": 0.023124860551592352,
+          "whitePos": [
+            2634.5138200231845,
+            745.0593218722407
+          ],
+          "collisionPos": [
+            2530.616314775653,
+            802.3826149251224
+          ],
+          "tarCushionPos": [
+            1368.1889356247802,
+            1413.3077825142839
+          ],
+          "pocketName": "BOT_MID",
+          "isDouble": false
+        },
+        "gainScores": [
+          0,
+          1
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 2,
+        "target": 16
+      },
+      {
+        "scoresAfter": [
+          3,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 3,
+        "pots": {"3": 1},
+        "potInfo": {
+          "targetPos": [
+            2323.6302533146045,
+            596.216741702544
+          ],
+          "estPotProb": 0.9785481005845251,
+          "tarPocketDt": 542.2489825176963,
+          "whiteTarDt": 630.6988466897562,
+          "angle": 0.09297719816771632,
+          "whitePos": [
+            2005.8562414990429,
+            1141.0109346143554
+          ],
+          "collisionPos": [
+            2288.8989589997195,
+            641.6024187316237
+          ],
+          "tarCushionPos": [
+            2643.2166697583407,
+            179.2293302082765
+          ],
+          "pocketName": "TOP_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          0,
+          1
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 2,
+        "target": 16
+      },
+      {
+        "scoresAfter": [
+          3,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 6,
+        "potInfo": {
+          "targetPos": [
+            1801.4269394864632,
+            335.5723745241487
+          ],
+          "estPotProb": 0.6989393560552113,
+          "tarPocketDt": 460.8127186673201,
+          "whiteTarDt": 535.4111197406455,
+          "angle": 0.2309795422390537,
+          "whitePos": [
+            2316.0478028442535,
+            483.3236321797583
+          ],
+          "collisionPos": [
+            1851.909916088747,
+            362.3602752117561
+          ],
+          "tarCushionPos": [
+            1368.8791768119115,
+            102.85978845490341
+          ],
+          "pocketName": "TOP_MID",
+          "isDouble": false
+        },
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": false,
+          "type": "ATTACK"
+        },
+        "player": 2,
+        "target": 16
+      },
+      {
+        "scoresAfter": [
+          4,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 9,
+        "pots": {"9": 1},
+        "potInfo": {
+          "targetPos": [
+            2486.1306567144234,
+            1240.8047111224205
+          ],
+          "estPotProb": 0.8064304842751115,
+          "tarPocketDt": 194.4711221158633,
+          "whiteTarDt": 2275.187522325055,
+          "angle": 0.4890255085377041,
+          "whitePos": [
+            264.9578292783314,
+            747.9867605532692
+          ],
+          "collisionPos": [
+            2441.0327359732423,
+            1205.70058109903
+          ],
+          "tarCushionPos": [
+            2681.358729822516,
+            1392.9003257035288
+          ],
+          "pocketName": "BOT_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          5,
+          2
+        ],
+        "cueHand": {
+          "extension": "SHORT",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 14,
+        "pots": {"14": 1},
+        "potInfo": {
+          "targetPos": [
+            2642.6072132349605,
+            1351.0390078133917
+          ],
+          "estPotProb": 0.9999999997364262,
+          "tarPocketDt": 118.61443263068942,
+          "whiteTarDt": 385.33821959143626,
+          "angle": 0.5381530548711593,
+          "whitePos": [
+            2296.0117258320684,
+            1182.6433083735021
+          ],
+          "collisionPos": [
+            2607.837917657293,
+            1305.682436373487
+          ],
+          "tarCushionPos": null,
+          "pocketName": "BOT_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          6,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 10,
+        "pots": {"10": 1},
+        "potInfo": {
+          "targetPos": [
+            2332.2168061334824,
+            965.5349581197046
+          ],
+          "estPotProb": 0.8426800183443208,
+          "tarPocketDt": 867.663011965929,
+          "whiteTarDt": 214.6531404371123,
+          "angle": 0.2715755765696546,
+          "whitePos": [
+            2298.677194896594,
+            1177.5516206195964
+          ],
+          "collisionPos": [
+            2312.3810733139417,
+            1019.1322176685312
+          ],
+          "tarCushionPos": [
+            2648.1580111951207,
+            120.52154531476829
+          ],
+          "pocketName": "TOP_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          7,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 11,
+        "pots": {"11": 1},
+        "potInfo": {
+          "targetPos": [
+            1780.5150209048222,
+            991.9569060579672
+          ],
+          "estPotProb": 0.9311948451253704,
+          "tarPocketDt": 574.3764874598954,
+          "whiteTarDt": 531.2457574103331,
+          "angle": 0.10391358955268304,
+          "whitePos": [
+            2100.072169078345,
+            567.5687773153222
+          ],
+          "collisionPos": [
+            1818.8983043420862,
+            949.6148934763436
+          ],
+          "tarCushionPos": null,
+          "pocketName": "BOT_MID",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          8,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 8,
+        "pots": {"8": 1},
+        "potInfo": {
+          "targetPos": [
+            2445.9946308528424,
+            482.98795485533
+          ],
+          "estPotProb": 0.8467855976897272,
+          "tarPocketDt": 380.8629484361255,
+          "whiteTarDt": 979.2589141638714,
+          "angle": 0.306704231151933,
+          "whitePos": [
+            1736.9666575881674,
+            1158.4339957035918
+          ],
+          "collisionPos": [
+            2418.757866313129,
+            533.2301794693963
+          ],
+          "tarCushionPos": [
+            2637.7890601791796,
+            129.03796337411168
+          ],
+          "pocketName": "TOP_RIGHT",
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 8
+      }
+    ],
+    "winner": 1
+  }],
+  "players": [
+    "Awu",
+    "Tu zi"
+  ],
+  "gameValues": {
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
+    "subRules": ["CHINESE_EIGHT_STD"],
+    "devMode": false,
+    "table": {
+      "tableOrdinal": 1,
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 3
+    }
+  },
+  "entireBeginTime": "2026-10-01 13_03_02.277",
+  "totalFrames": 1
+}

@@ -21,7 +21,7 @@ import trashsoftware.trashSnooker.util.Util;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlayer>
+public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlayer, ChineseEightTable>
         implements NeedBigBreak {
 
     public static final int NOT_SELECTED_REP = 0;
@@ -236,11 +236,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
             return rem;
         }
-    }
-
-    @Override
-    public ChineseEightTable getTable() {
-        return (ChineseEightTable) super.getTable();
     }
 
     @Override

@@ -19,7 +19,7 @@ import trashsoftware.trashSnooker.core.table.SidePocketTable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlayer>
+public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlayer, SidePocketTable>
         implements NeedBigBreak {
 
     private final LinkedHashMap<PoolBall, Boolean> pottedRecord = new LinkedHashMap<>();  // 缓存用，仅用于GameView画目标球
@@ -169,11 +169,6 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
     public double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer,
                                 Ball lastPotting) {
         return 1.0;
-    }
-
-    @Override
-    public SidePocketTable getTable() {
-        return (SidePocketTable) super.getTable();
     }
 
     @Override

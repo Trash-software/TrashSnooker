@@ -432,7 +432,9 @@ public class FastGameView extends ChildInitializable implements GameViewStarter 
                             dataLoader.filterActualPlayersBySex(PlayerPerson.Sex.fromStringKey(newValue.item));
                     default -> List.of();
                 };
+                boolean showCustom = ConfigLoader.getInstance().getBoolean(ConfigLoader.KEY_SHOW_CUSTOM_PLAYERS, true);
                 for (PlayerPerson person : selectedPlayers) {
+                    if (!showCustom && person.isCustom()) continue;
                     playerBox.getItems().add(new PersonItem(person));
                 }
             }

@@ -118,7 +118,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         return regularCueDecision(phy);
     }
 
-    public static double avgPriceOfSet(Game<?, ?> game, Collection<Ball> balls) {
+    public static double avgPriceOfSet(Game<?, ?, ?> game, Collection<Ball> balls) {
         double price = 0.0;
         for (Ball ball : balls) {
             price += ballAlivePrice(game, ball);

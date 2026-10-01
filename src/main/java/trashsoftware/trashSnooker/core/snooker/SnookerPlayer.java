@@ -64,7 +64,7 @@ public class SnookerPlayer extends Player {
     }
 
     @Override
-    public void correctPotBalls(Game<?, ?> game, Collection<? extends Ball> pottedBalls) {
+    public void correctPotBalls(Game<?, ?, ?> game, Collection<? extends Ball> pottedBalls) {
         super.correctPotBalls(game, pottedBalls);
 
         int singlePoleScore = getSinglePoleScore();
@@ -76,7 +76,7 @@ public class SnookerPlayer extends Player {
                     AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_100_BIG, getInGamePlayer());
                 }
             }
-            MaximumType curMaxType = checkMaximum((AbstractSnookerGame) game);
+            MaximumType curMaxType = checkMaximum((AbstractSnookerGame<?>) game);
             if (maximumType == null || maximumType == MaximumType.NONE) maximumType = curMaxType;
             else if (curMaxType == MaximumType.MAXIMUM_167) maximumType = curMaxType;
             
@@ -98,7 +98,7 @@ public class SnookerPlayer extends Player {
         }
     }
 
-    private MaximumType checkMaximum(AbstractSnookerGame game) {
+    private MaximumType checkMaximum(AbstractSnookerGame<?> game) {
         GameValues gameValues = game.getGameValues();
         int nReds = switch (gameValues.rule) {
             case SNOOKER -> 15;

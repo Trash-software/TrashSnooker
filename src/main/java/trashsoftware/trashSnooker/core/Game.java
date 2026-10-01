@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 
-public abstract class Game<B extends Ball, P extends Player> implements GameHolder, Cloneable {
+public abstract class Game<B extends Ball, P extends Player, T extends Table> implements GameHolder, Cloneable {
     public static final int END_REP = 31;
     public static final int CONGESTION_LIMIT = 30000;
     // 进攻球判定角
@@ -94,7 +94,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected GameRecorder recorder;
     protected Map<Integer, B> numberBallMap;
     protected B[] allBalls;
-    protected Table table;
+    protected T table;
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
     protected FrameAchievementRecorder achievementRecorder = new FrameAchievementRecorder();
@@ -105,7 +105,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
-                   Table table,
+                   T table,
                    int frameIndex,
                    int frameNumber) {
 //        this.parent = parent;
@@ -125,13 +125,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         setCueBall(createInitWhiteBall());
     }
 
-    public static Game<? extends Ball, ? extends Player> createGame(
+    public static Game<? extends Ball, ? extends Player, ? extends Table> createGame(
             GameSettings gameSettings,
             GameValues gameValues,
             EntireGame entireGame,
             int frameIndex,
             int frameNumber) {
-        Game<? extends Ball, ? extends Player> game = createGameInternal(gameSettings, gameValues, entireGame,
+        Game<? extends Ball, ? extends Player, ? extends Table> game = createGameInternal(gameSettings, gameValues, entireGame,
                 frameIndex, frameNumber);
 
         // 处理让球
@@ -176,14 +176,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return game;
     }
 
-    private static @NotNull Game<? extends Ball, ? extends Player> createGameInternal(
+    private static @NotNull Game<? extends Ball, ? extends Player, ? extends Table> createGameInternal(
             GameSettings gameSettings,
             GameValues gameValues,
             EntireGame entireGame,
             int frameIndex,
             int frameRestartIndex) {
 //        int frameIndex = entireGame == null ? 1 : (entireGame.getP1Wins() + entireGame.getP2Wins() + 1);
-        Game<? extends Ball, ? extends Player> game;
+        Game<? extends Ball, ? extends Player, ? extends Table> game;
         if (gameValues.rule == GameRule.SNOOKER) {
             if (gameValues.isTraining()) {
                 game = new SnookerTraining(entireGame, gameSettings, gameValues,
@@ -274,9 +274,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     @Override
     @SuppressWarnings("unchecked")
-    public Game<B, P> clone() {
+    public Game<B, P, T> clone() {
         try {
-            Game<B, P> copy = (Game<B, P>) super.clone();
+            Game<B, P, T> copy = (Game<B, P, T>) super.clone();
 
             copy.cloneBalls(allBalls);
 
@@ -301,7 +301,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public abstract GameRule getGameType();
 
-    public Table getTable() {
+    public T getTable() {
         return table;
     }
 
@@ -521,9 +521,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean stopAtCollision,
                                         boolean wipe,
                                         boolean useClone) {
-        
+
         B cueBall = getCueBall();
-        
+
         if (cueBall.isNotOnTable()) {
             return null;
         }
@@ -624,7 +624,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isAskingPickBall() {
         return askingPickBall;
     }
-    
+
     public final boolean ballPickable(Ball ball) {
         return askingPickBall && ballPickableWhenValid(ball);
     }
@@ -633,11 +633,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * 需要在下一杆的player和target等都设置好了之后再调用
      */
     protected void updateAskPickBall() {
-        
+
     }
-    
+
     protected abstract boolean ballPickableWhenValid(Ball ball);
-    
+
     public void pickBall(Ball validBall) {
         throw new RuntimeException("Pick ball not implemented for game " + getClass().getName());
     }
@@ -682,7 +682,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public abstract void setCueBall(Ball newCueBall);
-    
+
     public abstract B getCueBall();
 
     public int nBalls() {
@@ -809,7 +809,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         Map<Integer, B> map = getNumberBallMap();
         return map.get(number);
     }
-    
+
     public boolean isCueBall(Ball ball) {
         return ball.equals(getCueBall());
     }
@@ -1317,8 +1317,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
 
                 list.add(new PocketDirection(pocket,
-                        new double[][]{unitXY, 
-                                new double[]{aimPosX, aimPosY}, 
+                        new double[][]{unitXY,
+                                new double[]{aimPosX, aimPosY},
                                 new double[]{collisionPointX, collisionPointY}}));
             }
         }
@@ -1537,7 +1537,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (whiteFirstCollide == null) {
             // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
             thisCueFoul.addFoul(strings.getString("emptyCue"), foulScoreCalculator.get(), true);
-            if (getCueBall().isPotted()) setBallInHand();
+            if (!rule.hasRule(Rule.ALLOW_CUE_BALL_POT) && getCueBall().isPotted()) {
+                setBallInHand();
+            }
             AchManager.getInstance().addAchievement(Achievement.MISSED_SHOT, getCuingIgp());
         }
         if (!rule.hasRule(Rule.ALLOW_CUE_BALL_POT) && getCueBall().isPotted()) {
@@ -1726,7 +1728,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isStarted() {
         return finishedCuesCount > 0;
     }
-    
+
     public abstract boolean cueBallSwitchable();
 
     protected abstract void endMoveAndUpdate();
@@ -2498,7 +2500,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             // 这里可以用线性代数取代，但是这样直观且简单
             double curDt = Math.hypot(movingBall.x - firstBallInTouch.x, movingBall.y - firstBallInTouch.y);
-            double nextDt = Math.hypot(movingBall.x + movingBall.vx - (firstBallInTouch.x + firstBallInTouch.vx), 
+            double nextDt = Math.hypot(movingBall.x + movingBall.vx - (firstBallInTouch.x + firstBallInTouch.vx),
                     movingBall.y + movingBall.vy - (firstBallInTouch.y + firstBallInTouch.vy));
 
             if (nextDt < curDt) {

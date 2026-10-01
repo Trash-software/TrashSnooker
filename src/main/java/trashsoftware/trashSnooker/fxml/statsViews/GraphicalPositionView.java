@@ -36,7 +36,7 @@ public class GraphicalPositionView extends VBox {
     ScrollPane infoScrollPane = new ScrollPane();
     GridPane infoPane = new GridPane();
     GameValues gameValues;
-    Game<?, ?> fakeGame;
+    Game<?, ?, ?> fakeGame;
     List<CheckBox> frameCheckBoxes = new ArrayList<>();
     List<CheckBox> allCheckBoxes = new ArrayList<>(List.of(p1Check, p2Check, showDetailCheck));
     List<AttackAnalysis.PotAttemptRec>[] attempts;

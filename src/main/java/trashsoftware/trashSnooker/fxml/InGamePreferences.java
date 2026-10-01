@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import trashsoftware.trashSnooker.enums.CueBallSelectionMouseMode;
 import trashsoftware.trashSnooker.enums.TrajectoryHide;
 import trashsoftware.trashSnooker.enums.TrajectoryMode;
 import trashsoftware.trashSnooker.fxml.drawing.PredictionQuality;
@@ -10,6 +11,7 @@ import trashsoftware.trashSnooker.util.config.InputManager;
 public class InGamePreferences {
     TrajectoryMode trajectoryMode;
     TrajectoryHide trajectoryHide;
+    CueBallSelectionMouseMode cueBallSelectionMouseMode;
     PredictionQuality predictionQuality;
     private SettingsView.MouseDragMethod mouseDragMethod;
     
@@ -22,6 +24,9 @@ public class InGamePreferences {
         );
         trajectoryHide = TrajectoryHide.fromKey(
                 configLoader.getString("trajectoryHide", "nextCue")
+        );
+        cueBallSelectionMouseMode = CueBallSelectionMouseMode.fromKey(
+                configLoader.getString("cueBallSelectionMouseMode", "doubleClick")
         );
         
         mouseDragMethod = SettingsView.MouseDragMethod.fromKey(configLoader.getString("mouseDragMethod"));

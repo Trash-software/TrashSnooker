@@ -2,8 +2,6 @@ package trashsoftware.trashSnooker.core.russian;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
-import trashsoftware.trashSnooker.core.career.achievement.AchManager;
-import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.game.VariableCueBallGame;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -13,11 +11,9 @@ import trashsoftware.trashSnooker.core.scoreResult.RussianScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.RussianTable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class RussianGame extends VariableCueBallGame<RussianBall, RussianPlayer> {
+public class RussianGame extends VariableCueBallGame<RussianBall, RussianPlayer, RussianTable> {
 
     private final LinkedHashMap<RussianBall, Boolean> pottedRecord = new LinkedHashMap<>();  // 缓存用，仅用于GameView画目标球
     protected RussianPlayer winingPlayer;
@@ -204,17 +200,17 @@ public class RussianGame extends VariableCueBallGame<RussianBall, RussianPlayer>
     private void updateScoreFree(Set<RussianBall> pottedBalls) {
         boolean baseFoul = checkStandardFouls(() -> 0);
         int score = 0;
-        if (!baseFoul) {
-            score = pottedBalls.size();
-            currentPlayer.addScoreOfPotted(pottedBalls);
-        } else {
+        
+        boolean foul = baseFoul;  // 还有其他犯规，暂未实装
+        if (foul) {
             // 正常犯规了不扣分，等对手捡球的时候加分
             if (!pottedBalls.isEmpty()) {
-                // 犯规了但是进球了，把分补给对方
-                getAnotherPlayer().addScore(pottedBalls.size());
+                pickupIllegalBalls(pottedBalls);
             }
+        } else {
+            score = pottedBalls.size();
+            currentPlayer.addScoreOfPotted(pottedBalls);
         }
-        
 
         if (getCueBall().isPotted()) {
             if (whiteFirstCollide == null || whiteFirstCollide.isPotted()) {
@@ -235,6 +231,28 @@ public class RussianGame extends VariableCueBallGame<RussianBall, RussianPlayer>
 
         if (score == 0) {
             switchPlayer();
+        }
+    }
+    
+    private void pickupIllegalBalls(Set<RussianBall> pottedBalls) {
+        RussianTable table = getTable();
+        double[] placePoint = new double[]{table.rackFirstBallX(gameValues), gameValues.table.midY};
+
+        List<RussianBall> ballsToReplace = new ArrayList<>(pottedBalls);
+        
+        double x = placePoint[0];
+        while (!ballsToReplace.isEmpty() && x < gameValues.table.rightX - gameValues.ball.ballRadius) {
+            if (!isOccupied(x, placePoint[1])) {
+                Ball ball = ballsToReplace.removeLast();
+                ball.setX(x);
+                ball.setY(placePoint[1]);
+                ball.pickup();
+                x += gameValues.ball.ballDiameter;
+            }
+            x += MIN_GAP_DISTANCE;
+        }
+        if (!ballsToReplace.isEmpty()) {
+            System.err.println("Failed to place!" + ballsToReplace);
         }
     }
 

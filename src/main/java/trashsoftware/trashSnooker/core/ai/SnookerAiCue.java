@@ -17,14 +17,14 @@ import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 
 import java.util.*;
 
-public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
+public class SnookerAiCue extends AiCue<AbstractSnookerGame<?>, SnookerPlayer> {
 
     protected static final double ALIVE_THRESHOLD = 10.0;
     private final Map<Ball, Double> selfBallAlivePrices = new HashMap<>();
     private int allRedCount;
     private int aliveRedCount;
 
-    public SnookerAiCue(AbstractSnookerGame game, SnookerPlayer aiPlayer) {
+    public SnookerAiCue(AbstractSnookerGame<?> game, SnookerPlayer aiPlayer) {
         super(game, aiPlayer);
 
         makeAliveMap();

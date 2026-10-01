@@ -8,8 +8,8 @@ import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame, SnookerPlayer> {
-    public SnookerAiCueBallPlacer(AbstractSnookerGame game, SnookerPlayer player) {
+public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame<?>, SnookerPlayer> {
+    public SnookerAiCueBallPlacer(AbstractSnookerGame<?> game, SnookerPlayer player) {
         super(game, player);
     }
 

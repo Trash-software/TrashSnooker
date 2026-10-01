@@ -1155,7 +1155,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return true;
     }
 
-    boolean tryHitBall(Game<?, ?> game,
+    boolean tryHitBall(Game<?, ?, ?> game,
                        Ball ball, boolean applyGearSpin, Phy phy) {
         if (this.isNotMoving(phy)) {
             if (ball.isNotMoving(phy)) return false;  // 两球都没动，怎么可能撞

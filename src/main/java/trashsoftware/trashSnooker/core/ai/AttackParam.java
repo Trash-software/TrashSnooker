@@ -36,7 +36,7 @@ public class AttackParam {
     }
 
     public AttackParam(AttackChoice attackChoice,
-                       Game<?, ?> game,
+                       Game<?, ?, ?> game,
                        Phy phy,
                        CueParams cueParams) {
         this.attackChoice = attackChoice;

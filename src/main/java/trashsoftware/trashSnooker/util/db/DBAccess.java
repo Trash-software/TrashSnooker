@@ -302,7 +302,7 @@ public class DBAccess {
     }
 
     private void storeAttemptsForOnePlayer(EntireGame entireGame,
-                                           Game<?, ?> frame,
+                                           Game<?, ?, ?> frame,
                                            Player player,
                                            boolean isWinner) {
         // attempts, successes, 
@@ -403,7 +403,7 @@ public class DBAccess {
         }
     }
 
-    public void storeAttempts(EntireGame entireGame, Game<?, ?> frame, @Nullable InGamePlayer frameWinner) {
+    public void storeAttempts(EntireGame entireGame, Game<?, ?, ?> frame, @Nullable InGamePlayer frameWinner) {
         storeAttemptsForOnePlayer(entireGame,
                 frame,
                 frame.getPlayer1(),
@@ -765,7 +765,7 @@ public class DBAccess {
                 "PlayerName = '" + playerName + "')" + (endLine ? ";" : "");
     }
 
-    private String getFrameQueryWhere(EntireGame entireGame, Game<?, ?> game, String playerName,
+    private String getFrameQueryWhere(EntireGame entireGame, Game<?, ?, ?> game, String playerName,
                                       boolean playerIsAi,
                                       boolean endLine) {
         int aiRep = playerIsAi ? 1 : 0;
@@ -777,7 +777,7 @@ public class DBAccess {
     }
 
     public void recordNumberedBallResult(EntireGame entireGame,
-                                         Game<?, ?> frame,
+                                         Game<?, ?, ?> frame,
                                          NumberedBallPlayer player,
                                          boolean normalFinished,
                                          boolean wins,
@@ -845,7 +845,7 @@ public class DBAccess {
         }
     }
 
-    public void recordSnookerBreaks(EntireGame entireGame, Game<?, ?> frame,
+    public void recordSnookerBreaks(EntireGame entireGame, Game<?, ?, ?> frame,
                                     SnookerPlayer player, List<Integer> breakScores,
                                     MaximumType maximumType,
                                     boolean normalFinish) {
@@ -977,7 +977,7 @@ public class DBAccess {
         }
     }
 
-    private void createRecordForFrame(EntireGame entireGame, Game<?, ?> game, String playerId, boolean playerIsAi)
+    private void createRecordForFrame(EntireGame entireGame, Game<?, ?, ?> game, String playerId, boolean playerIsAi)
             throws SQLException {
         int aiRep = playerIsAi ? 1 : 0;
         String command1 = "INSERT INTO GeneralRecord VALUES (" +
@@ -1017,7 +1017,7 @@ public class DBAccess {
         }
     }
 
-    public void recordAFrameStarts(EntireGame entireGame, Game<?, ?> game) {
+    public void recordAFrameStarts(EntireGame entireGame, Game<?, ?, ?> game) {
         String generalCmd = "INSERT INTO Game VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 game.frameIndex + ", 0, NULL, " +
@@ -1037,7 +1037,7 @@ public class DBAccess {
     }
 
     public void recordAFrameEnds(EntireGame entireGame,
-                                 Game<?, ?> game,
+                                 Game<?, ?, ?> game,
                                  InGamePlayer winner) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
@@ -1052,7 +1052,7 @@ public class DBAccess {
         }
     }
 
-    public void recordFrameCancelled(EntireGame entireGame, Game<?, ?> game) {
+    public void recordFrameCancelled(EntireGame entireGame, Game<?, ?, ?> game) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
                 "WinnerName = NULL, " +

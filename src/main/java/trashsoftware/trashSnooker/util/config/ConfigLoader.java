@@ -23,6 +23,7 @@ public class ConfigLoader {
     public static final String KEY_ANTI_ALIASING = "antiAliasing";
     public static final String KEY_DISPLAY = "display";
     public static final String KEY_AI_AUTO_NEXT_FRAME = "aiAutoNextFrame";
+    public static final String KEY_SHOW_CUSTOM_PLAYERS = "showCustomPlayers";
 
     private static ConfigLoader instance;
     private final Map<String, String> keyValues = new HashMap<>();
@@ -246,6 +247,7 @@ public class ConfigLoader {
         put(KEY_ANTI_ALIASING, "disabled");
         put(KEY_DISPLAY, "windowed");
         put(KEY_AI_AUTO_NEXT_FRAME, false);
+        put(KEY_SHOW_CUSTOM_PLAYERS, true);
 
         double[] screenParams = autoDetectScreenParams();
         putScreenParams(screenParams);

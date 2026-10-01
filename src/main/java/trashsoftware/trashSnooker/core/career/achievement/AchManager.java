@@ -47,7 +47,7 @@ public abstract class AchManager {
     
     public abstract JSONObject toJson();
 
-    public abstract void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult,
+    public abstract void updateAfterCueFinish(Pane owner, Game<?, ?, ?> game, ScoreResult scoreResult,
                                               PotAttempt potAttempt, DefenseAttempt defenseAttempt,
                                               GamePlayStage playStage);
     

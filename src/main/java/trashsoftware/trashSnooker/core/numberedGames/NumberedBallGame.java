@@ -12,14 +12,14 @@ import trashsoftware.trashSnooker.fxml.GameView;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class NumberedBallGame<P extends NumberedBallPlayer>
-        extends FixedCueBallGame<PoolBall, P> {
+public abstract class NumberedBallGame<P extends NumberedBallPlayer, T extends NumberedBallTable>
+        extends FixedCueBallGame<PoolBall, P, T> {
     
     protected P winingPlayer;
 
     protected NumberedBallGame(EntireGame entireGame, GameSettings gameSettings,
                                GameValues gameValues,
-                               Table table,
+                               T table,
                                int frameIndex,
                                int frameNumber) {
         super(entireGame, gameSettings, gameValues, table, frameIndex, frameNumber);
@@ -74,11 +74,6 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     @Override
     protected boolean isBallPlacedInHeap(Ball ball) {
         return !isCueBall(ball);
-    }
-
-    @Override
-    public NumberedBallTable getTable() {
-        return (NumberedBallTable) table;
     }
     
     public abstract int getNumBallsTotal();

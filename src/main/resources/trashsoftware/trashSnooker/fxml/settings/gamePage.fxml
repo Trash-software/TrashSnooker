@@ -45,22 +45,32 @@
     <Label text="%aiVsAiAutoNextFrame" GridPane.rowIndex="5"/>
     <ComboBox fx:id="aiVsAiAutoNextFrameBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-    <Label text="%mouseDragMethod" GridPane.rowIndex="6"/>
-    <ComboBox fx:id="mouseDragMethodBox" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-
-    <Label text="%settingsKeyMap" GridPane.rowIndex="7">
+    <Label text="%settingsMouse" GridPane.rowIndex="6">
         <font>
             <Font size="16.0"/>
         </font>
     </Label>
-    <Separator GridPane.rowIndex="7" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+    <Separator GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
 
-    <Label text="%keyMapHint" GridPane.rowIndex="8"/>
-    <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="8" GridPane.columnIndex="1">
+    <Label text="%mouseDragMethod" GridPane.rowIndex="7"/>
+    <ComboBox fx:id="mouseDragMethodBox" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+    <Label text="%russianSelectCueBallKey" GridPane.rowIndex="8"/>
+    <ComboBox fx:id="cueBallSelectionModeBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+    <Label text="%settingsKeyMap" GridPane.rowIndex="9">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+    <Separator GridPane.rowIndex="9" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+    <Label text="%keyMapHint" GridPane.rowIndex="10"/>
+    <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="10" GridPane.columnIndex="1">
         <Button text="%reset" onAction="#resetKeyMapAction"/>
     </HBox>
 
-    <TableView GridPane.rowIndex="9" GridPane.columnSpan="2" fx:id="keyMapTable">
+    <TableView GridPane.rowIndex="11" GridPane.columnSpan="2" fx:id="keyMapTable">
         <columns>
             <TableColumn fx:id="behaviorColumn" text="%keyTitleBehavior" prefWidth="240.0"/>
             <TableColumn fx:id="keyColumn" text="%keyTitlePosition"/>

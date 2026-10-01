@@ -13,6 +13,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import trashsoftware.trashSnooker.enums.CueBallSelectionMouseMode;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
@@ -34,6 +35,8 @@ public class GamePage extends AbsSettingsPage {
     ComboBox<SettingsView.YesNo> aiVsAiAutoNextFrameBox;
     @FXML
     ComboBox<SettingsView.MouseDragMethod> mouseDragMethodBox;
+    @FXML
+    ComboBox<CueBallSelectionMouseMode> cueBallSelectionModeBox;
     @FXML
     TableView<KeyMap> keyMapTable;
     @FXML
@@ -58,7 +61,8 @@ public class GamePage extends AbsSettingsPage {
                 autoChangeBreakCueBox,
                 aiHelperDefenseBox,
                 aiVsAiAutoNextFrameBox,
-                mouseDragMethodBox));
+                mouseDragMethodBox,
+                cueBallSelectionModeBox));
     }
 
     @Override
@@ -94,6 +98,11 @@ public class GamePage extends AbsSettingsPage {
                 configLoader.getString("mouseDragMethod", "movement")
         ));
 
+        cueBallSelectionModeBox.getItems().addAll(CueBallSelectionMouseMode.values());
+        cueBallSelectionModeBox.getSelectionModel().select(CueBallSelectionMouseMode.fromKey(
+                configLoader.getString("cueBallSelectionMouseMode", "doubleClick")
+        ));
+
         setupKeyMapTable();
     }
 
@@ -116,6 +125,9 @@ public class GamePage extends AbsSettingsPage {
         }
         if (hasChanged.apply(mouseDragMethodBox)) {
             configLoader.put("mouseDragMethod", mouseDragMethodBox.getSelectionModel().getSelectedItem().toKey());
+        }
+        if (hasChanged.apply(cueBallSelectionModeBox)) {
+            configLoader.put("cueBallSelectionMouseMode", cueBallSelectionModeBox.getSelectionModel().getSelectedItem().toKey());
         }
     }
 

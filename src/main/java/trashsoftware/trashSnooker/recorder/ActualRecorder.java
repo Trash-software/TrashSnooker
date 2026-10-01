@@ -46,7 +46,7 @@ public abstract class ActualRecorder implements GameRecorder {
     protected int compression = NO_COMPRESSION;
     protected File outFile;
     protected OutputStream outputStream;
-    protected Game<?, ?> game;
+    protected Game<?, ?, ?> game;
     protected CueRecord cueRecord;
     protected Movement movement;
     protected ScoreResult scoreResult;
@@ -62,7 +62,7 @@ public abstract class ActualRecorder implements GameRecorder {
     protected List<ExtraBlock> extraBlocks = new ArrayList<>();
     private OutputStream wrapperStream;
 
-    public ActualRecorder(Game<?, ?> game, MetaMatchInfo metaMatchInfo) {
+    public ActualRecorder(Game<?, ?, ?> game, MetaMatchInfo metaMatchInfo) {
         this.game = game;
         if (metaMatchInfo != null) {
             this.extraBlocks.add(new ExtraBlock(ExtraBlock.TYPE_META_MATCH, metaMatchInfo));

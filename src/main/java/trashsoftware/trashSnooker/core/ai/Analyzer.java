@@ -23,7 +23,7 @@ public class Analyzer {
 
     static final double STD_LENGTH_AFTER_WALL = 50000.0;
 
-    private static <G extends Game<?, ?>> List<AttackChoice.DoubleAttackChoice> doubleAttackChoices(
+    private static <G extends Game<?, ?, ?>> List<AttackChoice.DoubleAttackChoice> doubleAttackChoices(
             G game,
             int attackTarget,
             Player attackingPlayer,
@@ -60,7 +60,7 @@ public class Analyzer {
         return choices;
     }
 
-    private static <G extends Game<?, ?>> List<AttackChoice.DirectAttackChoice> directAttackChoices(
+    private static <G extends Game<?, ?, ?>> List<AttackChoice.DirectAttackChoice> directAttackChoices(
             G game,
             int attackTarget,
             Player attackingPlayer,
@@ -143,7 +143,7 @@ public class Analyzer {
         return openCenter;
     }
 
-    public static <G extends Game<?, ?>> List<AttackChoice> getAttackChoices(
+    public static <G extends Game<?, ?, ?>> List<AttackChoice> getAttackChoices(
             G game,
             int attackTarget,
             Player attackingPlayer,
@@ -181,7 +181,7 @@ public class Analyzer {
     }
 
     public static AttackChoice choiceFromDifferentWhitePos(
-            Game<?, ?> game,
+            Game<?, ?, ?> game,
             double[] whitePos,
             AttackChoice origChoice
     ) {
@@ -253,7 +253,7 @@ public class Analyzer {
 
     private static void addDefenseScores(
             DefenseResult defenseResult,
-            Game<?, ?> copy,
+            Game<?, ?, ?> copy,
             AiCue<?, ?> aiCue,
             Player aiPlayer,
             Game.SeeAble seeAble,
@@ -311,7 +311,7 @@ public class Analyzer {
             CuePlayParams cpp,
             CueParams cueParams,
             Phy phy,
-            Game<?, ?> copy,
+            Game<?, ?, ?> copy,
             Set<Ball> legalSet,
             Player aiPlayer,
             double[] unitXY,
@@ -606,7 +606,7 @@ public class Analyzer {
     }
 
     static WhitePrediction[] toleranceAnalysis(
-            Game<?, ?> game,
+            Game<?, ?, ?> game,
             Player aiPlayer,
             CuePlayParams origCpp,
             Phy phy,
@@ -633,7 +633,7 @@ public class Analyzer {
     }
 
     static WhitePrediction[] toleranceAnalysis(
-            Game<?, ?> game,
+            Game<?, ?, ?> game,
             Player aiPlayer,
             CuePlayParams origCpp,
             Phy phy,
@@ -715,7 +715,7 @@ public class Analyzer {
     }
 
     public static double[] estimateRealCueDirWithCurve(
-            Game<?, ?> game,
+            Game<?, ?, ?> game,
             Phy phy,
             CueParams cueParams,
             double[] whiteToCollisionDir,
@@ -786,7 +786,7 @@ public class Analyzer {
      * @return 考虑了避免呲杆打点的{高低杆，左右赛，角度deg}
      */
     public static double[] findCueAblePointAndAngle(
-            Game<?, ?> game,
+            Game<?, ?, ?> game,
             Cue cue,
             double[] directionXY,
             double[][] theoreticalCuePoints

@@ -74,7 +74,7 @@ public abstract class Player {
     /**
      * Override这个method一定记得call super
      */
-    public void correctPotBalls(Game<?, ?> game, Collection<? extends Ball> pottedBalls) {
+    public void correctPotBalls(Game<?, ?, ?> game, Collection<? extends Ball> pottedBalls) {
         game.newPottedLegal.addAll(pottedBalls);
         for (Ball ball : pottedBalls) {
             if (singlePole.containsKey(ball)) {

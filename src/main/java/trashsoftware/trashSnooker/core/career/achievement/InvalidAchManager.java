@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class InvalidAchManager extends AchManager {
     @Override
-    public void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult,
+    public void updateAfterCueFinish(Pane owner, Game<?, ?, ?> game, ScoreResult scoreResult,
                                      PotAttempt potAttempt, DefenseAttempt defenseAttempt,
                                      GamePlayStage playStage) {
     }

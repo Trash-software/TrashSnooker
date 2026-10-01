@@ -10,7 +10,7 @@ import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 
 import java.util.List;
 
-public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
+public abstract class AiCueBallPlacer<G extends Game<?, ?, ?>, P extends Player> {
     protected final G game;
     protected final P player;
 
@@ -19,19 +19,17 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
         this.player = player;
     }
 
-    public static AiCueBallPlacer<? extends Game<?, ?>, ? extends Player> createAiCueBallPlacer(
-            Game<?, ?> game, Player aiPlayer) {
-        if (game instanceof AbstractSnookerGame) {
-            return new SnookerAiCueBallPlacer((AbstractSnookerGame) game, (SnookerPlayer) aiPlayer);
-        } else if (game instanceof ChineseEightBallGame) {
-            return new ChineseEightAiCueBallPlacer(
-                    (ChineseEightBallGame) game, (ChineseEightBallPlayer) aiPlayer);
-        } else if (game instanceof AmericanNineBallGame) {
-            return new AmericanNineAiCueBallPlacer(
-                    (AmericanNineBallGame) game, (AmericanNineBallPlayer) aiPlayer);
-        } else {
-            throw new RuntimeException("No such game type");
-        }
+    public static AiCueBallPlacer<? extends Game<?, ?, ?>, ? extends Player> createAiCueBallPlacer(
+            Game<?, ?, ?> game, Player aiPlayer) {
+        return switch (game) {
+            case AbstractSnookerGame<?> abstractSnookerGame ->
+                    new SnookerAiCueBallPlacer(abstractSnookerGame, (SnookerPlayer) aiPlayer);
+            case ChineseEightBallGame chineseEightBallGame -> new ChineseEightAiCueBallPlacer(
+                    chineseEightBallGame, (ChineseEightBallPlayer) aiPlayer);
+            case AmericanNineBallGame americanNineBallGame -> new AmericanNineAiCueBallPlacer(
+                    americanNineBallGame, (AmericanNineBallPlayer) aiPlayer);
+            case null, default -> throw new RuntimeException("No such game type");
+        };
     }
 
     protected abstract List<double[]> legalPositions();

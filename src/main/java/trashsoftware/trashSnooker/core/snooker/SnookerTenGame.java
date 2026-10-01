@@ -7,7 +7,7 @@ import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.table.SnookerTenTable;
 import trashsoftware.trashSnooker.core.table.Table;
 
-public class SnookerTenGame extends AbstractSnookerGame {
+public class SnookerTenGame extends AbstractSnookerGame<SnookerTenTable> {
     
     public SnookerTenGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex, int frameRestartIndex) {
         super(entireGame, gameSettings, gameValues, new SnookerTenTable(gameValues.table), frameIndex, frameRestartIndex);

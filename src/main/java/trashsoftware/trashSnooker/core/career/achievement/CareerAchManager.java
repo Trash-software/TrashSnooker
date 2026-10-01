@@ -164,7 +164,7 @@ public class CareerAchManager extends AchManager {
      */
     @Override
     public void updateAfterCueFinish(Pane owner,
-                                     Game<?, ?> game,
+                                     Game<?, ?, ?> game,
                                      ScoreResult scoreResult,
                                      PotAttempt potAttempt,
                                      DefenseAttempt defenseAttempt,
@@ -183,7 +183,7 @@ public class CareerAchManager extends AchManager {
 
             if (game.isThisCueFoul()) {
                 // 犯规分支
-                if (game instanceof AbstractSnookerGame asg) {
+                if (game instanceof AbstractSnookerGame<?> asg) {
                     if (asg.getRepositionCount() >= 2) {
                         if (justCuedPlayer.isHuman()) {
                             addAchievement(Achievement.HARD_SNOOKER_BY_OPPONENT, justCuedPlayer);
@@ -256,7 +256,7 @@ public class CareerAchManager extends AchManager {
                     if (playStage == GamePlayStage.THIS_BALL_WIN) {
                         addAchievement(Achievement.KEY_BALL_FAIL, justCuedPlayer);
                     }
-                    if (game instanceof NumberedBallGame<?>) {
+                    if (game instanceof NumberedBallGame<?, ?>) {
                         if (game.isFirstCueAfterHandBall()) {
                             addAchievement(Achievement.FREE_BALL_FAIL, justCuedPlayer);
                         }
@@ -325,7 +325,7 @@ public class CareerAchManager extends AchManager {
             }
 
             if (game.getGameType().poolLike()) {
-                NumberedBallGame<?> nbg = (NumberedBallGame<?>) game;
+                NumberedBallGame<?, ?> nbg = (NumberedBallGame<?, ?>) game;
             }
         } else {
             if (game.isEnded() && game.getWiningPlayer() != null) {

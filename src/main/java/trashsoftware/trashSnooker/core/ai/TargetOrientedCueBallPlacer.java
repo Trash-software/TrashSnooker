@@ -7,7 +7,7 @@ import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 
 import java.util.*;
 
-public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extends Player>
+public abstract class TargetOrientedCueBallPlacer<G extends Game<?, P, ?>, P extends Player>
         extends AiCueBallPlacer<G, P> {
     
     public static final int NUM_ANGLES = 7;

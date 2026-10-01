@@ -78,6 +78,7 @@ import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
+import trashsoftware.trashSnooker.enums.CueBallSelectionMouseMode;
 import trashsoftware.trashSnooker.enums.TrajectoryHide;
 import trashsoftware.trashSnooker.enums.TrajectoryMode;
 import trashsoftware.trashSnooker.fxml.alert.Alert;
@@ -1215,7 +1216,7 @@ public class GameView implements Initializable {
             if (replay != null) {
 
             } else {
-                AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                AbstractSnookerGame<?> asg = (AbstractSnookerGame<?>) game.getGame();
                 snookerScoreDiffLabel.setText(String.format(strings.getString("scoreDiff"),
                         asg.getScoreDiffAbs()));
                 snookerScoreRemainingLabel.setText(String.format(strings.getString("scoreRem"),
@@ -1460,7 +1461,7 @@ public class GameView implements Initializable {
 
             showTipBrokenMsg = false;
         }
-        if (game.getGame() instanceof AbstractSnookerGame asg) {
+        if (game.getGame() instanceof AbstractSnookerGame<?> asg) {
             // todo: 怎么上次AI对战时没显示呢
             if (asg.isStartingBlackBattle()) {
                 Platform.runLater(() -> AlertShower.showInfo(
@@ -1798,7 +1799,7 @@ public class GameView implements Initializable {
     }
 
     private void notReposition() {
-        AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+        AbstractSnookerGame<?> asg = (AbstractSnookerGame<?>) game.getGame();
         asg.notReposition();
 
         letOtherPlayMenu.setDisable(false);
@@ -2005,7 +2006,7 @@ public class GameView implements Initializable {
         if (aiCalculating) return;
         if (cueAnimationPlayer != null) return;
         
-        Game<?, ?> gameFrame = game.getGame();
+        Game<?, ?, ?> gameFrame = game.getGame();
         if (gameFrame.getCuingPlayer().getInGamePlayer().getPlayerType() ==
                 PlayerType.COMPUTER) {
             EventLogger.verbose("AI is playing!");
@@ -2077,10 +2078,18 @@ public class GameView implements Initializable {
                 }
             }
         } else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+            EventLogger.verbose("Secondary clicked!");
             if (potInspection != null) {
                 // 右键清除
                 potInspection.setSrcBall(null);
                 tableGraphicsChanged = true;
+            }
+            if (!game.getGame().isCalculating() && movement == null) {
+                if (game.getGame().cueBallSwitchable()) {
+                    if (pref.cueBallSelectionMouseMode == CueBallSelectionMouseMode.SECONDARY_CLICK) {
+                        processCueBallSelection(mouseEvent);
+                    }
+                }
             }
         }
     }
@@ -2106,15 +2115,21 @@ public class GameView implements Initializable {
 
             } else if (!game.getGame().isCalculating() && movement == null) {
                 if (game.getGame().cueBallSwitchable()) {
-                    Ball selBall = getBallOnMouse(mouseEvent);
-                    if (selBall != null) {
-                        game.getGame().setCueBall(selBall);
-                        cursorDrawer.synchronizeGame();
-                        recalculateUiRestrictions();
-                        EventLogger.verbose("New direction: " + cursorDirectionUnitX + ", " + cursorDirectionUnitY);
+                    if (pref.cueBallSelectionMouseMode == CueBallSelectionMouseMode.DOUBLE_CLICK) {
+                        processCueBallSelection(mouseEvent);
                     }
                 }
             }
+        }
+    }
+    
+    private void processCueBallSelection(MouseEvent mouseEvent) {
+        Ball selBall = getBallOnMouse(mouseEvent);
+        if (selBall != null) {
+            game.getGame().setCueBall(selBall);
+            cursorDrawer.synchronizeGame();
+            recalculateUiRestrictions();
+            EventLogger.verbose("New direction: " + cursorDirectionUnitX + ", " + cursorDirectionUnitY);
         }
     }
 
@@ -2299,7 +2314,7 @@ public class GameView implements Initializable {
 
     @FXML
     void withdrawAction() {
-        if (game.getGame() instanceof AbstractSnookerGame asg) {
+        if (game.getGame() instanceof AbstractSnookerGame<?> asg) {
             SnookerPlayer curPlayer = asg.getCuingPlayer();
             int diff = asg.getScoreDiff(curPlayer);
             String behindText = diff <= 0 ? strings.getString("scoreBehind") : strings.getString("scoreAhead");
@@ -2430,7 +2445,7 @@ public class GameView implements Initializable {
         InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
         updatePowerSlider(igp, CuePlayerHand.makeDefault(igp));
         draw();
-        if (game.getGame() instanceof AbstractSnookerGame asg) {
+        if (game.getGame() instanceof AbstractSnookerGame<?> asg) {
             if (asg.isNoHitThreeWarning()) {
                 showThreeNoHitWarning();
             }
@@ -2885,7 +2900,7 @@ public class GameView implements Initializable {
         updateBeforeCue();
         stopCueTimer();
         if (game.gameValues.rule.snookerLike()) {
-            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            AbstractSnookerGame<?> asg = (AbstractSnookerGame<?>) game.getGame();
             System.out.println(asg.getCurrentTarget() + " " + predictedTargetBall);
             if (asg.getCurrentTarget() == 0) {
                 // 判断斯诺克打彩球时的实际目标球
@@ -3328,7 +3343,7 @@ public class GameView implements Initializable {
                 return;
             }
             if (gameValues.rule.snookerLike()) {
-                AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                AbstractSnookerGame<?> asg = (AbstractSnookerGame<?>) game.getGame();
                 if (aiHasRightToReposition && asg.canReposition()) {
                     if (asg.aiConsiderReposition(game.predictPhy, lastPotAttempt)) {
                         Platform.runLater(() -> {
@@ -3443,7 +3458,7 @@ public class GameView implements Initializable {
         aiWhiteStopRange = cueResult.getWhiteStopRange();
         tableGraphicsChanged = true;
         if (game.gameValues.rule.snookerLike()) {
-            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            AbstractSnookerGame<?> asg = (AbstractSnookerGame<?>) game.getGame();
             if (cueResult.getTargetBall() != null) {
                 asg.setIndicatedTarget(cueResult.getTargetBall().getValue(), true);
             } else {
@@ -3766,7 +3781,7 @@ public class GameView implements Initializable {
         if (replay != null) {
 
         } else {
-            if (game.getGame() instanceof AbstractSnookerGame asg) {
+            if (game.getGame() instanceof AbstractSnookerGame<?> asg) {
                 if (predictedTargetBall != null) {
                     asg.setIndicatedTarget(predictedTargetBall.getValue(), false);
                 } else {
@@ -3793,7 +3808,7 @@ public class GameView implements Initializable {
         powerSlider.setShowTickLabels(false);
         powerSlider.setSnapToTicks(false);
 
-        powerSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
+        powerSlider.valueProperty().addListener(((_, _, newValue) -> {
             if (game != null) {
                 double maxPower;
                 if (currentHand != null) {
@@ -4162,7 +4177,7 @@ public class GameView implements Initializable {
                 wipeCanvas(singlePoleCanvas);
 
                 if (gameValues.rule.snookerLike()) {
-                    AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                    AbstractSnookerGame<?> asg = (AbstractSnookerGame<?>) game.getGame();
                     SnookerPlayer snookerPlayer = (SnookerPlayer) cuePlayer;
 
                     player1ScoreLabel.setText(String.valueOf(asg.getPlayer1().getScore()));
@@ -4194,13 +4209,13 @@ public class GameView implements Initializable {
                     String singlePole = "";
                     if (cuePlayer == game.getGame().getCuingPlayer()) {
                         // 进攻成功了
-                        drawNumberedAllTargets((NumberedBallGame<?>) game.getGame(),
+                        drawNumberedAllTargets((NumberedBallGame<?, ?>) game.getGame(),
                                 (NumberedBallPlayer) cuePlayer);
                         int sp = cuePlayer.getSinglePoleCount();
                         if (sp > 0) singlePole = String.valueOf(sp);
                     } else {
                         // 进攻失败了
-                        drawNumberedAllTargets((NumberedBallGame<?>) game.getGame(),
+                        drawNumberedAllTargets((NumberedBallGame<?, ?>) game.getGame(),
                                 (NumberedBallPlayer) game.getGame().getCuingPlayer());
                     }
                     singlePoleLabel.setText(singlePole);
@@ -4283,7 +4298,7 @@ public class GameView implements Initializable {
             snookerFreeBall = target.isSnookerFreeBall;
             System.out.println("Target: " + tar + ", player: " + target.playerNum);
         } else {
-            AbstractSnookerGame game1 = (AbstractSnookerGame) game.getGame();
+            AbstractSnookerGame<?> game1 = (AbstractSnookerGame<?>) game.getGame();
             p1 = game1.getCuingPlayer().getInGamePlayer().getPlayerNumber() == 1;
             tar = game1.getCurrentTarget();
             snookerFreeBall = game1.isDoingFreeBall();
@@ -4310,7 +4325,7 @@ public class GameView implements Initializable {
             p1 = target.playerNum == 1;
             tar = target.targetRep;
         } else {
-            NumberedBallGame<?> game1 = (NumberedBallGame<?>) game.getGame();
+            NumberedBallGame<?, ?> game1 = (NumberedBallGame<?, ?>) game.getGame();
             p1 = game1.getCuingPlayer().getInGamePlayer().getPlayerNumber() == 1;
             tar = game1.getCurrentTarget();
         }
@@ -4351,7 +4366,7 @@ public class GameView implements Initializable {
         }
     }
 
-    private void drawNumberedAllTargets(NumberedBallGame<?> frame, NumberedBallPlayer player) {
+    private void drawNumberedAllTargets(NumberedBallGame<?, ?> frame, NumberedBallPlayer player) {
         // 别想了，不会每一帧都画一遍，只有
         if (frame instanceof ChineseEightBallGame) {  // 李式八球也instanceof中八
             int ballRange = ((ChineseEightBallPlayer) player).getBallRange();
@@ -4503,7 +4518,7 @@ public class GameView implements Initializable {
         }
 
         if (indicatedTarget > 1) {
-            if (game.getGame() instanceof AbstractSnookerGame asg) {
+            if (game.getGame() instanceof AbstractSnookerGame<?> asg) {
                 double leftX = isP1 ?
                         ballDiameter * 1.3 :
                         ballDiameter * 0.1;

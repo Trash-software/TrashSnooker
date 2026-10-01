@@ -66,7 +66,7 @@ public abstract class FinalChoice {
 
         public final boolean isPureAttack;
         public final boolean isDoubleAttack;
-        final Game<?, ?> game;
+        final Game<?, ?, ?> game;
         final AiCue.KickPriceCalculator kickPriceCalculator;
         final AttackParam attackParams;
         final List<AttackChoice> nextStepAttackChoices;  // Sorted from good to bad
@@ -81,7 +81,7 @@ public abstract class FinalChoice {
         double penalty;
 
         protected IntegratedAttackChoice(
-                Game<?, ?> game,
+                Game<?, ?, ?> game,
                 AttackParam attackParams,
                 List<AttackChoice> nextStepAttackChoices,
                 int nextStepTarget,
@@ -110,7 +110,7 @@ public abstract class FinalChoice {
         /**
          * 由defense转来的，连攻带防，但不能与纯进攻的一起比较，因为price完全是防守的price
          */
-        protected IntegratedAttackChoice(Game<?, ?> game,
+        protected IntegratedAttackChoice(Game<?, ?, ?> game,
                                          AttackParam attackParams,
                                          int nextStepTarget,
                                          CuePlayParams params,
